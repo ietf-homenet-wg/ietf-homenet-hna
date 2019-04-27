@@ -1,0 +1,9 @@
+python:
+  - "2.7"
+
+before_install:
+  - "sudo apt-get install python-pip"
+  - "sudo pip install xml2rfc"
+  - "gem install kramdown-rfc2629"
+
+script: "make clean && make"
