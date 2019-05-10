@@ -69,7 +69,7 @@ author:
       -
         ins: W. Cloetens
         name: Wouter Cloetens
-        org: SoftAtHome<
+        org: SoftAtHome
         street: vaartdijk 3 701
         city: Wijgmaal
         code: 3018
