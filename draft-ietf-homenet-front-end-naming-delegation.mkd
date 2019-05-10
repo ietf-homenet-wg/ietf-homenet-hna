@@ -233,7 +233,7 @@ Server. The hidden primary is not expected to serve end user queries for
 the Homenet Zone as a regular primary server would. The hidden primary
 is only known to its associated Synchronization Server.
 
-# Architecture Description  {#sec-arc-desc"
+# Architecture Description  {#sec-arc-desc}
 
 Architecture Description This section describes the architecture for
 outsourcing the authoritative naming service from the HNA to the
@@ -429,10 +429,10 @@ recommend a long expiry timer.
 reduced, and 3600 (1 hour) seems more appropriate.
 
 
-<!-- ## Considerations on multiple Registered Homenet Domain Names
+[](<!-- ## Considerations on multiple Registered Homenet Domain Names
  	## are left for future versions
 When multiple Registered Homenet Domains are used
-(like example.com, example.net, example.org), a DNS Homenet
+-like example.com, example.net, example.org, a DNS Homenet
 Zone file per Registered Homenet Domain SHOULD be generated.
 In order to synchronize the zone contents, the HNA may provide
 all bindings in each zone files. As a result, any update MUST
@@ -447,7 +447,7 @@ DNAME {{!RFC6672}} or CNAME+DNAME
 implementation issue to determine whether redirection mechanisms MAY be
 preferred for large Homenet Zones, or when the number
 of Registered Homenet Domain becomes quite large.
--->
+-->)
 
 
 
@@ -608,9 +608,10 @@ case, the HNA is connected to the Internet, and IPsec communication
 between the HNA and the Synchronization Server should not be impacted by
 middle boxes.
 
+[](
     	<!--
     	As mentioned above, TSIG, IPsec and TLS/DTLS MAY be used to secure transactions between the HNA and the Public Authentication Servers. The HNA and the Synchronization Server SHOULD implement TSIG and IPsec.
-    	-->
+    	-->)
 
 How the PSK can be used by any of the TSIG, TLS/DTLS or IPsec protocols:
 Authentication based on certificates implies a mutual authentication and
@@ -630,7 +631,7 @@ renumbered. This means that the necessary keys to authenticate
 transaction SHOULD NOT be indexed using the IP address, and SHOULD be
 resilient to IP address changes.
 
-## HNA Security Policies {#sec-cpe-sec-policies"
+## HNA Security Policies {#sec-cpe-sec-policies}
 
 This section details security policies related to the Hidden Primary /
 Secondary synchronization.
@@ -766,7 +767,7 @@ different view for DNS queries originating from the home network and for
 DNS queries coming from the Internet. Each view could then be associated
 with a dedicated Homenet Zone.
 
-<!--Regarding {{fig-naming-arch}}, an example of an implementation of two distinct view could be the Homenet Zone that describes the homenet view and the Public Homenet Zone that contains the Internet view, with these two zones being different.-->
+[](<!--Regarding {{fig-naming-arch}}, an example of an implementation of two distinct view could be the Homenet Zone that describes the homenet view and the Public Homenet Zone that contains the Internet view, with these two zones being different.-->)
 
 Note that this document does not specify how DNS queries originating
 from the home network are addressed to the Homenet Zone. This could be
@@ -839,7 +840,7 @@ network, or one of the ISP. DNS resolution performed via the HNA or the
 ISP resolver may be different than those performed over the Internet.
 
 
-## Guidance and Recommendations" {#sec-guidance}
+## Guidance and Recommendations {#sec-guidance}
 
 As documented in {{sec-consequences}}, it is RECOMMENDED to avoid
 different views. If network administrators choose to implement multiple
@@ -900,7 +901,7 @@ Renumbering has been extensively described in {{!RFC4192}} and analyzed
 in {{!RFC7010}} and the reader is expected to be familiar with them
 before reading this section.
 
-## Hidden Primary" {#sec-primary}
+## Hidden Primary {#sec-primary}
 
 In a renumbering scenario, the Hidden Primary is informed it is being
 renumbered. In most cases, this occurs because the whole home network is
@@ -989,7 +990,7 @@ that is not designated by a FQDN, and to avoid potential bootstrap
 problems. Such scenarios are considered as out of scope in the case of
 home networks.
 
-
+[](
 <!-- <section {#sec-dnssec-outsrc" title="DNSSEC outsourcing
 configuration}
 
@@ -1000,14 +1001,14 @@ configuration}
     	Note that Outsourcing Infrastructure described in this document implements various functions, and thus different entities may be involved.
     	<list hangIndent="6" style="hanging
         	<t hangText="- DNS Slave functionsynchronizes the Homenet Zone
-        	between the HNA and the Outsourcing Infrastructures. The DNS Homenet Zone SHOULD  NOT be published directly on the Public Authoritative Servers, and the Public Authoritative Server(s) MUST NOT respond to  any DNS queries for that zone. Instead, the Outsourcing Infrastructure chooses a dedicated set of servers to serve the Public Homenet Zone: the Public Authoritative Server(s).
+        	between the HNA and the Outsourcing Infrastructures. The DNS Homenet Zone SHOULD  NOT be published directly on the Public Authoritative Servers, and the Public Authoritative Server(s MUST NOT respond to  any DNS queries for that zone. Instead, the Outsourcing Infrastructure chooses a dedicated set of servers to serve the Public Homenet Zone: the Public Authoritative Server(s.
         	<t hangText="- DNS Zone Signing functionsigns the DNS Zone Homenet Zone to generate an Public Homenet Zone.
-        	<t hangText="- Public Authoritative Server(s)hosts the naming service for the Public Homenet Zone. Any DNS query associated with the Homenet Zone SHOULD be performed using the specific servers designated as the Public Authoritative Server(s)
+        	<t hangText="- Public Authoritative Server hosts the naming service for the Public Homenet Zone. Any DNS query associated with the Homenet Zone SHOULD be performed using the specific servers designated as the Public Authoritative Servers
     	</list>
 
 
 
--->
+-->)
 
 # Privacy Considerations {#sec-privacy}
 
@@ -1049,7 +1050,7 @@ this information will not be cached.
 The Homenet Naming Architecture described in this document solves
 exposing the HNA's DNS service as a DoS attack vector.
 
-## Names are less secure than IP addresses {#sec-name-less-secure"
+## Names are less secure than IP addresses {#sec-name-less-secure}
 
 This document describes how an end user can make their services and
 devices from his home network reachable on the Internet by using names
@@ -1080,7 +1081,7 @@ that reason end users may choose not to respond to PTR DNS queries and
 MAY instead return a NXDOMAIN response.
 
 
-## DNS Reflection Attacks" {#sec-reflection-attack}
+## DNS Reflection Attacks {#sec-reflection-attack}
 
 An attacker performs a reflection attack when it sends traffic to one or
 more intermediary nodes (reflectors), that in turn send back response
@@ -1095,7 +1096,7 @@ involved as a reflector in a reflection attack.
 Server, and {{sec-reflection-public-primary}} the Public Authoritative
 Server(s).
 
-## "Reflection Attack involving the Hidden Primary" {#sec-reflection-hidden-primary}
+## "Reflection Attack involving the Hidden Primary {#sec-reflection-hidden-primary}
 
 With the specified architecture, the Hidden Primary is only expected to
 receive DNS queries of type SOA, AXFR or IXFR. This section analyzes how
@@ -1163,7 +1164,7 @@ Hidden Primary and the secondaries.
 
 
 
-## Reflection Attacks involving the Synchronization Server" {#sec-reflection-public-auth-name-server-set}
+## Reflection Attacks involving the Synchronization Server {#sec-reflection-public-auth-name-server-set}
 
 The Synchronization Server acts as a secondary coupled with  the Hidden
 Primary. The secondary expects to receive NOTIFY query, SOA responses,
@@ -1196,7 +1197,7 @@ sends a NOTIFY as long as the zone has not been updated by the
 secondary. Multiple SOA queries may indicate the secondary is under
 attack.
 
-## Reflection Attacks involving the Public Authoritative Servers" {#sec-reflection-public-primary}
+## Reflection Attacks involving the Public Authoritative Servers {#sec-reflection-public-primary}
 
 Reflection attacks involving the Public Authoritative Server(s) are
 similar to attacks on any Outsourcing Infrastructure. This is not
@@ -1208,7 +1209,7 @@ is to expose the Public Authoritative Server(s) to attacks instead of
 the HNA, as it is believed that the Public Authoritative Server(s) will
 be better able to defend itself.
 
-## Flooding Attack" {#sec-flooding-attack}
+## Flooding Attack {#sec-flooding-attack}
 
 The purpose of flooding attacks is mostly resource exhaustion, where the
 resource can be bandwidth, memory, or CPU for example.
@@ -1233,7 +1234,7 @@ that uses asymmetric cryptography.
 
 
 
-## Replay Attack" {#sec-replay-attack}
+## Replay Attack {#sec-replay-attack}
 
 Replay attacks consist of an attacker either resending or delaying a
 legitimate message that has been sent by an authorized user or process.
@@ -1263,12 +1264,16 @@ message. As a result, better time synchronization policies could reduce
 the time window of the attack.
 
 
-<!--
+[](<!--
 <section title="DNSSEC is recommended to authenticate DNS hosted data
 
-Deploying DNSSEC is recommended, since in some cases the information stored in the DNS is used by the ISP or an IT department to grant access. For example some servers may perform PTR DNS queries to grant access based on host names. DNSSEC mitigates lack of trust in DNS, and it is  RECOMMENDED to deploy DNSSEC on HNAs.
+Deploying DNSSEC is recommended, since in some cases the information
+stored in the DNS is used by the ISP or an IT department to grant
+access. For example some servers may perform PTR DNS queries to grant
+access based on host names. DNSSEC mitigates lack of trust in DNS, and
+it is  RECOMMENDED to deploy DNSSEC on HNAs.
 
-  	-->
+  	-->)
 
 
 
