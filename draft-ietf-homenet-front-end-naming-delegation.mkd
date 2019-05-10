@@ -41,30 +41,30 @@ author:
         country: US
         email: ralf.weber@nominum.com
       -
-        ins: R. Hunter 
+        ins: R. Hunter
         name: Ray Hunter
         org: Globis Consulting BV
         street: Weegschaalstraat 3
         city: Eindhoven
-        code: 5632CW 
-        country: NL 
+        code: 5632CW
+        country: NL
         email: v6ops@globis.net
       -
-        ins: C. Griffiths 
+        ins: C. Griffiths
         name: Chris Griffiths
-        org: 
-        street: 
-        city: 
-        code: 
-        country: 
+        org:
+        street:
+        city:
+        code:
+        country:
         email: cgriffiths@gmail.com
       -
-        ins: W. Cloetens 
+        ins: W. Cloetens
         name: Wouter Cloetens
         org: SoftAtHome<
         street: vaartdijk 3 701
         city: Wijgmaal
-        code: 3018 
+        code: 3018
         country: BE
         email: cgriffiths@gmail.com
 
@@ -73,11 +73,11 @@ author:
 
 
 --- abstract
-        
+
 Designation of services and devices of a home network is not user
 friendly, and mechanisms should enable a user to designate services and
 devices inside a home network using names.
-      
+
 In order to enable internal communications while the home network
 experiments Internet connectivity shortage, the naming service should be
 hosted on a device inside the home network. On the other hand, home
@@ -86,8 +86,8 @@ result, hosting the naming service on such home network device, visible
 on the Internet exposes this device to resource exhaustion and other
 attacks, which could make the home network unreachable, and most
 probably would also affect the internal communications of the home
-network. 
-   
+network.
+
 As result, home networks may prefer not serving the naming service for
 the Internet, but instead prefer outsourcing it to a third party. This
 document describes a mechanisms that enables the Home Network Authority
@@ -96,14 +96,14 @@ document describes a mechanisms that enables the Home Network Authority
 --- middle
 
 #Requirements notation
-  	
+
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in {{!RFC2119}}.
-	
+
 
 #Introduction
-  	
+
 IPv6 provides global end to end IP reachability. End users prefer to use
 names instead of long and complex IPv6 addresses when accessing services
 hosted in the home network.
@@ -125,7 +125,7 @@ functionality. Since management of the Homenet Zone involves DNS
 specific mechanisms that cannot be distributed (primary server), when
 multiple nodes can potentially manage the Homenet Zone, a single node
 needs to be selected. This selected node is designated as the Homenet
-Naming Authority (HNA).      
+Naming Authority (HNA).
 
 CPEs, Homenet Naming Authority, as well as home network devices are
 usually low powered devices not designed not for terminating heavy
@@ -160,9 +160,9 @@ Finally, {{sec-privacy}} and {{sec-security}} respectively discuss
 privacy and security considerations when outsourcing the Homenet Zone.
 
 #Terminology
-	
+
 * Customer Premises Equipment: (CPE) is a router providing connectivity
-to the home network. 
+to the home network.
 
 * Homenet Naming Authority: (HNA) is a home network node responsible to
 manage the Homenet Zone. This includes building the Homenet Zone, as
@@ -180,7 +180,7 @@ the Synchronization Server via a hidden primary / secondary
 architecture. The Outsourcing Infrastructure may process the Homenet
 Zone - for example providing DNSSEC signing - to generate the Public
 Homenet Zone. This Public Homenet Zone is then transmitted to the Public
-Authoritative Server(s) that publish it on the Internet. 
+Authoritative Server(s) that publish it on the Internet.
 
 * Public Homenet Zone: is the public version of the Homenet Zone. It is
 expected to be signed with DNSSEC. It is hosted by the Public
@@ -189,7 +189,7 @@ Public Homenet Zone and the Homenet Zone might be different. For example
 some names might not become reachable from the Internet, and thus not be
 hosted in the Public Homenet Zone. Another example of difference may
 also occur when the Public Homenet Zone is signed whereas the Homenet
-Zone is not signed.  
+Zone is not signed.
 
 * Outsourcing Infrastructure:  is the combination of the Synchronization
 Server and the Public Authoritative Server(s).
@@ -216,7 +216,7 @@ server(s) hosting the Public Homenet Reverse Zone. Queries for reverse
 resolution of the Homenet Domain are sent to this server. Similarly to
 Public Authoritative Servers, for resiliency, the Homenet Reverse Zone
 SHOULD be hosted on multiple servers.
-        
+
 * Reverse Synchronization Server: is the server with which the HNA
 synchronizes the Homenet Reverse Zone. It is configured as a secondary
 and the HNA acts as primary. There MAY be multiple Reverse
@@ -225,15 +225,15 @@ addition, the text assumes the Reverse Synchronization Server is a
 separate entity. This is not a requirement, and when the HNA signs the
 zone, the synchronization function might also be operated by the Reverse
 Public Authoritative Servers.
-        	
+
 * Hidden Primary: designates the primary server of the HNA, that
 synchronizes the Homenet Zone with the Synchronization Server. A primary
 / secondary architecture is used between the HNA and the Synchronization
 Server. The hidden primary is not expected to serve end user queries for
 the Homenet Zone as a regular primary server would. The hidden primary
 is only known to its associated Synchronization Server.
-		
-# Architecture Description  {#sec-arc-desc" 
+
+# Architecture Description  {#sec-arc-desc"
 
 Architecture Description This section describes the architecture for
 outsourcing the authoritative naming service from the HNA to the
@@ -243,8 +243,8 @@ illustrates this architecture and shows how the Homenet Zone should be
 built by the HNA. It also lists the necessary parameters the HNA needs
 to be able to outsource the authoritative naming service. These two
 sections are informational and non-normative.
- 
-	
+
+
 ## Architecture Overview {#sec-arch-overview}
 
 {{fig-naming-arch}} provides an overview of the architecture.
@@ -278,13 +278,13 @@ As a result, DNS queries from the DNS resolvers on the Internet are
 answered by the Outsourcing Infrastructure and do not reach the HNA.
 {{fig-naming-arch}} illustrates the case of the resolution of
 node1.example.com.
- 
 
-~~~    	
+
+~~~
 home network +-------------------+                Internet
-             |                   |   
-             |      HNA          |          
-             |                   |         +-----------------------+     
+             |                   |
+             |      HNA          |
+             |                   |         +-----------------------+
 +-------+    |+-----------------+|         | Public Authoritative  |
 |       |    || Homenet Zone    ||         | Server(s)             |
 | node1 |    ||                 ||         |+---------------------+|
@@ -296,11 +296,11 @@ example.com  |+-----------------+|   |     +-----------------------+
              +-------------------+   |        ^   |
                            Synchronization    |   |
                                               |   |
-    DNSSEC resolution for node1.example.com   |   v                    
-                                           +-----------------------+   
-                                           |                       |  
-                                           |    DNSSEC Resolver    |  
-                                           |                       |  
+    DNSSEC resolution for node1.example.com   |   v
+                                           +-----------------------+
+                                           |                       |
+                                           |    DNSSEC Resolver    |
+                                           |                       |
                                            +-----------------------+
 ~~~
 {: #fig-naming-arch title="Homenet Naming Architecture Description" }
@@ -341,13 +341,13 @@ from the HNA
 ~~~
 {: #fig-auth-servers title="Outsourcing Infrastructure Description" }
 
-    
-	
+
+
 ## Example: Homenet Zone {#sec-homenet-zone}
 
 This section is not normative and intends to illustrate how the HNA
-builds the Homenet Zone. 
-    	
+builds the Homenet Zone.
+
 As depicted in {{fig-naming-arch}} and {{fig-auth-servers}}, the Public
 Homenet Zone is hosted on the Public Authoritative Server(s), whereas
 the Homenet Zone is hosted on the HNA. Motivations for keeping these two
@@ -366,11 +366,11 @@ associated IP addresses. Then the HNA should add the additional new
 nodes that enter the home network, remove those that should be removed,
 and sign the Homenet Zone.
 
-   	 
+
 ~~~
 $ORIGIN example.com
 $TTL 1h
- 
+
 @  IN  SOA  public.primary.example.net
        hostmaster.example.com. (
        2013120710 ; serial number of this zone file
@@ -427,7 +427,7 @@ recommend a long expiry timer.
 * MINIMUM: indicates the minimum TTL. The default value indicated by
 {{!RFC1033}} is 86400 (1 day). For home network, this value MAY be
 reduced, and 3600 (1 hour) seems more appropriate.
-    	
+
 
 <!-- ## Considerations on multiple Registered Homenet Domain Names
  	## are left for future versions
@@ -448,7 +448,7 @@ implementation issue to determine whether redirection mechanisms MAY be
 preferred for large Homenet Zones, or when the number
 of Registered Homenet Domain becomes quite large.
 -->
-	
+
 
 
 ## Example: HNA necessary parameters for outsourcing {#sec-configuration-parameters}
@@ -500,11 +500,11 @@ creation of multiple Public Homenet Zones.
 associated with the Registered Homenet Domain. Multiple Public
 Authoritative Server(s) may be provided.
 
-	
 
-# Synchronization between HNA and the Synchronization Server {#sec-synch} 
 
-    	
+# Synchronization between HNA and the Synchronization Server {#sec-synch}
+
+
 The Homenet Reverse Zone and the Homenet Zone MAY be updated either with
 DNS UPDATE {{!RFC2136}} or using a primary / secondary synchronization.
 The primary / secondary mechanism is preferred as it scales better and
@@ -517,7 +517,7 @@ AXFR query performed by the secondary is a small packet sent over TCP
 forged NOTIFY. On the other hand, DNS UPDATE (which can be transported
 over UDP), requires more processing than a NOTIFY, and does not allow
 the server to perform asynchronous updates.
-	
+
 This document RECOMMENDS use of a primary / secondary mechanism instead
 of the use of DNS UPDATE. This section details the primary / secondary
 mechanism.
@@ -540,7 +540,7 @@ Domain Name. This secondary configuration has been previously agreed
 between the end user and the provider of the Synchronization Server. In
 order to set the primary / secondary architecture, the HNA acts as a
 Hidden Primary Server, which is a regular authoritative DNS Server
-listening on the WAN interface.	
+listening on the WAN interface.
 
 The Hidden Primary Server SHOULD accept SOA {{!RFC1033}}, AXFR
 {{!RFC1034}}, and  IXFR {{!RFC1995}} queries from its configured
@@ -548,7 +548,7 @@ secondary DNS server(s). The Hidden Primary Server SHOULD send NOTIFY
 messages {{!RFC1996}} in order to update Public DNS server zones as
 updates occur. Because, the Homenet Zones are likely to be small, the
 HNA MUST implement AXFR and SHOULD implement IXFR.
- 
+
 Hidden Primary Server differs from a regular authoritative server for the home network by:
 
 * Interface Binding: the Hidden Primary Server listens on the WAN
@@ -566,12 +566,12 @@ and any DNS query would be processed. The HNA SHOULD filter IXFR/AXFR
 traffic and drop traffic not initiated by the Synchronization Server.
 The HNA MUST listen for DNS on TCP and UDP and MUST at least allow SOA
 lookups of the Homenet Zone.
-    	
-    	
+
+
 ## Securing Synchronization
 
 Exchange between the Synchronization Server and the HNA MUST be secured,
-at least for integrity protection and for authentication. 
+at least for integrity protection and for authentication.
 
 TSIG {{!RFC2845}} or SIG(0) {{!RFC2931}} MAY be used to secure the DNS
 communications between the HNA and the Synchronization Server. TSIG uses
@@ -629,12 +629,12 @@ are subject to change, for example while the network is being
 renumbered. This means that the necessary keys to authenticate
 transaction SHOULD NOT be indexed using the IP address, and SHOULD be
 resilient to IP address changes.
-    	
-## HNA Security Policies {#sec-cpe-sec-policies" 
+
+## HNA Security Policies {#sec-cpe-sec-policies"
 
 This section details security policies related to the Hidden Primary /
 Secondary synchronization.
-       	 
+
 The Hidden Primary, as described in this document SHOULD
 drop any queries from the home network. This could be implemented via
 port binding and/or firewall rules. The precise mechanism deployed is
@@ -646,9 +646,9 @@ responses.  The Hidden Primary SHOULD drop any incoming packets other
 than DNS NOTIFY response, SOA query, IXFR query or AXFR query.  The
 Hidden Primary SHOULD drop any non protected IXFR or AXFR
 exchange,depending on how the synchronization is secured.
-    	
 
-# DNSSEC compliant Homenet Architecture {#sec-dnssec-deplyment} 
+
+# DNSSEC compliant Homenet Architecture {#sec-dnssec-deplyment}
 
 
 {{!RFC7368}} in Section 3.7.3 recommends DNSSEC to be deployed on both
@@ -664,7 +664,7 @@ Similarly, the secure delegation can be performed by the HNA or by the
 Outsourcing Infrastructure. {{sec-ds}} discusses these two alternatives.
 
 ## Zone Signing" {#sec-zone-signing}
-    	
+
 This section discusses the pros and cons when zone signing is performed
 by the HNA or by the Outsourcing Infrastructure. It is RECOMMENDED that
 the HNA signs the zone unless there is a strong argument against this,
@@ -673,7 +673,7 @@ signing MAY be performed by the Outsourcing Infrastructure on behalf of
 the HNA.
 
 Reasons for signing the zone by the HNA are:
-        	
+
 * 1) Keeping the Homenet Zone and the Public Homenet Zone equal to
 securely optimize DNS resolution. As the Public Zone is signed with
 DNSSEC, RRsets are authenticated, and thus DNS responses can be
@@ -711,7 +711,7 @@ guaranteed. When the Zone is signed by the HNA, it makes modification of
 the DNS data -- for example for flow redirection -- impossible. As a
 result, signing the Homenet Zone by the HNA provides better protection
 for end user privacy.
- 	
+
 Reasons for signing the zone by the Outsourcing Infrastructure are:
 
 1) The HNA may not be capable of signing the zone, most likely because
@@ -740,9 +740,9 @@ DHCP Options to outsource the configuration and avoid this issue.
 5) The Outsourcing Infrastructure  is more likely to handle  private
 keys more securely than the HNA. However, having all private keys in one
 place may also nullify that benefit.
-    	
+
 ## Secure Delegation" {#sec-ds}
-    	
+
 Secure delegation is achieved only if the DS RRset is properly set in
 the parent zone. Secure delegation can be performed by the HNA or the
 Outsourcing Infrastructures (that is the Synchronization Server or the
@@ -756,7 +756,7 @@ maintain with HNAs, and thus may be easier to establish with the
 Outsourcing Infrastructure. In fact, the Public Authoritative Server(s)
 may use Automating DNSSEC Delegation Trust Maintenance  {{!RFC7344}}.
 
-    	
+
 # Handling Different Views {#sec-views}
 
 The Homenet Zone provides information about the home network. Some users
@@ -767,7 +767,7 @@ DNS queries coming from the Internet. Each view could then be associated
 with a dedicated Homenet Zone.
 
 <!--Regarding {{fig-naming-arch}}, an example of an implementation of two distinct view could be the Homenet Zone that describes the homenet view and the Public Homenet Zone that contains the Internet view, with these two zones being different.-->
- 
+
 Note that this document does not specify how DNS queries originating
 from the home network are addressed to the Homenet Zone. This could be
 done via hosting the DNS resolver on the HNA for example.
@@ -781,7 +781,7 @@ names that are only significant in the home network, without creating
 different views.
 
 ## Misleading Reasons for Local Scope DNS Zone" {#sec-reasons}
-	
+
 The motivation for supporting different views is to provide different answers dependent on the origin of  the DNS query, for reasons such as:
 
 1: An end user may want to have services not published on the Internet.
@@ -802,7 +802,7 @@ favor link-local or site-local IP addresses. These IP addresses are not
 significant outside the boundaries of the home network. As a result,
 they MAY be published in the home network view, and SHOULD NOT be
 published in the Public Homenet Zone.
-          
+
 
 ## Consequences" {#sec-consequences}
 
@@ -824,23 +824,23 @@ local-scope IP addresses, but the communication is initiated on the
 unreachable on the Internet, thus aborting the communication. The same
 situation occurs if a device is flip / flopping between various WLAN
 networks.
-	
+
 Regarding DNSSEC, if the HNA does not sign the Homenet Zone and
 outsources the signing process, the two views are different, because one
 is protected with DNSSEC whereas the other is not. Devices with multiple
 interfaces will have difficulty securing the naming resolution, as
 responses originating from the home network may not be signed.
- 
+
 For devices with all its interfaces attached to a single administrative
 domain, that is to say the home network, or the Internet. Incoherence
 between DNS responses may still also occur if the device is able to
 perform DNS resolutions both using the DNS resolving server of the home
 network, or one of the ISP. DNS resolution performed via the HNA or the
-ISP resolver may be different than those performed over the Internet.   
-	
+ISP resolver may be different than those performed over the Internet.
+
 
 ## Guidance and Recommendations" {#sec-guidance}
-	
+
 As documented in {{sec-consequences}}, it is RECOMMENDED to avoid
 different views. If network administrators choose to implement multiple
 views, impacts on devices' resolution SHOULD be evaluated.
@@ -857,11 +857,11 @@ Instead, local scope information is expected to be provided to the home
 network using local scope naming services. mDNS {{!RFC6762}} DNS-SD
 {{!RFC6763}} are two examples of these services. Currently mDNS is
 limited to a single link network. However, future protocols are expected
-to leverage this constraint as pointed out in {{!RFC7558}}. 	 
-	
+to leverage this constraint as pointed out in {{!RFC7558}}.
+
 ## Homenet Reverse Zone {#sec-reverse}
- 	
-This section is focused on the Homenet Reverse Zone. 
+
+This section is focused on the Homenet Reverse Zone.
 
 Firstly, all considerations for the Homenet Zone apply to the Homenet
 Reverse Zone. The main difference between the Homenet Reverse Zone and
@@ -874,13 +874,13 @@ ISP, credentials to authenticate the HNA for the zone synchronization
 may be set automatically and transparently to the end user.
 {{?I-D.ietf-homenet-naming-architecture-dhc-options}} describes how
 automatic configuration may be performed.
-   
+
 With IPv6, the domain space for IP addresses is so large that reverse
 zone may be confronted with scalability issues. How the reverse zone is
 generated is out of scope of this document.
 {{?I-D.howard-dnsop-ip6rdns}} provides guidance on how to address
 scalability issues.
-	
+
 
 # Renumbering {#sec-renumbering}
 
@@ -901,13 +901,13 @@ in {{!RFC7010}} and the reader is expected to be familiar with them
 before reading this section.
 
 ## Hidden Primary" {#sec-primary}
- 
+
 In a renumbering scenario, the Hidden Primary is informed it is being
 renumbered. In most cases, this occurs because the whole home network is
 being renumbered. As a result, the Homenet Zone will also be updated.
 Although the new and old IP addresses may be stored in the Homenet Zone,
 we recommend that only the newly reachable IP addresses be published.
-	
+
 To avoid reachability disruption, IP connectivity information provided
 by the DNS SHOULD be coherent with the IP plane. In our case, this means
 the old IP address SHOULD NOT be provided via the DNS when it is not
@@ -930,8 +930,8 @@ Homenet Zone has been updated and that the IP address to use to retrieve
 the updated zone has also been updated. Both notifications are performed
 using regular DNS exchanges. Mechanisms to update an IP address provided
 by lower layers with protocols like SCTP {{!RFC4960}}, MOBIKE
-{{!RFC4555}} are not considered in this document.	 
-   	 
+{{!RFC4555}} are not considered in this document.
+
 The Hidden Primary SHOULD inform the Synchronization Server that the
 Homenet Zone has been updated by sending a NOTIFY payload with the new
 IP address. In addition, this NOTIFY payload SHOULD be authenticated
@@ -955,9 +955,9 @@ Primary were publicly announced in the DNS, then the IP address update
 could have been performed using the DNS as described in
 {{sec-secondary}}.
 
- 
+
 ## Synchronization Server {#sec-secondary}
-	
+
 Renumbering of the Synchronization Server results in the Synchronization
 Server changing its IP address. The Synchronization Server is a
 secondary, so its renumbering does not impact the Homenet Zone. In fact,
@@ -980,16 +980,16 @@ Seamless reachability is provided as long as T_OLD_UNREACHABLE - T_NEW >
 2 * TTL. If this condition is not met, the Synchronization Server may be
 unreachable during 2 * TTL - (T_OLD_UNREACHABLE - T_NEW). In the case of
 a break-before-make, T_OLD_UNREACHABLE = T_NEW, and it may become
-unreachable up to 2 * TTL.   
- 
+unreachable up to 2 * TTL.
+
 Some DNS infrastructure uses the IP address to designate the secondary,
 in which case, other mechanisms must be found. The reason for using IP
 addresses instead of names is generally to reach an internal interface
 that is not designated by a FQDN, and to avoid potential bootstrap
 problems. Such scenarios are considered as out of scope in the case of
 home networks.
-	
-	
+
+
 <!-- <section {#sec-dnssec-outsrc" title="DNSSEC outsourcing
 configuration}
 
@@ -1004,16 +1004,16 @@ configuration}
         	<t hangText="- DNS Zone Signing functionsigns the DNS Zone Homenet Zone to generate an Public Homenet Zone.
         	<t hangText="- Public Authoritative Server(s)hosts the naming service for the Public Homenet Zone. Any DNS query associated with the Homenet Zone SHOULD be performed using the specific servers designated as the Public Authoritative Server(s)
     	</list>
-    	
 
-	
+
+
 -->
 
 # Privacy Considerations {#sec-privacy}
 
 Outsourcing the DNS Authoritative service from the HNA to a third party
 raises a few privacy related concerns.
-	
+
 The Homenet Zone contains a full description of the services hosted in
 the network. These services may not be expected to be publicly shared
 although their names remain accessible through the Internet. Even though
@@ -1043,7 +1043,7 @@ indication of the services an end user accesses, plus how and when they
 use these services. Although, caching may obfuscate this information
 inside the home network, it is likely that outside your home network
 this information will not be cached.
-	
+
 # Security Considerations {#sec-security}
 
 The Homenet Naming Architecture described in this document solves
@@ -1062,7 +1062,7 @@ providing up to 2^64 possibilities. On the other hand, names used either
 for the home network domain or for the devices present less entropy
 (livebox, router, printer, nicolas, jennifer, ...) and thus potentially
 exposes the devices to dictionary attacks.
-  	
+
 
 ## Names are less volatile than IP addresses {#sec-name-less-volatile}
 
@@ -1078,7 +1078,7 @@ PTR provides a way to bind an IP address to a name. In that sense,
 responding to PTR DNS queries may affect the end user's privacy. For
 that reason end users may choose not to respond to PTR DNS queries and
 MAY instead return a NXDOMAIN response.
-  	
+
 
 ## DNS Reflection Attacks" {#sec-reflection-attack}
 
@@ -1155,13 +1155,13 @@ rejected is higher. If a legitimate SOA is discarded, the secondary will
 re-send SOA query every "retry time" second until "expire time" seconds
 occurs, where "retry time" and "expire time" have been defined in the
 SOA.
-   
+
 As a result, it is RECOMMENDED to set rate limiting policies to protect
 HNA resources. If a flood lasts more than the expired time defined by
 the SOA, it is RECOMMENDED to re-initiate a synchronization between the
 Hidden Primary and the secondaries.
 
-    	
+
 
 ## Reflection Attacks involving the Synchronization Server" {#sec-reflection-public-auth-name-server-set}
 
@@ -1179,7 +1179,7 @@ valid and signed NOTIFY queries, it is under a replay attack which is
 discussed in {{sec-replay-attack}}. The key thing here is that the
 secondary is likely to be designed to be able to process much more
 traffic than the Hidden Primary hosted on a HNA.
-    	 
+
 This paragraph details how the secondary may limit the NOTIFY queries.
 Because the Hidden Primary may be renumbered, the secondary SHOULD NOT
 perform permanent IP filtering based on IP addresses. In addition, a
@@ -1194,25 +1194,25 @@ the secondary, MAY rate limit incoming NOTIFY queries.
 On the Hidden Primary side, it is recommended that the Hidden Primary
 sends a NOTIFY as long as the zone has not been updated by the
 secondary. Multiple SOA queries may indicate the secondary is under
-attack.   
+attack.
 
 ## Reflection Attacks involving the Public Authoritative Servers" {#sec-reflection-public-primary}
 
 Reflection attacks involving the Public Authoritative Server(s) are
 similar to attacks on any Outsourcing Infrastructure. This is not
 specific to the architecture described in this document, and thus are
-considered as out of scope.  
+considered as out of scope.
 
 In fact, one motivation of the architecture described in this document
 is to expose the Public Authoritative Server(s) to attacks instead of
 the HNA, as it is believed that the Public Authoritative Server(s) will
 be better able to defend itself.
-    	
+
 ## Flooding Attack" {#sec-flooding-attack}
-    	
+
 The purpose of flooding attacks is mostly resource exhaustion, where the
-resource can be bandwidth, memory, or CPU for example. 
-   	 
+resource can be bandwidth, memory, or CPU for example.
+
 One goal of the architecture described in this document is to
 limit the surface of attack on the HNA. This is done by outsourcing the
 DNS service to the Public Authoritative Server(s). By doing so, the HNA
@@ -1225,12 +1225,12 @@ The use of an authenticated channel with SIG(0) or TSIG between the HNA
 and the Synchronization Server, enables detection of illegitimate DNS
 queries, so appropriate action may be taken - like dropping the queries.
 If signatures are validated, then most likely, the HNA is under a replay
-attack, as detailed in {{sec-replay-attack}}   
-    	
+attack, as detailed in {{sec-replay-attack}}
+
 In order to limit the resource required for authentication, it is
 recommended to use TSIG that uses symmetric cryptography over SIG(0)
 that uses asymmetric cryptography.
-    	
+
 
 
 ## Replay Attack" {#sec-replay-attack}
@@ -1253,7 +1253,7 @@ attack.
 {{sec-reflection-attack}} details how to mitigate reflection attacks and
 {{sec-flooding-attack}} details how to mitigate resource exhaustion.
 Both sections assume a context of DoS with a flood of DNS queries. This
-section suggests a way to limit the attack surface of replay attacks. 
+section suggests a way to limit the attack surface of replay attacks.
 
 As SIG(0) and TSIG use inception and expiration time, the time frame for
 replay attack is limited. SIG(0) and TSIG recommends a fudge value of 5
@@ -1261,25 +1261,25 @@ minutes. This value has been set as a compromise between possibly loose
 time synchronization between devices and the valid lifetime of the
 message. As a result, better time synchronization policies could reduce
 the time window of the attack.
-   	 
+
 
 <!--
 <section title="DNSSEC is recommended to authenticate DNS hosted data
-    	
+
 Deploying DNSSEC is recommended, since in some cases the information stored in the DNS is used by the ISP or an IT department to grant access. For example some servers may perform PTR DNS queries to grant access based on host names. DNSSEC mitigates lack of trust in DNS, and it is  RECOMMENDED to deploy DNSSEC on HNAs.
-  	
+
   	-->
 
-	
+
 
 
 #IANA Considerations
-  	
+
 This document has no actions for IANA.
-	
+
 
 #Acknowledgment
-  	
+
 The authors wish to thank Philippe Lemordant for its contributions on
 the early versions of the draft; Ole Troan for pointing out issues with
 the IPv6 routed home concept and placing the scope of this document in a
@@ -1293,4 +1293,4 @@ Andrew, Ted Lemon, Mikael Abrahamson, Michael Richardson and Ray Bellis
 for their feedback on handling different views as well as clarifying the
 impact of outsourcing the zone signing operation outside the HNA; Mark
 Andrew and Peter Koch for clarifying the renumbering.
-	
+
