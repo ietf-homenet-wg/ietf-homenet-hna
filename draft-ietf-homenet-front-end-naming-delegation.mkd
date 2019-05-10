@@ -1,7 +1,7 @@
 ---
 title: Outsourcing Home Network  Authoritative Naming Service
 abbrev: Outsourcing Authoritative Naming Service
-docname: draft-ietf-homenet-front-end-naming-delegation-08
+docname: draft-ietf-homenet-front-end-naming-delegation-09
 
 
 area: Internet
@@ -40,6 +40,14 @@ author:
         code: 94063
         country: US
         email: ralf.weber@nominum.com
+      - ins: M. Richardson
+        name: Michael Richardson
+        org: Sandelman Software Works
+        email: mcr+ietf@sandelman.ca
+        street: 470 Dawson Avenue
+        city: Ottawa, ON
+        code: K1Z 5V7
+        country: Canada
       -
         ins: R. Hunter
         name: Ray Hunter
@@ -61,7 +69,7 @@ author:
       -
         ins: W. Cloetens
         name: Wouter Cloetens
-        org: SoftAtHome<
+        org: SoftAtHome
         street: vaartdijk 3 701
         city: Wijgmaal
         code: 3018
