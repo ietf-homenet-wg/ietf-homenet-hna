@@ -382,112 +382,6 @@ from the HNA
 
 
 
-## Example: Homenet Zone {#sec-homenet-zone}
-
-This section is not normative and intends to illustrate how the HNA
-builds the Homenet Zone.
-
-As depicted in {{fig-naming-arch}} and {{fig-auth-servers}}, the Public
-Homenet Zone is hosted on the Public Authoritative Server(s), whereas
-the Homenet Zone is hosted on the HNA. This section
-considers that the HNA builds the zone that will be effectively
-published on the Public Authoritative Server(s). In other words "Homenet
-to Public Zone transformation" is the identity also commonly designated
-as "no operation" (NOP).
-
-In that case, the Homenet Zone should configure its Name Server RRset
-(NS) and Start of Authority (SOA) with the values associated with the
-Public Authoritative Server(s). This is illustrated in
-{{fig-homenet-zone}}. public.primary.example.net is the FQDN of the
-Public Authoritative Server(s), and IP1, IP2, IP3, IP4 are the
-associated IP addresses. Then the HNA should add the additional new
-nodes that enter the home network, remove those that should be removed,
-and sign the Homenet Zone.
-
-
-~~~
-$ORIGIN example.com
-$TTL 1h
-
-@  IN  SOA  public.primary.example.net
-       hostmaster.example.com. (
-       2013120710 ; serial number of this zone file
-       1d         ; secondary refresh
-       2h         ; secondary retry time in case of a problem
-       4w         ; secondary expiration time
-       1h         ; maximum caching time in case of failed
-                  ; lookups
-       )
-
-@   NS  public.authoritative.servers.example.net
-
-public.primary.example.net   A @IP1
-public.primary.example.net   A @IP2
-public.primary.example.net   AAAA @IP3
-public.primary.example.net   AAAA @IP4
-~~~
-{: #fig-homenet-zone title="Homenet Zone" }
-
-The SOA RRset is defined in {{!RFC1033}}, {{!RFC1035}} and {{!RFC2308}}.
-This SOA is specific, as it is used for the synchronization between the
-Hidden Primary and the Synchronization Server and published on the DNS
-Public Authoritative Server(s)..
-
-* MNAME: indicates the primary. In our case the zone is published on the
-Public Authoritative Server(s), and its name MUST be included. If
-multiple Public Authoritative Server(s) are involved, one of them MUST
-be chosen. More specifically, the HNA MUST NOT include the name of the
-Hidden Primary.
-
-* RNAME: indicates the email address to reach the administrator.
-{{!RFC2142}} recommends using hostmaster@domain and replacing the '@'
-sign by '.'.
-
-* REFRESH and RETRY: indicate respectively in seconds how often
-secondaries need to check the primary, and the time between two refresh
-when a refresh has failed.  Default values indicated by {{!RFC1033}} are
-3600 (1 hour) for refresh and  600 (10 minutes) for retry. This value
-might be too long for highly dynamic content. However, the Public
-Authoritative Server(s) and the HNA are expected to implement NOTIFY
-{{!RFC1996}}. So whilst shorter refresh timers might increase the
-bandwidth usage for secondaries hosting large number of zones, it will
-have little practical impact on the elapsed time required to achieve
-synchronization between the Outsourcing Infrastructure and the Hidden
-Master. As a result, the default values are acceptable.
-
-* EXPIRE: is the upper limit data SHOULD be kept in absence of refresh.
-The default value indicated by {{!RFC1033}} is 3600000 (approx. 42
-days). In home network architectures, the HNA provides both the DNS
-synchronization and the access to the home network. This device may be
-plugged and unplugged by the end user without notification, thus we
-recommend a long expiry timer.
-
-* MINIMUM: indicates the minimum TTL. The default value indicated by
-{{!RFC1033}} is 86400 (1 day). For home network, this value MAY be
-reduced, and 3600 (1 hour) seems more appropriate.
-
-
-[](<!-- ## Considerations on multiple Registered Homenet Domain Names
- 	## are left for future versions
-When multiple Registered Homenet Domains are used
--like example.com, example.net, example.org, a DNS Homenet
-Zone file per Registered Homenet Domain SHOULD be generated.
-In order to synchronize the zone contents, the HNA may provide
-all bindings in each zone files. As a result, any update MUST
-be performed on all zone files, i.e. for all Registered Homenet
-Domains. To limit thees updates when multiple Registered Homenet
-Domains are involved, the HNA MAY fill all bindings
-in a specific zone file and redirect all other zones to that zone.
-This can be achieved with redirecting mechanisms like
-CNAME {{!RFC2181}}, {{!RFC1034}},
-DNAME {{!RFC6672}} or CNAME+DNAME
-{{?I-D.sury-dnsext-cname-dname}}. This is an
-implementation issue to determine whether redirection mechanisms MAY be
-preferred for large Homenet Zones, or when the number
-of Registered Homenet Domain becomes quite large.
--->)
-
-
 
 ## Example: HNA necessary parameters for outsourcing {#sec-configuration-parameters}
 
@@ -1155,4 +1049,113 @@ Andrew, Ted Lemon, Mikael Abrahamson, Michael Richardson and Ray Bellis
 for their feedback on handling different views as well as clarifying the
 impact of outsourcing the zone signing operation outside the HNA; Mark
 Andrew and Peter Koch for clarifying the renumbering.
+
+# Annex
+
+## Example: Homenet Zone {#sec-homenet-zone}
+
+This section is not normative and intends to illustrate how the HNA
+builds the Homenet Zone.
+
+As depicted in {{fig-naming-arch}} and {{fig-auth-servers}}, the Public
+Homenet Zone is hosted on the Public Authoritative Server(s), whereas
+the Homenet Zone is hosted on the HNA. This section
+considers that the HNA builds the zone that will be effectively
+published on the Public Authoritative Server(s). In other words "Homenet
+to Public Zone transformation" is the identity also commonly designated
+as "no operation" (NOP).
+
+In that case, the Homenet Zone should configure its Name Server RRset
+(NS) and Start of Authority (SOA) with the values associated with the
+Public Authoritative Server(s). This is illustrated in
+{{fig-homenet-zone}}. public.primary.example.net is the FQDN of the
+Public Authoritative Server(s), and IP1, IP2, IP3, IP4 are the
+associated IP addresses. Then the HNA should add the additional new
+nodes that enter the home network, remove those that should be removed,
+and sign the Homenet Zone.
+
+
+~~~
+$ORIGIN example.com
+$TTL 1h
+
+@  IN  SOA  public.primary.example.net
+       hostmaster.example.com. (
+       2013120710 ; serial number of this zone file
+       1d         ; secondary refresh
+       2h         ; secondary retry time in case of a problem
+       4w         ; secondary expiration time
+       1h         ; maximum caching time in case of failed
+                  ; lookups
+       )
+
+@   NS  public.authoritative.servers.example.net
+
+public.primary.example.net   A @IP1
+public.primary.example.net   A @IP2
+public.primary.example.net   AAAA @IP3
+public.primary.example.net   AAAA @IP4
+~~~
+{: #fig-homenet-zone title="Homenet Zone" }
+
+The SOA RRset is defined in {{!RFC1033}}, {{!RFC1035}} and {{!RFC2308}}.
+This SOA is specific, as it is used for the synchronization between the
+Hidden Primary and the Synchronization Server and published on the DNS
+Public Authoritative Server(s)..
+
+* MNAME: indicates the primary. In our case the zone is published on the
+Public Authoritative Server(s), and its name MUST be included. If
+multiple Public Authoritative Server(s) are involved, one of them MUST
+be chosen. More specifically, the HNA MUST NOT include the name of the
+Hidden Primary.
+
+* RNAME: indicates the email address to reach the administrator.
+{{!RFC2142}} recommends using hostmaster@domain and replacing the '@'
+sign by '.'.
+
+* REFRESH and RETRY: indicate respectively in seconds how often
+secondaries need to check the primary, and the time between two refresh
+when a refresh has failed.  Default values indicated by {{!RFC1033}} are
+3600 (1 hour) for refresh and  600 (10 minutes) for retry. This value
+might be too long for highly dynamic content. However, the Public
+Authoritative Server(s) and the HNA are expected to implement NOTIFY
+{{!RFC1996}}. So whilst shorter refresh timers might increase the
+bandwidth usage for secondaries hosting large number of zones, it will
+have little practical impact on the elapsed time required to achieve
+synchronization between the Outsourcing Infrastructure and the Hidden
+Master. As a result, the default values are acceptable.
+
+* EXPIRE: is the upper limit data SHOULD be kept in absence of refresh.
+The default value indicated by {{!RFC1033}} is 3600000 (approx. 42
+days). In home network architectures, the HNA provides both the DNS
+synchronization and the access to the home network. This device may be
+plugged and unplugged by the end user without notification, thus we
+recommend a long expiry timer.
+
+* MINIMUM: indicates the minimum TTL. The default value indicated by
+{{!RFC1033}} is 86400 (1 day). For home network, this value MAY be
+reduced, and 3600 (1 hour) seems more appropriate.
+
+
+[](<!-- ## Considerations on multiple Registered Homenet Domain Names
+ 	## are left for future versions
+When multiple Registered Homenet Domains are used
+-like example.com, example.net, example.org, a DNS Homenet
+Zone file per Registered Homenet Domain SHOULD be generated.
+In order to synchronize the zone contents, the HNA may provide
+all bindings in each zone files. As a result, any update MUST
+be performed on all zone files, i.e. for all Registered Homenet
+Domains. To limit thees updates when multiple Registered Homenet
+Domains are involved, the HNA MAY fill all bindings
+in a specific zone file and redirect all other zones to that zone.
+This can be achieved with redirecting mechanisms like
+CNAME {{!RFC2181}}, {{!RFC1034}},
+DNAME {{!RFC6672}} or CNAME+DNAME
+{{?I-D.sury-dnsext-cname-dname}}. This is an
+implementation issue to determine whether redirection mechanisms MAY be
+preferred for large Homenet Zones, or when the number
+of Registered Homenet Domain becomes quite large.
+-->)
+
+
 
