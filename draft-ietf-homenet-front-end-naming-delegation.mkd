@@ -128,6 +128,15 @@ The management of the names can be a role that the Customer Premises Equiment
 (CPE) does.  Other devices in the homenet could fullfil this role, but for simplicity,
 this document assumes the function is located on one of the CPE devices.
 
+CPEs have not been designed to host services on the Internet and CPEs
+acting as public authoritative DNS servers exposes the home network to
+DoS. Instead the CPE should behave as a Homenet Naming Authority (HNA)
+and manage the publication of the Public Homenet Zone on a dedicated
+infrastructure also designated as Outsourcing Infrastructure. The
+outsourcing operation is performed using standard DNS mechanisms
+involving primary and secondary DNS servers, with the HMA hosted primary
+being a stealth primary.
+
 A homenet may have multiple CPEs. Since management of the Homenet Zone
 involves DNS specific mechanisms that cannot be distributed (primary server),
 when multiple nodes can potentially manage the Homenet Zone, a single node
@@ -135,21 +144,6 @@ needs to be selected. This selected node is designated as the Homenet
 Naming Authority (HNA).
 
 The process by which a single HNA is selected is not in scope for this document.
-
-CPEs, Homenet Naming Authority, as well as home network devices are
-usually low powered devices not designed not for terminating heavy
-traffic. As a result, hosting an authoritative DNS service visible to the
-Internet may expose the home network to resource exhaustion and other
-attacks. Additionally, the names become unavailable during disruptions.
-
-In order to avoid resource exhaustion and other attacks, this document
-describes an architecture that outsources the authoritative naming
-service of the home network.  More specifically, the Homenet Naming
-Authority builds the Homenet Zone and  outsources it to an Outsourcing
-Infrastructure.  The Outsourcing Infrastructure in in charge of
-publishing the corresponding Public Homenet Zone on the Internet.
-This is done using standard DNS mechanisms involving primary and secondary
-DNS servers, with the HMA hosted primary being a stealth primary.
 
 {{sec-arch-overview}} provides an architecture description that
 describes the relation between the Homenet Naming Authority and the
