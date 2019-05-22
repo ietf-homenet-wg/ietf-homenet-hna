@@ -116,51 +116,53 @@ IPv6 provides global end to end IP reachability. End users prefer to use
 names instead of long and complex IPv6 addresses when accessing services
 hosted in the home network.
 
-Customer Edge Routers and other Customer Premises Equipment (CPEs) are
-already providing IPv6 connectivity to the home network, and generally
-provide IPv6 addresses or prefixes to the nodes of the home network.  In
-addition, {{!RFC7368}} recommends that home networks be resilient to
-connectivity disruption from the ISP. This could be achieved by a
-dedicated device inside the home network that builds, serves or manage
-the Homenet Zone, thus  providing bindings between names and IP
-addresses.
+{{!RFC7368}} recommends that home networks be resilient to
+connectivity disruption from the ISP.
+The public names should be resolvable within the homenet and by the Internet,
+even when there are disruptions.
+This could be achieved by a device inside the home network that builds,
+publishes and manages a Homenet Zone, thus providing bindings between public
+names and IP addresses.
 
-CPEs are of course good candidates to manage the binding between names
-and IP addresses of nodes. However, this could also be performed by
-another device in the home network that is not a CPE. In addition, a
-given home network may have multiple nodes that may implement this
-functionality. Since management of the Homenet Zone involves DNS
-specific mechanisms that cannot be distributed (primary server), when
-multiple nodes can potentially manage the Homenet Zone, a single node
+The management of the names can be a role that the Customer Premises Equiment
+(CPE) does.  Other devices in the homenet could fullfil this role, but for simplicity,
+this document assumes the function is located on one of the CPE devices.
+
+A homenet may have multiple CPEs. Since management of the Homenet Zone
+involves DNS specific mechanisms that cannot be distributed (primary server),
+when multiple nodes can potentially manage the Homenet Zone, a single node
 needs to be selected. This selected node is designated as the Homenet
 Naming Authority (HNA).
 
+The process by which a single HNA is selected is not in scope for this document.
+
 CPEs, Homenet Naming Authority, as well as home network devices are
 usually low powered devices not designed not for terminating heavy
-traffic. As a result, hosting an authoritative DNS service on the
+traffic. As a result, hosting an authoritative DNS service visible to the
 Internet may expose the home network to resource exhaustion and other
-attacks. This may isolate the home network from the Internet and also
-impact the services hosted by the such an home network device, thus
-affecting overall home network communication.
+attacks. Additionally, the names become unavailable during disruptions.
 
- In order to avoid resource exhaustion and other attacks, this document
+In order to avoid resource exhaustion and other attacks, this document
 describes an architecture that outsources the authoritative naming
-service of the home network. More specifically, the Homenet Naming
+service of the home network.  More specifically, the Homenet Naming
 Authority builds the Homenet Zone and  outsources it to an Outsourcing
-Infrastructure. The Outsourcing Infrastructure in in charge of
+Infrastructure.  The Outsourcing Infrastructure in in charge of
 publishing the corresponding Public Homenet Zone on the Internet.
+This is done using standard DNS mechanisms involving primary and secondary
+DNS servers, with the HMA hosted primary being a stealth primary.
 
 {{sec-arch-overview}} provides an architecture description that
 describes the relation between the Homenet Naming Authority and the
-Outsourcing Architecture. In order to keep the Public Homenet Zone
+Outsourcing Architecture.  In order to keep the Public Homenet Zone
 up-to-date {{sec-synch}} describes how the Homenet Zone and the Public
-Homenet Zone can be synchronized. The proposed architecture aims at
-deploying DNSSEC, and the Public Homenet Zone is expected to be signed
-with a secure delegation. The zone signing and secure delegation may be
-performed either by the Homenet Naming Authority or by the Outsourcing
-Infrastructure. {{sec-dnssec-deplyment}} discusses these two
-alternatives. {{sec-reverse}} discusses management of the reverse
-zone. {{sec-renumbering}} discusses how renumbering should be handled.
+Homenet Zone can be synchronized.
+
+The proposed architecture aims at expects to use DNSSEC, and the Public
+Homenet Zone is expected to be signed with a secure delegation.  DNSSEC
+is handled by the HNA.
+
+{{sec-reverse}} discusses management of the reverse zone.
+{{sec-renumbering}} discusses how renumbering should be handled.
 Finally, {{sec-privacy}} and {{sec-security}} respectively discuss
 privacy and security considerations when outsourcing the Homenet Zone.
 
@@ -172,6 +174,39 @@ network using local scope naming services. mDNS {{!RFC6762}} DNS-SD
 limited to a single link network. However, future protocols are expected
 to leverage this constraint as pointed out in {{!RFC7558}}.
 
+## Alternative solutions
+
+An alternative to having a single zone is what is currently common with IPv4,
+where a host uses a RESTful HTTP service to register a single name into a
+common public zone.  This is often called "Dynamic DNS", and there are a
+number of commercial providers, including dyn.com, ghandi.com.  These
+solutions were typically used by a host behind the CPE to make it's CPE IPv4
+address visible, usually in order to enable incoming connections.
+
+For a small number (one to three) of hosts, use of such a system provides an
+alternative to the Front-End naming.  The alternative does suffer from some limitations:
+
+* the CPE/HNA router is unaware of the process, and can not answer for the same
+names when there are disruptions in connectivity. This makes the home user use
+ddifferent names when there are disruptions.
+
+* the CPE/HNA router can not control the process. Any host can do this
+  regardless of whether or not the homenet administrator wants the name
+  published or not.  There is therefore no possible audit trail.
+
+* the credentials for the dynamic DNS server need to be securely transfered
+  to the hosts that wish to use it.  This is not a problem for a technical
+  user to do with one or two hosts, but it does become a problem for
+  non-technical users.
+
+* "all the good names are taken" -- current services put everyone's names
+into a some set of zones, and there are often conflicts.  Distinguishing
+similar names by delegation of zones was among the primary design goals of
+the DNS system.
+
+There is no technical reason why a RESTful cloud service could not provide
+solutions to many of these problems, but this document describes a DNS based
+solution.
 
 #Terminology
 
