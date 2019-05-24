@@ -330,28 +330,29 @@ node1.example.com.
 
 
 ~~~
-home network +-------------------+                Internet
-             |                   |
-             |      HNA          |
-             |                   |         +-----------------------+
-+-------+    |+-----------------+|         | Public Authoritative  |
-|       |    || Homenet Zone    ||         | Server(s)             |
-| node1 |    ||                 ||         |+---------------------+|
-|       |    ||                 ||         || Public Homenet Zone ||
-+-------+    || Homenet Domain  ||=========||                     ||
-             || Name            ||   ^     ||  (example.com)      ||
-node1.\      || (example.com)   ||   |     |+---------------------+|
-example.com  |+-----------------+|   |     +-----------------------+
-             +-------------------+   |        ^   |
-                           Synchronization    |   |
-                                              |   |
-    DNSSEC resolution for node1.example.com   |   v
-                                           +-----------------------+
-                                           |                       |
-                                           |    DNSSEC Resolver    |
-                                           |                       |
-                                           +-----------------------+
-~~~
+home network +---------------------+                Internet
+             |     HNA             |  (Synchronization)
+             | Homenet Domain Name |<===========+
+             |  Homenet Zone       |            ||
+             +---------------------+            ||
+                        ||                      v
+             +-----------------------+    +-----------------------+
++-------+    | Homenet Authoritative |   | Public Authoritative  |
+|       |    | Server(s)             |   | Server(s)             |
+| node1 |    |+---------------------+|   |+---------------------+|
+|       |    ||Public Homenet Zone  ||   || Public Homenet Zone ||
++-------+    ||                     ||===||                     ||
+             || (example.com)       ||   ||  (example.com)      ||
+node1.\      |+---------------------+|   |+---------------------+|
+example.com  +-----------------------+   +-----------------------+
+                                                  ^   |
+    DNSSEC resolution for node1... .example.com   |   v
+                                  .            +-----------------------+
+                                               |                       |
+                                               |    DNSSEC Resolver    |
+                                               |                       |
+                                               +-----------------------+
+~~~                                
 {: #fig-naming-arch title="Homenet Naming Architecture Description" }
 
 The Outsourcing Infrastructure is described in {{fig-auth-servers}}. The
@@ -706,88 +707,15 @@ scope of this document, and only the authoritative part of the server is
 considered.
 
 Deploying DNSSEC requires signing the zone and configuring a secure
-delegation. As described in {{sec-arch-overview}}, signing can be
-performed either by the HNA or by the Outsourcing Infrastructure.
-{{sec-zone-signing}} details the implications of these two alternatives.
-Similarly, the secure delegation can be performed by the HNA or by the
-Outsourcing Infrastructure. {{sec-ds}} discusses these two alternatives.
-
-## Zone Signing {#sec-zone-signing}
-
-This section discusses the pros and cons when zone signing is performed
-by the HNA or by the Outsourcing Infrastructure. It is RECOMMENDED that
-the HNA signs the zone unless there is a strong argument against this,
-such as a HNA that is not capable of signing the zone. In that case zone
-signing MAY be performed by the Outsourcing Infrastructure on behalf of
-the HNA.
-
-Reasons for signing the zone by the HNA are:
-
-* Keeping the Homenet Zone and the Public Homenet Zone equal to
-securely optimize DNS resolution. As the Public Zone is signed with
-DNSSEC, RRsets are authenticated, and thus DNS responses can be
-validated even though they are not provided by the authoritative server.
-This provides the HNA the ability to respond on behalf of the Public
-Authoritative Server(s). This could be useful for example if, in the
-future, the HNA announces to the home network that the HNA can act as a
-local authoritative primary or equivalent for the Homenet Zone.
-Currently the HNA is not expected to receive authoritative DNS queries,
-as its IP address is not mentioned in the Public Homenet Zone. On the
-other hand most HNAs host a resolving function, and could be configured
-to perform a local lookup to the Homenet Zone instead of initiating a
-DNS exchange with the Public Authoritative Server(s). Note that
-outsourcing the zone signing operation means that all DNSSEC queries
-SHOULD be cached to perform a local lookup, otherwise a resolution with
-the Public Authoritative Server(s) would be performed.
-
-* Keeping the Homenet Zone and the Public Homenet Zone equal to
-securely address the connectivity disruption independence detailed in
-{{!RFC7368}} section 4.4.1 and 3.7.5. As local lookups are possible in
-case of network disruption, communications within the home network can
-still rely on the DNSSEC service. Note that outsourcing the zone signing
-operation does not address connectivity disruption independence with
-DNSSEC. Instead local lookup would provide DNS as opposed to DNSSEC
-responses provided by the Public Authoritative Server(s).
-
-* Privacy and Integrity of the DNSSEC Homenet Zone are better
-guaranteed. When the Zone is signed by the HNA, it makes modification of
-the DNS data -- for example for flow redirection -- impossible. As a
-result, signing the Homenet Zone by the HNA provides better protection
-for end user privacy.
-
-Reasons for signing the zone by the Outsourcing Infrastructure are:
-
-1) The HNA may not be capable of signing the zone, most likely because
-its firmware does not support this function. However this reason is
-expected to become less and less valid over time.
-
-2) Outsourcing DNSSEC management operations. Management operations
-involve key roll-over, which can be performed automatically by the HNA
-and transparently for the end user. Avoiding DNSSEC management is mostly
-motivated by bad software implementations.
-
-3) Reducing the impact of HNA replacement on the Public Homenet Zone.
-Unless the HNA private keys can be extracted and stored off-device, HNA
-hardware replacement will result in an emergency key roll-over. This can
-be mitigated by using relatively small TTLs.
-
-4) Reducing configuration impact on the end user. Unless there are zero
-configuration mechanisms in place to provide credentials between the new
-HNA and the Synchronization Server, authentication associations between
-the HNA and the  Synchronization Server would need to be re-configured.
-As HNA replacement is not expected to happen regularly, end users may
-not be at ease with such configuration settings. However, mechanisms as
-described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}} use
-DHCP Options to outsource the configuration and avoid this issue.
-
-5) The Outsourcing Infrastructure  is more likely to handle  private
-keys more securely than the HNA. However, having all private keys in one
-place may also nullify that benefit.
-
-## Secure Delegation {#sec-ds}
+delegation. This document RECOMMENDS that signing is performed by the
+HNA and that the Public Homenet Zone is outsourced signed. In
+particular this prevents the resolution performed over the public
+Internet to differ from the resolution performed from the home network.
+In addition, this increases the trust of the data as homenet data is
+being signed by the HNA as opposed to a third party. 
 
 Secure delegation is achieved only if the DS RRset is properly set in
-the parent zone. Secure delegation can be performed by the HNA or the
+the parent zone. Secure delegation is performed by the HNA or the
 Outsourcing Infrastructures (that is the Synchronization Server or the
 Public Authoritative Server(s)).
 
