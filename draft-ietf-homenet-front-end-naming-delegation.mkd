@@ -121,14 +121,14 @@ connectivity disruption from the ISP.
 The public names should be resolvable within the homenet and by the Internet,
 even when there are disruptions.
 This could be achieved by a device inside the home network that builds,
-publishes and manages a Homenet Zone, thus providing bindings between public
+publishes and manages a Public Homenet Zone, thus providing bindings between public
 names and IP addresses.
 
 The management of the names can be a role that the Customer Premises Equiment
 (CPE) does.  Other devices in the homenet could fullfil this role, but for simplicity,
 this document assumes the function is located on one of the CPE devices.
 
-A homenet may have multiple CPEs. Since management of the Homenet Zone
+A homenet may have multiple CPEs. Since management of the Public Homenet Zone
 involves DNS specific mechanisms that cannot be distributed (primary server),
 when multiple nodes can potentially manage the Homenet Zone, a single node
 needs to be selected. This selected node is designated as the Homenet
@@ -166,7 +166,7 @@ is handled by the HNA.
 Finally, {{sec-privacy}} and {{sec-security}} respectively discuss
 privacy and security considerations when outsourcing the Homenet Zone.
 
-The Homenet Zone is expected to host public information only. It is not
+The public (homenet) zone is expected to host public information only. It is not
 the scope of this DNS service to define local home network boundaries.
 Instead, local scope information is expected to be provided to the home
 network using local scope naming services. mDNS {{!RFC6762}} DNS-SD
@@ -222,14 +222,9 @@ Outsourcing Infrastructure.
 network.
 
 * Homenet Zone: is the DNS zone associated with the home network. It is
-designated by its Registered Homenet Domain. This zone is built by the
-HNA and contains the bindings between names and IP addresses of the
-nodes in the home network. The HNA synchronizes the Homenet Zone with
-the Synchronization Server via a hidden primary / secondary
-architecture. The Outsourcing Infrastructure may process the Homenet
-Zone - for example providing DNSSEC signing - to generate the Public
-Homenet Zone. This Public Homenet Zone is then transmitted to the Public
-Authoritative Server(s) that publish it on the Internet.
+designated by its Registered Homenet Domain (home.arpa, see {{RFC8375}}).
+This zone is built by the HNA and contains the bindings between names and IP
+addresses of the nodes in the home network.  This zone is not considered public.
 
 * Public Homenet Zone: is the public version of the Homenet Zone. It is
 expected to be signed with DNSSEC. It is hosted by the Public
@@ -248,14 +243,12 @@ hosting the Public Homenet Zone. Name resolution requests for the
 Homenet Domain are sent to these servers. For resiliency the Public
 Homenet Zone SHOULD be hosted on multiple servers.
 
-* Synchronization Server: is the server with which the HNA synchronizes
-the Homenet Zone. The Synchronization Server is configured as a
-secondary and the HNA acts as primary. There MAY be multiple
-Synchronization Servers, but the text assumes a single server. In
-addition, the text assumes the Synchronization Server is a separate
-entity. This is not a requirement, and when the HNA signs the zone, the
-synchronization function might also be operated by the Public
-Authoritative Servers.
+* Distribution Master (DM): is the server to which the HNA transfers the
+the Public Homenet Zone. The Distribution Master is configured as a
+secondary and the HNA acts as (stealth) primary. There MAY be multiple
+Distribution Master, and the DM may distribute to a larger set of public
+servers.  The architecture of the distribution system is out of scope of
+this document, and this text assumes a single server for simplicity.
 
 * Homenet Reverse Zone: The reverse zone file associated with the
 Homenet Zone.
@@ -266,21 +259,17 @@ resolution of the Homenet Domain are sent to this server. Similarly to
 Public Authoritative Servers, for resiliency, the Homenet Reverse Zone
 SHOULD be hosted on multiple servers.
 
-* Reverse Synchronization Server: is the server with which the HNA
-synchronizes the Homenet Reverse Zone. It is configured as a secondary
-and the HNA acts as primary. There MAY be multiple Reverse
-Synchronization Servers, but the text assumes a single server. In
-addition, the text assumes the Reverse Synchronization Server is a
-separate entity. This is not a requirement, and when the HNA signs the
-zone, the synchronization function might also be operated by the Reverse
-Public Authoritative Servers.
+* Reverse Distribution Master: is the server with which the HNA
+transfers the Homenet Reverse Zone. It is configured as a secondary
+and the HNA acts as (stealth) primary. There MAY be multiple Reverse
+Distribution Masters, but the text assumes a single server.
 
-* Hidden Primary: designates the primary server of the HNA, that
-synchronizes the Homenet Zone with the Synchronization Server. A primary
-/ secondary architecture is used between the HNA and the Synchronization
-Server. The hidden primary is not expected to serve end user queries for
+* Hidden/Stealth Primary: designates the primary server of the HNA, that
+transfers the Homenet Zone with the Distibution Master. A primary
+/ secondary architecture is used between the HNA and the Distribution Master.
+The hidden primary is not expected to serve end user queries for
 the Homenet Zone as a regular primary server would. The hidden primary
-is only known to its associated Synchronization Server.
+is only known to its associated Distribution Master.
 
 # Architecture Description  {#sec-arc-desc}
 
