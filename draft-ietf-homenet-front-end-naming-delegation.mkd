@@ -330,28 +330,29 @@ node1.example.com.
 
 
 ~~~
-home network +-------------------+                Internet
-             |                   |
-             |      HNA          |
-             |                   |         +-----------------------+
-+-------+    |+-----------------+|         | Public Authoritative  |
-|       |    || Homenet Zone    ||         | Server(s)             |
-| node1 |    ||                 ||         |+---------------------+|
-|       |    ||                 ||         || Public Homenet Zone ||
-+-------+    || Homenet Domain  ||=========||                     ||
-             || Name            ||   ^     ||  (example.com)      ||
-node1.\      || (example.com)   ||   |     |+---------------------+|
-example.com  |+-----------------+|   |     +-----------------------+
-             +-------------------+   |        ^   |
-                           Synchronization    |   |
-                                              |   |
-    DNSSEC resolution for node1.example.com   |   v
-                                           +-----------------------+
-                                           |                       |
-                                           |    DNSSEC Resolver    |
-                                           |                       |
-                                           +-----------------------+
-~~~
+home network +---------------------+                Internet
+             |     HNA             |  (Synchronization)
+             | Homenet Domain Name |<===========+
+             |  Homenet Zone       |            ||
+             +---------------------+            ||
+                        ||                      v
+             +-----------------------+    +-----------------------+
++-------+    | Homenet Authoritative |   | Public Authoritative  |
+|       |    | Server(s)             |   | Server(s)             |
+| node1 |    |+---------------------+|   |+---------------------+|
+|       |    ||Public Homenet Zone  ||   || Public Homenet Zone ||
++-------+    ||                     ||===||                     ||
+             || (example.com)       ||   ||  (example.com)      ||
+node1.\      |+---------------------+|   |+---------------------+|
+example.com  +-----------------------+   +-----------------------+
+                                                  ^   |
+    DNSSEC resolution for node1... .example.com   |   v
+                                  .            +-----------------------+
+                                               |                       |
+                                               |    DNSSEC Resolver    |
+                                               |                       |
+                                               +-----------------------+
+~~~                                
 {: #fig-naming-arch title="Homenet Naming Architecture Description" }
 
 The Outsourcing Infrastructure is described in {{fig-auth-servers}}. The
