@@ -222,7 +222,7 @@ Outsourcing Infrastructure.
 network.
 
 * Homenet Zone: is the DNS zone associated with the home network. It is
-designated by its Registered Homenet Domain (home.arpa, see {{RFC8375}}).
+designated by its Registered Homenet Domain (home.arpa, see {{!RFC8375}}).
 This zone is built by the HNA and contains the bindings between names and IP
 addresses of the nodes in the home network.  This zone is not considered public.
 
