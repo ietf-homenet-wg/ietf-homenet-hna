@@ -92,7 +92,7 @@ Table of Contents
    4.  Architecture Description  . . . . . . . . . . . . . . . . . .   7
      4.1.  Architecture Overview . . . . . . . . . . . . . . . . . .   7
      4.2.  Example: HNA necessary parameters for outsourcing . . . .   9
-   5.  Synchronization between HNA and the Synchronization Server  .  10
+   5.  Synchronization between HNA and the Distribution Master . . .  10
      5.1.  Synchronization with a Hidden Primary . . . . . . . . . .  11
      5.2.  Securing Synchronization  . . . . . . . . . . . . . . . .  12
      5.3.  HNA Security Policies . . . . . . . . . . . . . . . . . .  13
@@ -117,7 +117,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
      11.2.  Names are less volatile than IP addresses  . . . . . . .  18
      11.3.  DNS Reflection Attacks . . . . . . . . . . . . . . . . .  18
      11.4.  Reflection Attack involving the Hidden Primary . . . . .  18
-     11.5.  Reflection Attacks involving the Synchronization Server   20
+     11.5.  Reflection Attacks involving the Distribution Master . .  20
      11.6.  Reflection Attacks involving the Public Authoritative
             Servers  . . . . . . . . . . . . . . . . . . . . . . . .  21
      11.7.  Flooding Attack  . . . . . . . . . . . . . . . . . . . .  21
@@ -270,9 +270,9 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
       connectivity to the home network.
 
    o  Homenet Naming Authority: (HNA) is a home network node responsible
-      to manage the Homenet Zone.  This includes building the Homenet
+      for managing the Homenet Zone.  This includes building the Homenet
       Zone, as well as managing the distribution of that Homenet Zone
-      through the Outsourcing Infrastructure.
+      through the Outsourcing Infrastructure via hosting the Hidden/Stealth Primary.
 
 
 
@@ -301,7 +301,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
       Homenet Zone is signed whereas the Homenet Zone is not signed.
 
    o  Outsourcing Infrastructure: is the combination of the
-      Synchronization Server and the Public Authoritative Server(s).
+      Distribution Master (DM) and the Public Authoritative Server(s).
 
    o  Public Authoritative Servers: are the authoritative name servers
       hosting the Public Homenet Zone.  Name resolution requests for the
@@ -309,7 +309,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
       Public Homenet Zone SHOULD be hosted on multiple servers.
 
    o  Distribution Master (DM): is the server to which the HNA transfers
-      the the Public Homenet Zone.  The Distribution Master is
+      the Public Homenet Zone.  The Distribution Master is
       configured as a secondary and the HNA acts as (stealth) primary.
       There MAY be multiple Distribution Master, and the DM may
       distribute to a larger set of public servers.  The architecture of
@@ -325,7 +325,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
       Similarly to Public Authoritative Servers, for resiliency, the
       Homenet Reverse Zone SHOULD be hosted on multiple servers.
 
-   o  Reverse Distribution Master: is the server with which the HNA
+   o  Reverse Distribution Master (RDM): is the server with which the HNA
       transfers the Homenet Reverse Zone.  It is configured as a
       secondary and the HNA acts as (stealth) primary.  There MAY be
       multiple Reverse Distribution Masters, but the text assumes a
@@ -339,7 +339,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
 
 
    o  Hidden/Stealth Primary: designates the primary server of the HNA,
-      that transfers the Homenet Zone with the Distibution Master.  A
+      that synchronizes the Homenet Zone with the Distibution Master.  A
       primary / secondary architecture is used between the HNA and the
       Distribution Master.  The hidden primary is not expected to serve
       end user queries for the Homenet Zone as a regular primary server
@@ -401,19 +401,30 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    home network +-------------------+                Internet
                 |                   |
                 |      HNA          |
-                |                   |         +-----------------------+
-   +-------+    |+-----------------+|         | Public Authoritative  |
-   |       |    || Homenet Zone    ||         | Server(s)             |
-   | node1 |    ||                 ||         |+---------------------+|
-   |       |    ||                 ||         || Public Homenet Zone ||
-   +-------+    || Homenet Domain  ||=========||                     ||
-                || Name            ||   ^     ||  (example.com)      ||
-   node1.\      || (example.com)   ||   |     |+---------------------+|
-   example.com  |+-----------------+|   |     +-----------------------+
-                +-------------------+   |        ^   |
-                              Synchronization    |   |
-                                                 |   |
-       DNSSEC resolution for node1.example.com   |   v
+                |                   |          +-----------------------+
+   +-------+    |+-----------------+|          | Distribution          |
+   |       |    || Homenet Zone    ||          | Master                |
+   | node1 |    ||                 ||          |+---------------------+|
+   |       |    ||                 ||          || Homenet Zone        ||
+   +-------+    || Homenet Domain  ||<========>||                     ||
+                || Name            ||   ^      ||  (example.com)      ||
+   node1.\      || (example.com)   ||   |      |+---------------------+|
+   example.com  |+-----------------+|   |      +-----------------------+
+                +-------------------+   |       | Further Transformation
+                                        |       V (out of scope)
+                                        |      +-----------------------+
+                            Synchronization    | Public Authoritative  |
+                            to/from the HNA    | Server(s)             |
+                            (in scope)         |+---------------------+|
+                                               || Public Homenet Zone ||
+                                               ||                     ||
+                                               ||  (example.com)      ||
+                                               |+---------------------+|
+                                               +-----------------------+
+                                                     ^   |
+                       DNSSEC resolution             |   |
+                       for node1.example.com         |   |
+                       [RFC 4033] et al.             |   v
                                               +-----------------------+
                                               |                       |
                                               |    DNSSEC Resolver    |
@@ -423,13 +434,13 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
              Figure 1: Homenet Naming Architecture Description
 
    The Outsourcing Infrastructure is described in Figure 2.  The
-   Synchronization Server receives the Homenet Zone as an input.  The
+   Distribution Master (DM) receives the Homenet Zone as an input.  The
    received zone may be transformed to output the Public Homenet Zone.
    Various operations may be performed here, however this document only
    considers zone signing as a potential operation.  This should occur
-   only when the HNA outsources this operation to the Synchronization
-   Server.  On the other hand, if the HNA signs the Homenet Zone itself,
-   the zone would be collected by the Synchronization Server and
+   only when the HNA outsources this operation to the Distribution Master.
+   On the other hand, if the HNA signs the Homenet Zone itself,
+   the zone would be collected by the Distribution Master and
    directly transferred to the Public Authoritative Server(s).  These
    policies are discussed and detailed in Section 6.
 
@@ -458,8 +469,8 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
 
            +----------------------+        +----------------------+
            |                      |        |                      |
-           |   Synchronization    |        | Public Authoritative |
-           |       Server         |        | Server(s)            |
+           |     Distribution     |        | Public Authoritative |
+           |       Master         |        | Server(s)            |
            |                      |        |                      |
            | +------------------+ |   X    |+--------------------+|
            | | Homenet Zone     | |   ^    || Public Homenet Zone||
@@ -481,19 +492,19 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    informational, and is intended to clarify the information handled by
    the HNA and the various settings to be done.
 
-   Synchronization Server may be configured with the following
+   The Distribution Master (DM) may be configured with the following
    parameters.  These parameters are necessary to establish a secure
-   channel between the HNA and the Synchronization Server as well as to
+   channel between the HNA and the DM as well as to
    specify the DNS zone that is in the scope of the communication:
 
-   o  Synchronization Server: The associated FQDNs or IP addresses of
-      the Synchronization Server.  IP addresses are optional and the
+   o  Distribution Master: The associated FQDNs or IP addresses of
+      the Distribution Master.  IP addresses are optional and the
       FQDN is sufficient.  To secure the binding name and IP addresses,
       a DNSSEC exchange is required.  Otherwise, the IP addresses should
       be entered manually.
 
    o  Authentication Method: How the HNA authenticates itself to the
-      Synchronization Server.  This MAY depend on the implementation but
+      Distribution Master (DM).  This MAY depend on the implementation but
       this should cover at least IPsec, DTLS and TSIG
 
    o  Authentication data: Associated Data.  PSK only requires a single
@@ -517,7 +528,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
       required.  Otherwise, the IP addresses should be entered manually.
 
    o  Registered Homenet Domain: The domain name used to establish the
-      secure channel.  This name is used by the Synchronization Server
+      secure channel.  This name is used by the Distribution Master
       and the HNA for the primary / secondary configuration as well as
       to index the NOTIFY queries of the HNA when the HNA has been
       renumbered.
@@ -534,7 +545,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
       associated with the Registered Homenet Domain.  Multiple Public
       Authoritative Server(s) may be provided.
 
-5.  Synchronization between HNA and the Synchronization Server
+5.  Synchronization between HNA and the Distribution Master (DM)
 
    The Homenet Reverse Zone and the Homenet Zone MAY be updated either
    with DNS UPDATE [RFC2136] or using a primary / secondary
@@ -565,8 +576,8 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
 5.1.  Synchronization with a Hidden Primary
 
    Uploading and dynamically updating the zone file on the
-   Synchronization Server can be seen as zone provisioning between the
-   HNA (Hidden Primary) and the Synchronization Server (Secondary
+   Distribution Master (DM) can be seen as zone provisioning between the
+   HNA (Hidden Primary) and the Distribution Master (Secondary
    Server).  This can be handled either in band or out of band.
 
    Note that there is no standard way to distribute a DNS primary
@@ -576,10 +587,10 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    the Hidden Primary.  Selection mechanisms based on HNCP [RFC7788] are
    good candidates.
 
-   The Synchronization Server is configured as a secondary for the
+   The Distribution Master is configured as a secondary for the
    Homenet Domain Name.  This secondary configuration has been
    previously agreed between the end user and the provider of the
-   Synchronization Server.  In order to set the primary / secondary
+   Distribution Master.  In order to set the primary / secondary
    architecture, the HNA acts as a Hidden Primary Server, which is a
    regular authoritative DNS Server listening on the WAN interface.
 
@@ -598,16 +609,17 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
       network would listen on the home network interface.
 
    o  Limited exchanges: the purpose of the Hidden Primary Server is to
-      synchronize with the Synchronization Server, not to serve any
+      synchronize with the Distribution Master, not to serve any
       zones to end users.  As a result, exchanges are performed with
-      specific nodes (the Synchronization Server).  Further, exchange
+      specific nodes (the Distribution Master).  Further, exchange
       types are limited.  The only legitimate exchanges are: NOTIFY
       initiated by the Hidden Primary and IXFR or AXFR exchanges
-      initiated by the Synchronization Server.  On the other hand,
+      initiated by the Distribution Master.  On the other hand,
       regular authoritative servers would respond to any hosts, and any
       DNS query would be processed.  The HNA SHOULD filter IXFR/AXFR
-      traffic and drop traffic not initiated by the Synchronization
-      Server.  The HNA MUST listen for DNS on TCP and UDP and MUST at
+      traffic and drop traffic not initiated by the Distribution Master (DM).
+      
+      The HNA MUST listen for DNS on TCP and UDP and MUST at
       least allow SOA lookups of the Homenet Zone.
 
 
@@ -620,11 +632,11 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
 
 5.2.  Securing Synchronization
 
-   Exchange between the Synchronization Server and the HNA MUST be
+   Exchange between the Distribution Master (DM) and the HNA MUST be
    secured, at least for integrity protection and for authentication.
 
    TSIG [RFC2845] or SIG(0) [RFC2931] MAY be used to secure the DNS
-   communications between the HNA and the Synchronization Server.  TSIG
+   communications between the HNA and the DM.  TSIG
    uses a symmetric key which can be managed by TKEY [RFC2930].
    Management of the key involved in SIG(0) is performed through zone
    updates.  How keys are rolled over with SIG(0) is out-of-scope of
@@ -636,33 +648,31 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    that TKEY does not provide authentication mechanisms.
 
    Protocols like TLS [RFC5246] / DTLS [RFC6347] MAY be used to secure
-   the transactions between the Synchronization Server and the HNA.  The
+   the transactions between the DM and the HNA.  The
    advantage of TLS/DTLS is that this technology is widely deployed, and
    most of the devices already embed TLS/DTLS libraries, possibly also
    taking advantage of hardware acceleration.  Further, TLS/DTLS
    provides authentication facilities and can use certificates to
-   authenticate the Synchronization Server and the HNA.  On the other
+   authenticate the DMr and the HNA.  On the other
    hand, using TLS/DTLS requires implementing DNS exchanges over TLS/
    DTLS, as well as a new service port.  This document therefore does
    NOT RECOMMEND this option.
 
    IPsec [RFC4301] IKEv2 [RFC7296] MAY also be used to secure
-   transactions between the HNA and the Synchronization Server.
+   transactions between the HNA and the DM.
    Similarly to TLS/DTLS, most HNAs already embed an IPsec stack, and
    IKEv2 supports multiple authentication mechanisms via the EAP
    framework.  In addition, IPsec can be used to protect DNS exchanges
-   between the HNA and the Synchronization Server without any
-   modifications of the DNS server or client.  DNS integration over
-   IPsec only requires an additional security policy in the Security
+   between the HNA and the DM without any modifications of the DNS server or client.
+   DNS integration over IPsec only requires an additional security policy in the Security
    Policy Database (SPD).  One disadvantage of IPsec is that NATs and
    firewall traversal may be problematic.  However, in our case, the HNA
    is connected to the Internet, and IPsec communication between the HNA
-   and the Synchronization Server should not be impacted by middle
-   boxes.
+   and the DM should not be impacted by middle boxes.
 
    <<!-- As mentioned above, TSIG, IPsec and TLS/DTLS MAY be used to
    secure transactions between the HNA and the Public Authentication
-   Servers.  The HNA and the Synchronization Server SHOULD implement
+   Servers.  The HNA and the DM SHOULD implement
    TSIG and IPsec.  -->>
 
 
@@ -680,14 +690,13 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    public key, or certificates, as well as Certificate Authorities.
    This adds complexity to the configuration especially on the HNA side.
    For this reason, we RECOMMEND that the HNA MAY use PSK or certificate
-   base authentication, and that the Synchronization Server MUST support
+   base authentication, and that the DM MUST support
    PSK and certificate based authentication.
 
    Note also that authentication of message exchanges between the HNA
-   and the Synchronization Server SHOULD NOT use the external IP address
+   and the DM SHOULD NOT use the external IP address
    of the HNA to index the appropriate keys.  As detailed in Section 8,
-   the IP addresses of the Synchronization Server and the Hidden Primary
-   are subject to change, for example while the network is being
+   the IP addresses of the DM and the HNA are subject to change, for example while the network is being
    renumbered.  This means that the necessary keys to authenticate
    transaction SHOULD NOT be indexed using the IP address, and SHOULD be
    resilient to IP address changes.
@@ -702,7 +711,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    binding and/or firewall rules.  The precise mechanism deployed is out
    of scope of this document.  The Hidden Primary SHOULD drop any DNS
    queries arriving on the WAN interface that are not issued from the
-   Synchronization Server.  The Hidden Primary SHOULD drop any outgoing
+   DM.  The Hidden Primary SHOULD drop any outgoing
    packets other than DNS NOTIFY query, SOA response, IXFR response or
    AXFR responses.  The Hidden Primary SHOULD drop any incoming packets
    other than DNS NOTIFY response, SOA query, IXFR query or AXFR query.
@@ -735,8 +744,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
 
    Secure delegation is achieved only if the DS RRset is properly set in
    the parent zone.  Secure delegation is performed by the HNA or the
-   Outsourcing Infrastructures (that is the Synchronization Server or
-   the Public Authoritative Server(s)).
+   Outsourcing Infrastructures (that is the DM or the Public Authoritative Server(s)).
 
    The DS RRset can be updated manually with nsupdate for example.  This
    requires the HNA or the Outsourcing Infrastructure to be
@@ -757,8 +765,8 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    Zone is most likely managed by the ISP.  As the ISP also provides the
    IP prefix to the HNA, it may be able to authenticate the HNA using
    mechanisms outside the scope of this document e.g. the physical
-   attachment point to the ISP network.  If the Reverse Synchronization
-   Server is managed by the ISP, credentials to authenticate the HNA for
+   attachment point to the ISP network.  If the Reverse Distribution Master
+   is managed by the ISP, credentials to authenticate the HNA for
    the zone synchronization may be set automatically and transparently
    to the end user.  [I-D.ietf-homenet-naming-architecture-dhc-options]
    describes how automatic configuration may be performed.
@@ -772,7 +780,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
 8.  Renumbering
 
    This section details how renumbering is handled by the Hidden Primary
-   server or the Synchronization Server.  Both types of renumbering are
+   server or the Distribution Master.  Both types of renumbering are
    discussed i.e. "make-before-break" and "break-before-make".
 
    In the make-before-break renumbering scenario, the new prefix is
@@ -827,10 +835,10 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    to update an IP address provided by lower layers with protocols like
    SCTP [RFC4960], MOBIKE [RFC4555] are not considered in this document.
 
-   The Hidden Primary SHOULD inform the Synchronization Server that the
+   The Hidden Primary SHOULD inform the DM that the
    Homenet Zone has been updated by sending a NOTIFY payload with the
    new IP address.  In addition, this NOTIFY payload SHOULD be
-   authenticated using SIG(0) or TSIG.  When the Synchronization Server
+   authenticated using SIG(0) or TSIG.  When the DM
    receives the NOTIFY payload, it MUST authenticate it.  Note that the
    cryptographic key used for the authentication SHOULD be indexed by
    the Registered Homenet Domain contained in the NOTIFY payload as well
@@ -843,14 +851,14 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
 
 
    as the RRSIG.  In other words, the IP address SHOULD NOT be used as
-   an index.  If authentication succeeds, the Synchronization Server
+   an index.  If authentication succeeds, the DM
    MUST also notice the IP address has been modified and perform a
    reachability check before updating its primary configuration.  The
    routability check MAY performed by sending a SOA request to the
    Hidden Primary using the source IP address of the NOTIFY.  This
    exchange is also secured, and if an authenticated response is
    received from the Hidden Primary with the new IP address, the
-   Synchronization Server SHOULD update its configuration file and
+   DM SHOULD update its configuration file and
    retrieve the Homenet Zone using an AXFR or a IXFR exchange.
 
    Note that the primary reason for providing the IP address is that the
@@ -989,7 +997,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    is likely to receive a DNSSEC response.  This section analyzes how
    the different components may be involved as a reflector in a
    reflection attack.  Section 11.4 considers the Hidden Primary,
-   Section 11.5 the Synchronization Server, and Section 11.6 the Public
+   Section 11.5 the Distribution Master, and Section 11.6 the Public
    Authoritative Server(s).
 
 11.4.  Reflection Attack involving the Hidden Primary
@@ -1026,7 +1034,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    Motivations for such a flood might be a reflection attack, but could
    also be a resource exhaustion attack performed against the Hidden
    Primary.  The Hidden Primary only expects to exchange traffic with
-   the Synchronization Server, that is its associated secondary.  Even
+   the Distribution Master, that is its associated secondary.  Even
    though secondary servers may be renumbered as mentioned in Section 8,
    the Hidden Primary is likely to perform a DNSSEC resolution and find
    out the associated secondary's IP addresses in use.  As a result, the
@@ -1043,7 +1051,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    should be performed appropriately, so as to limit the impact on the
    legitimate SOA sent by the secondary.
 
-   The main reason for the Synchronization Server sending a SOA query is
+   The main reason for the Distribution Master sending a SOA query is
    to update the SOA RRset after the TTL expires, to check the serial
    number upon the receipt of a NOTIFY query from the Hidden Primary, or
    to re-send the SOA request when the response has not been received.
@@ -1077,16 +1085,16 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    defined by the SOA, it is RECOMMENDED to re-initiate a
    synchronization between the Hidden Primary and the secondaries.
 
-11.5.  Reflection Attacks involving the Synchronization Server
+11.5.  Reflection Attacks involving the Distribution Master
 
-   The Synchronization Server acts as a secondary coupled with the
+   The Distribution Master acts as a secondary coupled with the
    Hidden Primary.  The secondary expects to receive NOTIFY query, SOA
    responses, AXFR and IXFR responses from the Hidden Primary.
 
    Sending a NOTIFY query to the secondary generates a NOTIFY response
    as well as initiating an SOA query exchange from the secondary to the
    Hidden Primary.  As mentioned in [RFC1996], this is a known "benign
-   denial of service attack".  As a result, the Synchronization Server
+   denial of service attack".  As a result, the Distribution Master
    SHOULD enforce rate limiting on sending SOA queries and NOTIFY
    responses to the Hidden Primary.  Most likely, when the secondary is
    flooded with valid and signed NOTIFY queries, it is under a replay
@@ -1143,12 +1151,12 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    the surface of attack on the HNA.  This is done by outsourcing the
    DNS service to the Public Authoritative Server(s).  By doing so, the
    HNA limits its DNS interactions between the Hidden Primary and the
-   Synchronization Server.  This limits the number of entities the HNA
+   Distribution Master.  This limits the number of entities the HNA
    interacts with as well as the scope of DNS exchanges - NOTIFY, SOA,
    AXFR, IXFR.
 
    The use of an authenticated channel with SIG(0) or TSIG between the
-   HNA and the Synchronization Server, enables detection of illegitimate
+   HNA and the Distribution Master, enables detection of illegitimate
    DNS queries, so appropriate action may be taken - like dropping the
    queries.  If signatures are validated, then most likely, the HNA is
    under a replay attack, as detailed in Section 11.8
@@ -1161,7 +1169,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
 
    Replay attacks consist of an attacker either resending or delaying a
    legitimate message that has been sent by an authorized user or
-   process.  As the Hidden Primary and the Synchronization Server use an
+   process.  As the Hidden Primary and the Distribution Master use an
    authenticated channel, replay attacks are mostly expected to use
    forged DNS queries in order to provide valid traffic.
 
@@ -1290,7 +1298,7 @@ Migault, et al.         Expires November 25, 2019              [Page 23]
 Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
 
 
-   Hidden Primary and the Synchronization Server and published on the
+   Hidden Primary and the Distribution Master and published on the
    DNS Public Authoritative Server(s)..
 
    o  MNAME: indicates the primary.  In our case the zone is published
@@ -1418,6 +1426,11 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    [RFC2931]  Eastlake 3rd, D., "DNS Request and Transaction Signatures
               ( SIG(0)s )", RFC 2931, DOI 10.17487/RFC2931, September
               2000, <https://www.rfc-editor.org/info/rfc2931>.
+              
+   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S. Rose,
+              "DNS Security Introduction and Requirements",
+              RFC 4033, DOI 10.17487/RFC4033, March 2005,
+              <https://www.rfc-editor.org/info/rfc4033>.
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
@@ -1527,6 +1540,11 @@ Internet-Draft  Outsourcing Authoritative Naming Service        May 2019
    [RFC7788]  Stenberg, M., Barth, S., and P. Pfister, "Home Networking
               Control Protocol", RFC 7788, DOI 10.17487/RFC7788, April
               2016, <https://www.rfc-editor.org/info/rfc7788>.
+              
+              
+   [RFC8078]   Gudmundsson, O. and P. Wouters, "Managing DS Records from
+               the Parent via CDS/CDNSKEY", RFC 8078, DOI 10.17487/RFC8078,
+               March 2017, <https://www.rfc-editor.org/info/rfc8078>.
 
    [RFC8375]  Pfister, P. and T. Lemon, "Special-Use Domain
               'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
