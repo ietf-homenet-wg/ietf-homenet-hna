@@ -39,7 +39,7 @@ author:
         code: 94063
         country: US
         email: ralf.weber@nominum.com
-      - 
+      -
         ins: M. Richardson
         name: Michael Richardson
         org: Sandelman Software Works
@@ -60,19 +60,14 @@ author:
       -
         ins: C. Griffiths
         name: Chris Griffiths
-        org:
-        street:
-        city:
-        code:
-        country:
         email: cgriffiths@gmail.com
       -
         ins: W. Cloetens
         name: Wouter Cloetens
         org: Deutsche Telekom
-        street: 
-        city: 
-        code: 
+        street:
+        city:
+        code:
         country:
         email: wouter.cloetens@external.telekom.de
 
@@ -82,12 +77,10 @@ author:
 
 --- abstract
 
-The Homenet Naming authority is responsible for making devices within the home network accessible by name within the home network as well as from outside the home network (e.g. the Internet). 
-The names of the devices accessible from the Internet are stored in the Public Homenet Zone, served by a DNS authoritative server. 
-It is unlikely that home
-networks will contain sufficiently robust platforms designed to host a
-service such as the DNS on the Internet and as such would expose the
-home network to DDoS attacks.
+The Homenet Naming authority is responsible for making devices within the home network accessible by name within the home network as well as from outside the home network (e.g. the Internet).
+The names of the devices accessible from the Internet are stored in the Public Homenet Zone, served by a DNS authoritative server.
+In order to avoid DDoS attacks on the home infrastructure, this
+document puts the primary DNS servers on an outsourced DNS infrastructure.
 
 This document describes a mechanism that enables the Home Network
 Authority (HNA) to outsource the naming service to the Outsourcing
@@ -152,7 +145,7 @@ inside the homenet.
 In order to avoid resource exhaustion and other attacks, this document
 describes an architecture that outsources the authoritative naming
 service of the home network. More specifically, the HNA builds the
-Public Homenet Zone and  outsources it to an Outsourcing Infrastructure
+Public Homenet Zone and  outsources it to an DNS Outsourcing Infrastructure (DOI)
 via a Distribution Master (DM). The Outsourcing Infrastructure is in
 charge of publishing the corresponding Public Homenet Zone on the
 Internet. The transfer of DNS zone information is achieved using
@@ -171,9 +164,9 @@ functional DNSSEC, and the Public Homenet Zone is expected to be signed
 with a secure delegation.  DNSSEC key management and zone signing is
 handled by the HNA.
 
-{{hna-provisioning}} discusses management and configuration of the Public Homenet Zone. It shows that the HNA configuration of the Outsourcing infrastructure can involve no or little interaction with the end user. More specifically, it shows that the existence of an account in the Outsourcing Infrastructure is sufficient for the Outsourcing Infrastructure to push the necessary configuration.  
+{{hna-provisioning}} discusses management and configuration of the Public Homenet Zone. It shows that the HNA configuration of the Outsourcing infrastructure can involve no or little interaction with the end user. More specifically, it shows that the existence of an account in the Outsourcing Infrastructure is sufficient for the Outsourcing Infrastructure to push the necessary configuration.
 
-{{sec-reverse}} discusses management of one or more reverse zones. It shows that management of the reverse zones can be entirely automated and benefit from a pre-established relation between the ISP and the home network. Note that such scenarios may also be met for the Public Homenet Zone, but not necessarily. 
+{{sec-reverse}} discusses management of one or more reverse zones. It shows that management of the reverse zones can be entirely automated and benefit from a pre-established relation between the ISP and the home network. Note that such scenarios may also be met for the Public Homenet Zone, but not necessarily.
 
 {{sec-renumbering}} discusses how renumbering should be handled.
 Finally, {{sec-privacy}} and {{sec-security}} respectively discuss
@@ -452,7 +445,7 @@ messages. DNS messages can be protected using various kind of transport
 layers, among others, UDP:53/DTLS, TLS/TCP:53, HTTPS:443. There was
 consideration to using a standard TSIG {{!RFC2845}} or SIG(0)
 {{!RFC2931}} to perform a dynamic DNS update to the DM. There are a
-number of issues with this.  
+number of issues with this.
 The main one is that the Dynamic DNS update
 would also update the parent zone's (NS, DS and associated A or AAAA records) while the goal is to update the
 Distribution Master's configuration files.  The visible NS records
@@ -461,7 +454,7 @@ Revealing the address of the HNA in the DNS is not desirable. Please see section
 
 This specification also assumes:
 * the DM serves both the Control Channel and Synchronization Channel on a single IP address, single port and with a single transport protocol.
-* the HNA uses a single IP address for both  the Control and Synchronization channel by default. However, the HNA MAY use distinct IP addresses - see section {{sec-synch}} and section {sec-sync-info}} for more details.   
+* the HNA uses a single IP address for both  the Control and Synchronization channel by default. However, the HNA MAY use distinct IP addresses - see section {{sec-synch}} and section {sec-sync-info}} for more details.
 
 The Distribution Channel is internal to the Outsourcing Infrastructure
 and as such is not the primary concern of this specification.
@@ -485,7 +478,7 @@ Optionally the Outsourcing Infrastructure MAY also provide operational parameter
 As the information is necessary for the HNA to proceed and the information is
 associated to the Outsourcing Infrastructure, this information exchange is mandatory.
 
-## Information to build the DNSSEC chain of trust {#sec-chain-of-trust} 
+## Information to build the DNSSEC chain of trust {#sec-chain-of-trust}
 
 The HNA SHOULD provide the hash of the KSK (DS RRset), so the that
 Outsourcing Infrastructure provides this value to the parent zone.  A
@@ -510,7 +503,7 @@ the DS to the parent zone. Upon refusal, the DM clearly indicates it does not ha
 
 ## Information to set the Synchronization Channel {#sec-sync-info}
 
-That information sets the  primary/secondary relation between the HNA and the DM. 
+That information sets the  primary/secondary relation between the HNA and the DM.
 The HNA works as a primary authoritative DNS server, and MUST provide the corresponding IP address.
 
 The specified IP address on the HNA side and the currently used IP
@@ -610,8 +603,8 @@ and other method should be used by the HNA.
 
 To provide the IP address of the primary, the HNA MAY send a DNS UPDATE
 message. The NAME in the SOA MUST be the parent zone of the Registered
-Homenet Domain. The Update section MUST be a RRset of Type NS. 
-The RDATA MUST be a RRset of type A or AAAA that designates the IP addresses associated to the primary. 
+Homenet Domain. The Update section MUST be a RRset of Type NS.
+The RDATA MUST be a RRset of type A or AAAA that designates the IP addresses associated to the primary.
 There may be multiple IP addresses. These IP addresses MUST be
 provided in the additional section. The reason to provide these IP
 addresses is that it is NOT RECOMMENDED to publish these IP addresses.
@@ -843,22 +836,26 @@ With IPv6, the domain space for IP addresses is so large that reverse zone may b
 This document does not deal with how the HNA is provisioned with a trusted relationship to the Distribution Master for the forward zone.
 
 This section details what needs to be provisioned into the HNA and serves as a requirements statement for mechanisms. The HNA needs to be provisioned with:
-* the Registered Domain
-* the DM ( FQDN, IP, certificate ) in order to reach the DM and be able to authenticate the channels between the HNA and the DM
-* the DM transport protocol and port (default DNS over TLS)
-* the HNA IP address used for the Synchronization Channel ( by default the same as the one used for the control channel)
-* the HNA credentials used by the DM for its authentication. 
+
+* the Registered Domain (e.g., myhome.isp.example )
+* the contact info for the Distribution Master (DM), including the DNS name (FQDN), possibly including the IP literal, and a certificate (or anchor) to be used to authenticate the service
+* the DM transport protocol and port (the default is DNS over TLS, on port 853)
+* the HNA credentials used by the DM for its authentication.
 
 
+The HNA will need to select an IP address for communication for the Synchronization Channel.
+This is typically the outside WAN address of the router, but could be an IPv6 LAN address in the case of a home with multiple ISPs (and multiple border routers).
+This is communicated in section BLAH when the NS and A record is communicated.
 
-Provisioning of the relationship with an ISP-connection specific Distribution Master for forward and reverse zones is dealt with in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}
+The above parameters MUST be be provisionined for ISP-specific reverse zones, as per  {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
+ISP-specific forward zones MAY also be provisioned using {{?I-D.ietf-homenet-naming-architecture-dhc-options}}, but zones which are not related to a specific ISP zone (such as with a DNS provider) must be provisioned through other means.
 
-Similarly, it the HNA is provided by a registrar, the HNA may be given configured to end user. 
+Similarly, it the HNA is provided by a registrar, the HNA may be given configured to end user.
 
 In the absence of specific pre-established relation, these pieces of information may be entered manually by the end user. In order to ease the configuration from the end user the following scheme may be implemented.
 
-The HNA may present the end user a web interface where it provides the end user the ability to indicate the Registered Domain or the registrar for example a preselected list. 
-Once the regsitrar has been selected, the HNA redirects the end user to that registrar in order to receive a access token. The access token will enable the HNA to retrieve the DM parameters associated to the Registered Domain. These parameters will include the credentials used by the HNA to establish the Control and Synchronization Channels. 
+The HNA may present the end user a web interface where it provides the end user the ability to indicate the Registered Domain or the registrar for example a preselected list.
+Once the regsitrar has been selected, the HNA redirects the end user to that registrar in order to receive a access token. The access token will enable the HNA to retrieve the DM parameters associated to the Registered Domain. These parameters will include the credentials used by the HNA to establish the Control and Synchronization Channels.
 
 Such architecture limits the necessary steps to configure the HNA from the end user.
 
@@ -1016,8 +1013,8 @@ As a result, if provisioned using DHCPv6, the security credential may not even t
 On the other hand, if the HNA is not hosted at the border of the home network, the credential may rely on the security associated to DHCPv6.
 Even if HNA and DM are in the same administrative domain it is strongly RECOMMENDED to use a secure channel.
 
-The security of these channels heavily relies on TLS and the DM or RDM is authenticated by its certificate. 
-To ensure the multiple TLS session are are continuously authenticating the same entity, TLS may take advantage of second factor authentication as described in {{?RFC8672}}. 
+The security of these channels heavily relies on TLS and the DM or RDM is authenticated by its certificate.
+To ensure the multiple TLS session are are continuously authenticating the same entity, TLS may take advantage of second factor authentication as described in {{?RFC8672}}.
 
 
 ## Names are less secure than IP addresses {#sec-name-less-secure}
