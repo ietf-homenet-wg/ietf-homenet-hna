@@ -156,7 +156,7 @@ with the HNA hosted primary being a stealth primary.
 describes the relation between the HNA and the
 Outsourcing Architecture. In order to keep the Public Homenet Zone
 up-to-date {{sec-synch}} describes how the HNA and the Outsourcing
-Infrastructure synchronizes the Pubic Homenet Zone. 
+Infrastructure synchronizes the Pubic Homenet Zone.
 
 The proposed architecture aims at expects to use DNSSEC, and the Public
 Homenet Zone is expected to be signed with a secure delegation.  DNSSEC
@@ -232,15 +232,15 @@ designated by its Registered Homenet Domain (home.arpa, see
 between names and IP addresses of the nodes in the home network.  This
 zone is not considered public.
 
-* Public Homenet Zone: contains the names of the home network that are 
+* Public Homenet Zone: contains the names of the home network that are
 expected to be publicly available on the Internet. It is expected to be
 signed with DNSSEC. It is hosted by the Public Authoritative Server(s),
-which are authoritative for this zone. 
+which are authoritative for this zone.
 
 * Outsourcing Infrastructure: is the infrastructure responsible to
 receive the Public Homenet Zone and publish it on the Internet. It is
 mostly composed of a Distribution Master and Public Authoritative
-Servers. 
+Servers.
 
 * Public Authoritative Servers: are the authoritative name servers
 hosting the Public Homenet Zone. Name resolution requests for the
@@ -281,25 +281,25 @@ the authoritative naming service from the HNA to the Outsourcing
 Infrastructure in {{sec-arch-overview}}. Section {{sec-homenet-zone}}
 and {{sec-configuration-parameters}} illustrates this architecture with
 the example of a Public Homenet Zone as well as necessary parameter to
-configure the HNA. 
+configure the HNA.
 
 
 ## Architecture Overview {#sec-arch-overview}
 
 Figure {{fig-naming-arch}} illustrates the architecture where the HNA
 outsources the publication of the Public Homenet Zone to the Outsourcing
-Infrastructure. 
+Infrastructure.
 
 The Public Homenet Zone is identified by the Registered Homenet Domain
 Name -- example.com. ".local" as well as ".home.arpa" are not considered
-as Registered Homenet Domain Name.  
+as Registered Homenet Domain Name.
 
 The HNA builds the Public Homenet Zone with all names that are expected
 to be published on the Internet. Reversely, name that use the Registered
 Homenet Domain Name are expected to be published on the Internet.  Names
 associated with services or devices that are not expected to be
 reachable from outside the home network or names bound to non-globally
-reachable IP addresses MUST NOT be part of the Homenet Zone.  
+reachable IP addresses MUST NOT be part of the Homenet Zone.
 
 How the Homenet Zone is built is out of the scope of this document. The
 HNA may host or interact with multiple services to determine
@@ -318,7 +318,7 @@ record has been updated in the parent zone. It is important to note that
 while the HNA is configured as an authoritative server, it is not
 expected to answer to DNS requests to resolve the Public Homenet Zone.
 The function of the HNA is limited to the synchronization with the DM
-and is not expected to be mentioned into the NS reccord.   
+and is not expected to be mentioned into the NS reccord.
 
 Resolution is performed by the DNSSEC resolvers. When the resolution is
 performed outside the home network, the DNSSEC Resolver resolves the DS
@@ -332,14 +332,14 @@ service of the home network implemented by the Homenet Authoritative
 Servers. These servers are not expected to be mentioned in the Public
 Homenet Zone. As such their information as well as the corresponding
 signed DS record are provided by the HNA to the Homenet DNSSEC Resolvers
-using HNCP. Such configuration is outside the scope of this document. 
+using HNCP. Such configuration is outside the scope of this document.
 
 How the Homenet Authoritative Servers are provisioned is also out of
 scope of this specification. It could be implemented using primary
 secondaries servers. In some cases, the HNA and Homenet Authoritative
 Servers may be combined together which would result in a common
 instantiation of an authoritative server on the WAN and inner interface.
-Other mechanisms may also be used. 
+Other mechanisms may also be used.
 
 ~~~
 home network +---------------------+                Internet
@@ -363,7 +363,7 @@ example.com  +-----------------------+   +-----------------------+
               |    DNSSEC Resolver    |  |    DNSSEC Resolver    |
               |                       |  |                       |
               +-----------------------+  +-----------------------+
-~~~                                
+~~~
 {: #fig-naming-arch title="Homenet Naming Architecture Description" }
 
 ~~~
@@ -385,8 +385,8 @@ example.com  +-----------------------+   +-----------------------+
   |     | | (example.com)    | |   |    || (example.com)      ||
   |     | +------------------+ |   |    |+--------------------+|
   |     +----------------------+   |    +----------------------+
-  |                       
-Synchronization                
+  |
+Synchronization
 from the HNA
 ~~~
 {: #fig-auth-servers title="Outsourcing Infrastructure Description" }
@@ -403,12 +403,11 @@ The primary / secondary mechanism is preferred as it scales better and
 avoids DoS attacks: First the primary notifies the secondary that the
 zone must be updated and leaves the secondary to proceed with the update
 when possible. Then, a NOTIFY message is sent by the primary, which is a
-small packet that is less likely to load the secondary. Finally, the
-AXFR query performed by the secondary is a small packet sent over TCP
-(section 4.2 {{!RFC5936}}), which mitigates reflection attacks using a
-forged NOTIFY. On the other hand, DNS UPDATE (which can be transported
-over UDP), requires more processing than a NOTIFY, and does not allow
-the server to perform asynchronous updates.
+small packet that is less likely to load the secondary.
+
+Finally, the AXFR query performed by the secondary is a small packet sent
+over TCP (section 4.2 {{!RFC5936}}), which mitigates reflection attacks using
+a forged NOTIFY.  DNS over TLS {{!RFC7858}} is RECOMMENDED.
 
 This document RECOMMENDS use of a primary / secondary mechanism instead
 of the use of DNS UPDATE. This section details the primary / secondary
@@ -461,23 +460,33 @@ traffic and drop traffic not initiated by the DM.
 The HNA MUST listen for DNS on TCP and UDP and MUST at least allow SOA
 lookups of the Homenet Zone.
 
-
-## Securing Synchronization
+## Configuration of Distribution Master
 
 Exchange between the DM and the HNA MUST be secured, at least for
-integrity protection and for authentication. 
+integrity protection and for authentication.  The purpose of this
+communication is to inform the Distribution Master as the location
+of the HNA Stealth Primary.
 
-TSIG {{!RFC2845}} or SIG(0) {{!RFC2931}} MAY be used to secure the DNS
-communications between the HNA and the DM. TSIG uses a symmetric key
-which can be managed by TKEY {{!RFC2930}}. Management of the key
-involved in SIG(0) is performed through zone updates. How keys are
-rolled over with SIG(0) is out-of-scope of this document. The advantage
-of these mechanisms is that they are only associated with the DNS
-application. Not relying on shared libraries eases testing and
-integration. On the other hand, using TSIG, TKEY or SIG(0) requires
-these mechanisms to be implemented on the HNA, which adds code and
-complexity. Another disadvantage is that TKEY does not provide
-authentication mechanisms.
+There was consideration to using TSIG {{!RFC2845}} or SIG(0) {{!RFC2931}} to
+do a dynamic DNS update.  There are a number of issues with this.  The main
+one is that the Dynamic DNS update would update the zone's NS records,
+while the goal is to update the Distribution Master's configuration files.
+The visible NS records SHOULD remain pointing at the cloud provider's anycast
+addresses.  Revealing the address of the HNA in the DNS is not desireable.
+
+Instead an HTTPS RESTful end point on the DM is created, and a POST
+
+- implemented DNS-over-TLS using Notify and SOA templating.
+-
+a) AXFR SOA
+b) AXFR from the DM cfg to HNA (all the parameters)
+    - template file.
+c) <create the zone>
+d) Notify goes to DM cfg control channel.
+e) DM cfg sends info to DM, which does the AXFR.
+
+
+
 
 Protocols like TLS {{!RFC5246}} / DTLS {{!RFC6347}} MAY be used to
 secure the transactions between the DM and the HNA.
@@ -545,7 +554,7 @@ the authoritative server and the resolver. The resolver side is out of
 scope of this document, and only the authoritative part of the server is
 considered.
 
-This document assumes the HNA signs the Public Homenet Zone. 
+This document assumes the HNA signs the Public Homenet Zone.
 
 Secure delegation is achieved only if the DS RRset is properly set in
 the parent zone. Secure delegation is performed by the HNA or the
