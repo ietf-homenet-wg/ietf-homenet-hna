@@ -430,8 +430,10 @@ addresses.  Revealing the address of the HNA in the DNS is not desireable.
 [Open Question: The proposal is to use DNS for control meesages. Should the messages be transported over DNS, or JSON?]
 
 ### Messages {##sec-ctrl-messages}
+The provisining process SHOULD provide a method of securing the control channel. This MAY be based on certificates for both the DM and each HNA. The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
+
 The HNA SHOULD send an AXFR request to the DM on the Control Channel to retrieve template information
-on how to construct the Public Homenet Zone.
+on how to construct the Public Homenet Zone in order to start the bootstrap process,.
 
 When an AXFR is received by the DM on the control channel, the message MAY be checked for authenticity (e.g. the source domain corresponds to the certificate used by the HNA), and then the DM SHOULD reply with an unsigned template zone, containing all of the relevant RR's required to contruct the Homenet Public zone e.g. ORIGIN, NS, AAAA and A records of the Public Authoritative Servers, and any keying material required for UPDATE requests from the HNA to the DM.
 
@@ -441,12 +443,14 @@ to ensure that resolution on the public Internet uses the NS records provided as
 How the template zone is created is outside the scope of this document, but it may
 be produced "on the fly" by the DM, or it may be created as part of the provisioning process.
 
-The HNA SHOULD send UPDATE requests to the DM on the Control Channel to set any information required for
-establishing the synchronization channel e.g. the AAAA or A RR and potentially NS RR of the HNA itself, plus any KEY RRs.
+The HNA MAY also create the initial configuration of the Homenet Authorative Server at this point, including appropriate inbound ACLs to prevent amplification or DDoS attacks.
 
-When an UPDATE is received by the DM on the control channel, the message MAY be checked for authenticity (e.g. the source domain corresponds to the certificate used by the HNA), and then the DM SHOULD use the received information
-to configure the synchronization channel. For example, an incoming NS and AAAA records may be used to set the
-target address of the outbound AXFR on the Synchronization Channel. 
+The HNA SHOULD send DNS UPDATE requests to the DM on the Control Channel to set any information required for
+establishing the synchronization channel e.g. the AAAA or A RR and an NS RR of the HNA itself, plus an initial DS RR to bootstrap the DNSSEC chain of trust, plus any KEY RRs.
+
+When an UPDATE is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the source domain corresponds to the certificate used by the HNA), and then the DM SHOULD use the received information
+to configure the synchronization channel. For example, an incoming NS and AAAA records MAY be used to set the
+target address of the outbound AXFR on the Synchronization Channel. An incoming UPDATE containing a DS MAY be used to establish the initial trust for DNSSEC (by inserting the DS RR in the parent zone). 
 
 The DM MUST NOT publish the information received on the Control Channel in the Public Homenet Zone.
 
@@ -532,12 +536,12 @@ lookups of the Homenet Zone.
 
 ## DM Synchronization Channel between HNA and DM {##sec-synch}
 
-THe DM Synchronization Channel isused for communication between the HNA and the DM
+THe DM Synchronization Channel is used for communication between the HNA and the DM
 for synchronizing the Public Homenet Zone.
 
 Uploading and dynamically updating the zone file on the DM can be seen
 as zone provisioning between the HNA (Hidden Primary) and the DM
-(Secondary Server). This can be handled either via AXFR + NOTIFY or DNS UPDATE.
+(Secondary Server). This can be handled via AXFR + DNS UPDATE.
 
 This document RECOMMENDS use of a primary / secondary mechanism instead
 of the use of DNS UPDATE. The primary / secondary mechanism is RECOMMENDED as
