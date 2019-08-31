@@ -430,12 +430,12 @@ addresses.  Revealing the address of the HNA in the DNS is not desireable.
 [Open Question: The proposal is to use DNS for control meesages. Should the messages be transported over DNS, or JSON?]
 
 ### Messages {##sec-ctrl-messages}
-The provisining process SHOULD provide a method of securing the control channel. This MAY be based on certificates for both the DM and each HNA. The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
+The provisioning process SHOULD provide a method of securing the control channel, so that the content of messages can be authenticated. This authentication MAY be based on certificates for both the DM and each HNA. The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
 
 The HNA SHOULD send an AXFR request to the DM on the Control Channel to retrieve template information
-on how to construct the Public Homenet Zone in order to start the bootstrap process,.
+on how to construct the Public Homenet Zone in order to start the bootstrap process. The SOA of the AXFR SHOULD have an owner of the zone to be delegated.
 
-When an AXFR is received by the DM on the control channel, the message MAY be checked for authenticity (e.g. the source domain corresponds to the certificate used by the HNA), and then the DM SHOULD reply with an unsigned template zone, containing all of the relevant RR's required to contruct the Homenet Public zone e.g. ORIGIN, NS, AAAA and A records of the Public Authoritative Servers, and any keying material required for UPDATE requests from the HNA to the DM.
+When an AXFR query is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the owner of the zone corresponds to the certificate's common name used by the HNA), and then the DM SHOULD reply with an unsigned template zone, containing all of the relevant RR's required to contruct the Homenet Public zone e.g. ORIGIN, NS, AAAA and A records of the Public Authoritative Servers, and any keying material required for future UPDATE requests from the HNA to the DM.
 
 The HNA SHOULD use the information in the template zone when contructing the Public Homenet Zone,
 to ensure that resolution on the public Internet uses the NS records provided as part of the template.
@@ -448,9 +448,14 @@ The HNA MAY also create the initial configuration of the Homenet Authorative Ser
 The HNA SHOULD send DNS UPDATE requests to the DM on the Control Channel to set any information required for
 establishing the synchronization channel e.g. the AAAA or A RR and an NS RR of the HNA itself, plus an initial DS RR to bootstrap the DNSSEC chain of trust, plus any KEY RRs.
 
-When an UPDATE is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the source domain corresponds to the certificate used by the HNA), and then the DM SHOULD use the received information
-to configure the synchronization channel. For example, an incoming NS and AAAA records MAY be used to set the
-target address of the outbound AXFR on the Synchronization Channel. An incoming UPDATE containing a DS MAY be used to establish the initial trust for DNSSEC (by inserting the DS RR in the parent zone). 
+When an UPDATE is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the source zone corresponds to the certificate used by the HNA), and then the DM SHOULD use the received information
+to configure the synchronization channel.
+
+An incoming NS and AAAA records SHOULD be used to set the target address of the outbound AXFR on the Synchronization Channel. The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the notional glue records should be inserted). The NS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the NS RR SHOULD correspond to the owner of the AAAA and/or A RR's, which SHOULD be placed in the Additional section of the Update query.
+
+An incoming UPDATE containing a DS MAY be used to establish the initial trust for DNSSEC (by inserting the DS RR in the parent zone). The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the DS records should be inserted). The DS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the DS RR SHOULD correspond to the DS record to be inserted in the parent domain.
+
+Note: future key roll overs MAY be handled by "Managing DS Records from the Parent via CDS/CDNSKEY" {{!RFC8078}} without using the control channel.
 
 The DM MUST NOT publish the information received on the Control Channel in the Public Homenet Zone.
 
