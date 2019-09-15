@@ -82,25 +82,18 @@ author:
 
 --- abstract
 
-Designation of services and devices on a home network is not currently user
-friendly, especially when accessed via mobile devices that may move in and out
-of the homenet, and mechanisms should enable a user to designate services and
-devices inside a home network using names.
+The Homenet Naming authority is responsible for making devices within
+the home network accessible by name within the home network as well as
+from outside the home network (e.g. the Internet). The names of the
+devices accessible from the Internet are stored in the Public Homenet
+Zone, served by a DNS authoritative server.   It is unlikely that home
+network have sufficiently robust platform designed to host a service
+such as the DNS on the Internet and as such woudl expose the home
+network to DDoS attacks. 
 
-On the one hand, the naming service should be hosted on a device inside the home network
-in order to ensure continuity of internal communications whilst the home network
-experiences a connectivity outage to the Internet. On the other hand, home network devices
-have not generally been designed to handle heavy loads. As a result, hosting the naming
-service on such home network device, visible on the Internet exposes this device to
-resource exhaustion and other attacks, which could make the home network unreachable, and most
-probably would also affect the internal communications within the home network.
-
-As result, home networks may prefer to outsource hosting of the naming service
-to a third party. However, current best practice of DNS delegation does not adequately
-address this situation.
-
-This document describes a mechanism that enables the Home Network Authority (HNA)
-to outsource the naming service to the Outsourcing Infrastructure via a Distribution Master (DM).
+This document describes a mechanism that enables the Home Network
+Authority (HNA) to outsource the naming service to the Outsourcing
+Infrastructure via a Distribution Master (DM).
 
 --- middle
 
@@ -118,7 +111,7 @@ names instead of long and complex IPv6 addresses when accessing services
 hosted in the home network.
 
 {{!RFC7368}} recommends that home networks be resilient to connectivity
-disruption from the ISP.  The public names should be resolvable within
+disruption from the ISP. The public names should be resolvable within
 the home network and on the Internet, even when there are disruptions.
 This could be achieved by a device inside the home network that builds,
 publishes, and manages a Public Homenet Zone, thus providing bindings
@@ -131,29 +124,31 @@ the function is located on one of the CPE devices.
 
 A home network may have multiple CPEs. Since management of the Public
 Homenet Zone involves DNS specific mechanisms that cannot be distributed
-over mulitple servers (primary server), when multiple nodes can potentially
-manage the Public Homenet Zone, a single node needs to be selected per
-outsourced zone. This selected node is designated as providing the
-Homenet Naming Authority (HNA) function.
+over multiple servers (primary server), when multiple nodes can
+potentially manage the Public Homenet Zone, a single node needs to be
+selected per outsourced zone. This selected node is designated as
+providing the Homenet Naming Authority (HNA) function.
 
-The process by which a single HNA is selected per zone is not in scope for this
-document.
+The process by which a single HNA is selected per zone is not in scope
+for this document.
 
 CPEs, which may host the HNA function, as well as home network devices,
-are usually low powered devices not designed not for terminating heavy traffic.
-As a result, hosting an authoritative DNS service visible to the Internet may expose
-the home network to resource exhaustion and other attacks. Additionally,
-the names could become unavailable during disruptions of the upstream Internet conenctivity.
+are usually low powered devices not designed not for terminating heavy
+traffic. As a result, hosting an authoritative DNS service visible to
+the Internet may expose the home network to resource exhaustion and
+other attacks. Additionally, the names could become unavailable during
+disruptions of the upstream Internet connectivity.
 
 In order to avoid resource exhaustion and other attacks, this document
 describes an architecture that outsources the authoritative naming
-service of the home network.  More specifically, the HNA builds the
+service of the home network. More specifically, the HNA builds the
 Public Homenet Zone and  outsources it to an Outsourcing Infrastructure
-via a Distribution Master (DM). The Outsourcing Infrastructure in in charge
-of publishing the corresponding Public Homenet Zone on the Internet.
-The transfer of DNS zone informatioon is achieved using standard DNS mechanisms
-involving primary and secondary DNS servers, with the HNA hosted primary being
-a stealth primary, and the Distribution Master a secondary.
+via a Distribution Master (DM). The Outsourcing Infrastructure is in
+charge of publishing the corresponding Public Homenet Zone on the
+Internet. The transfer of DNS zone information is achieved using
+standard DNS mechanisms involving primary and secondary DNS servers,
+with the HNA hosted primary being a stealth primary, and the
+Distribution Master a secondary.
 
 {{sec-arch-overview}} provides an architecture description that
 describes the relation between the HNA and the Outsourcing Architecture. 
@@ -170,8 +165,9 @@ Finally, {{sec-privacy}} and {{sec-security}} respectively discuss
 privacy and security considerations when outsourcing the Public Homenet
 Zone.
 
-The Public Homenet Zone is expected to contain public information only in a single universal view.
-This document does not define how the information required to contruct this view is derived.
+The Public Homenet Zone is expected to contain public information only
+in a single universal view.  This document does not define how the
+information required to contract this view is derived.
 
 It is also not in the scope of this document to define names for exclusive use within
 the boundaries of the local home network. Instead, local scope information is expected
@@ -186,8 +182,8 @@ leverage this constraint as pointed out in {{!RFC7558}}.
 An alternative existing solution in IPv4 is to have a single zone,
 where a host uses a RESTful HTTP service to register a single name
 into a common public zone.  This is often called "Dynamic DNS", and
-there are a number of commercial providers, including dyn.com,
-ghandi.com. etc. These solutions were typically used by a host behind the
+there are a number of commercial providers, including Dyn,
+Gandi etc. These solutions were typically used by a host behind the
 CPE to make it's CPE IPv4 address visible, usually in order to enable
 incoming connections.
 
@@ -196,14 +192,14 @@ provides an alternative to the architecture described in this document.
 
 The alternative does suffer from some severe limitations:
 
-* the CPE/HNA router is unaware of the process, and can not responde to
-queires for these names when there are disruptions in connectivity. This makes
-the home user or application dependent on having to resolve different names in
-the event of outages or disruptions.
+* the CPE/HNA router is unaware of the process, and can not respond to
+queries for these names when there are disruptions in connectivity. This
+makes the home user or application dependent on having to resolve
+different names in the event of outages or disruptions.
 
 * the CPE/HNA router can not control the process. Any host can do this
 regardless of whether or not the home network administrator wants the
-name published or not.  There is therefore no possible audit trail.
+name published or not. There is therefore no possible audit trail.
 
 * the credentials for the dynamic DNS server need to be securely transferred
 to all hosts that wish to use it. This is not a problem for a technical
@@ -258,21 +254,24 @@ the Homenet network.
 
 * Distribution Master (DM): is the (set of) server(s) to which the HNA
 synchronizes the Public Homenet Zone, and which then distributes the
-relevant information to the Public Authoritative Servers.
-
-The Distribution Master has 3 communication channels: a DM Control Channel see section [add refs],
-a DM Synchronization Channel, and, and one or more Distribution Channels.
-
-There MAY be multiple DM's, and multiple servers per DM. This text assumes a single DM
-server for simplicity, but there is no reason why each channel need to be implemented
-on the same server, or indeed use the same code base.
+relevant information to the Public Authoritative Servers. 
 
 * Homenet Reverse Zone: The reverse zone file associated with the Public Homenet Zone.
 
 * Reverse Public Authoritative Servers: equivalent to Public Authoritative Servers
 specifically for reverse resolution.
 
-* Reverse Distribution Master: equivalent to Distribution Master specfically for reverse resolution.
+* Reverse Distribution Master: equivalent to Distribution Master
+specifically for reverse resolution.
+
+* Homenet DNSSEC Resolver: a resolver that performs a DNSSEC resolution
+on the home network for the Public Homenet Zone. The resolution is
+performed requesting the Homenet Authoritative Servers.  
+
+* DNSSEC Resolver: a resolver that performs a DNSSEC resolution on the
+Internet for the Public Homenet Zone. The resolution is performed
+requesting the Public Authoritative Servers. 
+
 
 # Architecture Description  {#sec-arc-desc}
 
@@ -283,32 +282,33 @@ and {{sec-configuration-parameters}} illustrates this architecture with
 the example of a Public Homenet Zone as well as necessary parameter to
 configure the HNA.
 
-
 ## Architecture Overview {#sec-arch-overview}
 
 Figure {{fig-naming-arch}} illustrates the architecture where the HNA
 outsources the publication of the Public Homenet Zone to the Outsourcing
-Infrastructure.
+Infrastructure. 
 
 The Public Homenet Zone is identified by the Registered Homenet Domain
-Name -- example.com. myzone.example.com
+Name -- example.com.
 
-".local" as well as ".home.arpa" are explictly not considered as Public Homenet zones.
+".local" as well as ".home.arpa" are explicitly not considered as Public
+Homenet zones.
 
 The HNA SHOULD build the Public Homenet Zone in a single view populated with all
 names that are expected to be published on the Internet.
 
 Names associated with services or devices that are not expected to be
 resolvable from outside the home network, or names bound to non-globally
-reachable IP addresses e.g. ULA, MUST NOT be part of the Public Homenet Zone.
+reachable IP addresses e.g. ULA, MUST NOT be part of the Public Homenet
+Zone.
 
-How the Public Homenet Zone is populated is out of the scope of this document. The
-node providing the HNA function may also host or interact with multiple
-services to determine name-to-address mappings, such as a web GUI,
-DHCP {{!RFC6644}} or mDNS {{!RFC6762}}. These services may coexist
-and may be used to populate the Public Homenet Zone.
+How the Public Homenet Zone is populated is out of the scope of this
+document. The node providing the HNA function may also host or interact
+with multiple services to determine name-to-address mappings, such as a
+web GUI, DHCP {{!RFC6644}} or mDNS {{!RFC6762}}. These services may
+coexist and may be used to populate the Public Homenet Zone.
 
-The HNA also signes the Public Homenet Zone. The HNA handles all
+The HNA also signs the Public Homenet Zone. The HNA handles all
 operations and keying material required for DNSSEC, so there is no
 provision made in this architecture for transferring DNSSEC related
 keying material between the HNA and the DM.
@@ -321,14 +321,30 @@ responsible to distribute the Public Homenet Zone to the multiple Public
 Authoritative Servers that Outsourcing Infrastructure is responsible
 for.
 
-It is important to note that while the HNA is configured as an authoritative server,
-it is not expected to answer to DNS requests from the public Internet for
-the Public Homenet Zone. The function of the HNA is limited to building the
-the zone and  synchronization with the DM.
+The DM has 3 communication channels: 
+  * a DM Control Channel (see section {{#sec-ctrl}}) to configure the 
+HNA and the Outsourcing Infrastructure, 
+  * a DM Synchronization Channel (see section {{#sec-synch}} to
+synchronize the Public Homenet Zone on the HNA and on the DM.  
+  * one or more Distribution Channels (see section {{#sec-dist}} that
+distributes the Public Homenet Zone from the DM to the Public
+Authoritative Server serving the Public Homenet Zone on the Internet.
 
-The addresses associated with the HNA SHOULD NOT be mentioned in the NS records
-of the Public Homenet zone, unless additional security provisions necessary
-to protect the HNA from external attack have been taken.
+There MAY be multiple DM's, and multiple servers per DM. This text
+assumes a single DM server for simplicity, but there is no reason why
+each channel need to be implemented on the same server, or indeed use
+the same code base.
+
+
+It is important to note that while the HNA is configured as an
+authoritative server, it is not expected to answer to DNS requests from
+the public Internet for the Public Homenet Zone. The function of the HNA
+is limited to building the zone and  synchronization with the DM.
+
+The addresses associated with the HNA SHOULD NOT be mentioned in the NS
+records of the Public Homenet zone, unless additional security
+provisions necessary to protect the HNA from external attack have been
+taken.
 
 The Outsourcing Infrastructure is also responsible to ensure the DS
 record has been updated in the parent zone.
@@ -338,15 +354,16 @@ performed outside the home network, the DNSSEC Resolver resolves the DS
 record on the Global DNS and the name associated to the Public Homenet
 Zone (node1.example.com) on the Public Authoritative Servers.
 
-When the resolution is performed from within the home network, the Homenet DNSSEC
-Resolver may proceed similarly. On the other hand, to provide resilience
-to the Public Homenet Zone in case of disruption, the Homenet DNSSEC
-Resolver MUST be able to to the resolution on the authoritative name
-service of the home network implemented by the Homenet Authoritative
-Servers. These servers are not expected to be mentioned in the Public
-Homenet Zone. As such their information as well as the corresponding
-signed DS record are provided by the HNA to the Homenet DNSSEC Resolvers
-using HNCP. Such configuration is outside the scope of this document.
+When the resolution is performed from within the home network, the
+Homenet DNSSEC Resolver may proceed similarly. On the other hand, to
+provide resilience to the Public Homenet Zone in case of disruption, the
+Homenet DNSSEC Resolver MUST be able to perform the resolution on the
+authoritative name service of the home network implemented by the
+Homenet Authoritative Servers. These servers are not expected to be
+mentioned in the Public Homenet Zone, nor to be accessible from the
+Internet. As such their information as well as the corresponding signed
+DS record are provided by the HNA to the Homenet DNSSEC Resolvers using
+HNCP. Such configuration is outside the scope of this document.
 
 How the Homenet Authoritative Servers are provisioned is also out of
 scope of this specification. It could be implemented using primary
@@ -356,118 +373,304 @@ instantiation of an authoritative server on the WAN and inner interface.
 Other mechanisms may also be used.
 
 ~~~
-           home network                          Internet
-             +---------------------+
-             |         HNA         |  Synch + Control
-             | Public Homenet Zone |<================++  
-             +---------------------+                 ||
-                        ||                           vv
-             +-----------------------+   +-----------------------+
-             |                       |   | Distribution Master   |
-             |                       |   +-----------------------+
-+-------+    | Homenet Authoritative |   | Public Authoritative  |
-|       |    | Server(s)             |   | Server(s)             |
-| node1 |    |+---------------------+|   |+---------------------+|
-|       |    ||Public Homenet Zone  ||   || Public Homenet Zone ||
-+-------+    ||                     ||===||                     ||
-             || (example.com)       ||   ||  (example.com)      ||
-node1.\      |+---------------------+|   |+---------------------+|
-example.com  +-----------------------+   +-----------------------+
-                        ^   |                       ^   |
-                        |   |    name resolution    |   |
-                        |   v                       |   v
-              +-----------------------+  +-----------------------+
-              |       Homenet         |  |       Internet        |
-              |    DNSSEC Resolver    |  |    DNSSEC Resolver    |
-              |                       |  |                       |
-              +-----------------------+  +-----------------------+
+         Home network                 |         Internet
+                                      |
+                                      | +----------------------------+
+                                      | | Outsourcing Infrastructure |
+                           Control    | |                            |
+  +-----------------------+Channel    | |  +-----------------------+ |
+  |         HNA           |<-------------->| Distribution Master   | |
+  |+---------------------+|           | |  |+---------------------+| |
+  || Public Homenet Zone ||Synchronization || Public Homenet Zone || |
+  || (example.com)       ||Channel    | |  ||  (example.com)      || |
+  |+---------------------+|<-------------->|+---------------------+| |
+  +----------------------+|           | |  +-----------------------+ |
+                                      | |           ^ Distribution   |
+                                      | |           | Channel        |
+  +-----------------------+           | |           v                |
+  | Homenet Authoritative |           | |  +-----------------------+ |
+  | Server(s)             |           | |  | Public Authoritative  | |
+  |+---------------------+|           | |  | Server(s)             | |
+  ||Public Homenet Zone  ||           | |  |+---------------------+| |
+  || (example.com)       ||           | |  || Public Homenet Zone || |
+  |+---------------------+|           | |  ||  (example.com)      || |
+  +-----------------------+           | |  |+---------------------+| |
+             ^   |                    | |  +-----------------------+ |
+             |   |                    | +----------^---|-------------+
+             |   |                    |            |   |
+             |   |           name resolution       |   |
+             |   v                    |            |   v
+   +----------------------+           | +-----------------------+
+   |       Homenet        |           | |       Internet        |
+   |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
+   +----------------------+           | +-----------------------+
 ~~~
 {: #fig-naming-arch title="Homenet Naming Architecture Name Resolution" }
-
-~~~
-                                           Internet
-
-                  +------------------------------------------------------+
-                  |            Outsourcing Infrastructure                |
-                  +------------------------------------------------------+
-Control Channel
-            |     +----------------------+        +----------------------+
-            |     |                      |        |                      |
-+-----+     |     | Distribution Master  |        | Public Authoritative |
-|     |     v     |                      |        | Server(s)            |
-|     |<--------->|                      |        |                      |
-|     |           | +------------------+ |        |+--------------------+|
-| HNA |           | | Public Homenet   | |        || Public Homenet Zone||
-|     |<--------->| | Zone             | |<------>||                    ||
-|     |     ^     | |                  | |   ^    ||                    ||
-|     |     |     | | (example.com)    | |   |    || (example.com)      ||
-+-----+     |     | +------------------+ |   |    |+--------------------+|
-            |     +----------------------+   |    +----------------------+
-            |                                |
-Synchronization Channel            Distribution Channel
-
-~~~
-{: #fig-auth-servers title="Outsourcing Infrastructure Description" }
 
 
 # Distribution Master Communication Channels {#sec-comms}
 
-## Control Channel between HNA and DM {##sec-ctrl}
+This section details the interfaces and channels of the DM, that is the
+Control Channel, the Synchronization Channel and the Distribution
+Channel.
 
-The DM Control Channel isused for communication between the HNA and the DM
-for control information.
+The Control Channel and the Synchronization Channel are the interfaces
+used between the HNA and the Outsourcing Infrastructure. The entity
+within the Outsourcing Infrastructure responsible to handle these
+communications is the  DM and communications between the HNA and the DM
+are supposed to be protected and mutually authenticated. While section
+{{#sec-ctrl-security}} discusses more in length the different security
+protocols that could be used to secure, this specification RECOMMENDS
+the use of TLS with mutually authentication based on certificates to
+secure the channel between the HNA and the DM. 
 
-A seperate control channel is required for communicating information that is not going
-to be published in the Public Homenet Zone e.g. NS RR and AAAA RR for the HNA itself.
+The Control Channel is used to set the Synchronization Channel. We
+assume that the HNA sets the Control Channel with the DM and as such has
+a prior knowledge of the DM identity (X509 certificate), the IP address
+and port to use and protocol to set secure session. On the other hand,
+we also assume the DM has knowledge of the identity of the HNA (X509
+certificate) as well as the Registered Homenet Domain.    
 
-There was consideration to using a standard TSIG {{!RFC2845}} or SIG(0) {{!RFC2931}} to
-perform a dynamic DNS update to the DM.  There are a number of issues with this.  The main
-one is that the Dynamic DNS update would also update the zone's NS records,
-while the goal is to update the Distribution Master's configuration files.
-The visible NS records SHOULD remain pointing at the cloud provider's anycast
-addresses.  Revealing the address of the HNA in the DNS is not desireable.
+This specification also assumes the same transport protocol and ports
+used by the DM to serve the Control Channel and by the HNA to serve the
+Synchronization Channel are the same. More specifically, if the HNA sets
+the Control Channel using UDP:53/DTLS, TLS/TCP:53, HTTPS:443 or any
+other combination, the same will be used for the synchronization
+Channel.   
 
-[Open Question: The proposal is to use DNS for control meesages. Should the messages be transported over DNS, or JSON?]
+The Distribution Channel is internal to the Outsourcing Infrastructure
+and as such is not the primary concern of this specification. 
 
-### Messages {##sec-ctrl-messages}
-The provisioning process SHOULD provide a method of securing the control channel, so that the content of messages can be authenticated. This authentication MAY be based on certificates for both the DM and each HNA. The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
 
-The HNA SHOULD send an AXFR request to the DM on the Control Channel to retrieve template information
-on how to construct the Public Homenet Zone in order to start the bootstrap process. The SOA of the AXFR SHOULD have an owner of the zone to be delegated.
+## Control Channel between HNA and DM {#sec-ctrl}
 
-When an AXFR query is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the owner of the zone corresponds to the certificate's common name used by the HNA), and then the DM SHOULD reply with an unsigned template zone, containing all of the relevant RR's required to contruct the Homenet Public zone e.g. ORIGIN, NS, AAAA and A records of the Public Authoritative Servers, and any keying material required for future UPDATE requests from the HNA to the DM.
+The DM Control Channel is used by the HNA and the Outsourcing
+Infrastructure to exchange information related to the configuration of
+the delegation which includes:
 
-The HNA SHOULD use the information in the template zone when contructing the Public Homenet Zone,
-to ensure that resolution on the public Internet uses the NS records provided as part of the template.
+A) Necessary information to build the Public Homenet Zone. More
+specifically, the Public Homenet Zone contains information that is
+related to the infrastructure serving the zone. In our case, the
+infrastructure serving the Public Homenet Zone is the Outsourcing
+Infrastructure, so these information MUST reflect that Outsourcing
+Infrastructure and MUST be provided to the HNA. The information includes
+at least names and IP addresses of the Public Authoritative Servers. In
+term of RRset information this corresponds, for the Registered Homenet
+Domain the MNAME of the SOA, the NS and associated A and AAA RRsets.
+Optionally the Outsourcing Infrastructure MAY also provide operational
+parameters such as other fields of SOA (SERIAL, RNAME, REFRESH, RETRY,
+EXPIRE and MINIMUM). As the information is necessary for the HNA to
+proceed and the information is associated to the Outsourcing
+Infrastructure, this information exchange is mandatory.  
 
-How the template zone is created is outside the scope of this document, but it may
-be produced "on the fly" by the DM, or it may be created as part of the provisioning process.
+QUESTION: The previous text mentioned that KEY could also be exchanged.
+I have the impression that assuming that we have a protected channel
+using TLS does not make the KEY necessary. The current text has removed
+the KEY RRset being provided by the DM. 
 
-The HNA MAY also create the initial configuration of the Homenet Authorative Server at this point, including appropriate inbound ACLs to prevent amplification or DDoS attacks.
+B) Necessary information to build the DNSSEC chain of trust. The HNA MAY
+provide the hash of the KSK (DS RRset), so the that Outsourcing
+Infrastructure provides this value to the parent zone.  A common
+deployment use case is that the Outsourcing Infrastructure is the
+registrar of the Registered Homenet Domain, and as such, its
+relationship with the registry of the parent zone enables it to update
+the parent zone. When such relation exists, the HNA should be able to
+request the Outsourcing Infrastructure to update the DS RRset in the
+parent zone. A direct update is especially necessary to initialize the
+chain of trust. Though the HNA may also manually manage the values of
+the DS, it is RECOMMENDED to use other mechanisms such as CDS and
+CDNSKEY {{!RFC7344}} is used. As some deployment may not provide an
+Outsourcing Infrastructure that will be able to update the DS in the
+parent zone, this information exchange is OPTIONAL. 
 
-The HNA SHOULD send DNS UPDATE requests to the DM on the Control Channel to set any information required for
-establishing the synchronization channel e.g. the AAAA or A RR and an NS RR of the HNA itself, plus an initial DS RR to bootstrap the DNSSEC chain of trust, plus any KEY RRs.
+QUESTION: I think we need the HNA to check the delegation is performed.
+It would also be good to have the DM sending warnings when there is no
+DS associated to the KSK. I am tempt to have the DM SHOULD try to
+configure the delegation... but I do not like having two entities doing
+the same thing. 
 
-When an UPDATE is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the source zone corresponds to the certificate used by the HNA), and then the DM SHOULD use the received information
-to configure the synchronization channel.
 
-An incoming NS and AAAA records SHOULD be used to set the target address of the outbound AXFR on the Synchronization Channel. The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the notional glue records should be inserted). The NS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the NS RR SHOULD correspond to the owner of the AAAA and/or A RR's, which SHOULD be placed in the Additional section of the Update query.
+C) Necessary information for the DM to set the Synchronization Channel,
+that is to set the  primary/secondary relation between the HNA and the
+DM. The HNA works as a primary authoritative DNS server, and MUST
+provide the corresponding IP address. The specified IP address on the
+HNA side and the currently used IP address of the DM defines the IP
+addresses involved in the Synchronization Channel. Ports and transport
+protocol are the same a s those used by the Control Channel. By default,
+the same IP address used by the HNA is considered by the DM. Exchange of
+this information is OPTIONAL. 
 
-An incoming UPDATE containing a DS MAY be used to establish the initial trust for DNSSEC (by inserting the DS RR in the parent zone). The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the DS records should be inserted). The DS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the DS RR SHOULD correspond to the DS record to be inserted in the parent domain.
+QUESTION: I am wondering if that exchange is mandatory. Typically, we
+could maybe consider that by default the IP is the one of the HNA for
+the Control Channel. One tyhing we need to consider carefully, is
+whether the IP address announced by the HNA is actually seen by the DM.
+The typical case would be is NAT is between DM and HNA.  
 
-Note: future key roll overs MAY be handled by "Managing DS Records from the Parent via CDS/CDNSKEY" {{!RFC8078}} without using the control channel.
+There are multiple ways these information could be exchanged between the
+HNA and the DM. This specification defines a mechanism that re-use the
+DNS exchanges format. The intention is to reuse standard libraries
+especially to check the format of the exchanged fields as well as to
+minimize the additional libraries needed for the HNA. The re-use of
+DNS exchanges achieves these goals. Note that while information is
+provided using DNS exchanges, the exchanged information is not expected
+to be set in any zone file, instead this information is expected to be
+processed appropriately.  
 
-The DM MUST NOT publish the information received on the Control Channel in the Public Homenet Zone.
+The Control Channel is not expected to be a long term session. After a
+predefined timer the Control Channel is expected to be finished. The
+Control CHannel MAY Be re-open at any time later. 
 
-Any NOTIFY requests received on the Control Channel MAY be checked for authenticity, and
-then SHOULD be forwarded to the process providing the Synchronization Channel on the DM.
+Note that the Control Channel does not provides means to stop the
+synchronization between the primary and the secondary. The reason is
+that synchronization is always initiated by the primary with a NOTIFY
+message.  
 
-How this forwarding occurs is out of scope for this document, but could be achieved by generating
-a second internal NOTIFY message from the DM to a standard DNS server, or via an internal software signal.
+#A seperate control channel is required for communicating information that is not going
+#to be published in the Public Homenet Zone e.g. NS RR and AAAA RR for the HNA itself.
+#
+#There was consideration to using a standard TSIG {{!RFC2845}} or SIG(0) {{!RFC2931}} to
+#perform a dynamic DNS update to the DM.  There are a number of issues with this.  The main
+#one is that the Dynamic DNS update would also update the zone's NS records,
+#while the goal is to update the Distribution Master's configuration files.
+#The visible NS records SHOULD remain pointing at the cloud provider's anycast
+#addresses.  Revealing the address of the HNA in the DNS is not desireable.
+#
+#[Open Question: The proposal is to use DNS for control meesages. Should the messages be transported over DNS, or JSON?]
 
-[Open Question: do updates for the DS RR flow via the control or synch channel?]
+### Messages {#sec-ctrl-messages}
 
-### Securing the Control Channel between HNA and DM {##sec-ctrl-security}
+
+#The provisioning process SHOULD provide a method of securing the control channel, so that the content of messages can be authenticated. This authentication MAY be based on certificates for both the DM and each HNA. The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
+ 
+The information provided by the DM to the HNA are retrieved by the HNA
+with a AXFR exchange. The AXFR message enables the response to contain
+any type of RRsets. The response might be extended in the future if
+additional information will be needed. Alternatively, the information
+provided by the HNA to the DM is pushed by the HNA via a DNS update
+exchange. 
+
+To retrieve the necessary information to build the Public Homenet Zone,
+the HNA MUST send an DNS request of type AXFR associated to the
+Registered Homenet Domain. The DM MUST respond with a zone template. The
+zone template MUST contain a RRset of type SOA, one or multiple RRset of
+type NS and at least one RRset of type A or AAAA. The SOA RR is used to
+indicate to the HNA the value of the MNAME of the Public Homenet Zone.
+The NAME of the SOA RR MUST be the Registered Homenet Domain. The MNAME
+value of the SOA RDATA is the value provided by the Outsourcing
+Infrastructure to the HNA. Other RDATA values (RNAME, REFRESH, RETRY,
+EXPIRE and MINIMUM) are provided by the Outsourcing Infrastructure as
+suggestions.  The NS RRsets are used to carry the Public Authoritative
+Servers of the Outsourcing Infrastructure. Their associated NAME MUST be
+the Registered Homenet Domain. The TTL and RDATA are those expected to
+be published on the Public Homenet Zone. The RRsets of Type A and AAAA
+MUST have their NAME matching the NSDNAME of one of the NS RRsets. 
+
+Upon receiving the response, the HNA MUST validate the conditions on the
+SOA, NS and A or AAAA RRsets. If an error occurs, the HNA MUST stop
+proceeding and MUST report an error. Otherwise, the HNA builds the
+Public Homenet Zone by setting the MNAME value of the SOA as indicated
+by the SOA provided by the AXFR response. The HNA SHOULD set the value
+of NAME, REFRESH, RETRY, EXPIRE and MINIMUM of the SOA to those provided
+by the AXFR response. The HNA MUST insert the NS and corresponding A or
+AAAA RRset in its Public Homenet Zone. The HNA MUST ignore other RRsets.
+If an error message is returned by the DM, the HNA MUST proceed as a
+regular DNS resolution. Error messages SHOULD be logged for further
+analysis. If the resolution does not succeed, the outsourcing operation
+is aborted and the HNA MUST close the Control Channel. 
+
+To provide the DS RRset to initialize the DNSSEC chain of trust the HNA
+MAY send a DNS UPDATE {{!RFC2136}} message. The NAME in the SOA MUST be
+set to the parent zone of the Registered Homenet Domain - that is where
+the DS records should be inserted. The DS RRset MUST be placed in the
+Update section of the UPDATE query, and the NAME SHOULD be set to the
+Registered Homenet Domain. The rdata of the DS RR SHOULD correspond to
+the DS record to be inserted in the parent zone.
+
+A NOERROR response from the MD is a commitment to update the parent zone
+with the provided DS. An error indicates the MD will not update the DS,
+and other method should be used by the HNA. 
+
+To provide the IP address of the primary, the HNA MAY send a DNS UPDATE
+message. he NAME in the SOA MUST be the parent zone of the Registered
+Homenet Domain. The Update section MUST be a RRset of Type NS. The NAME
+associated to the NS RRSet MUST be the Registered Domain Name. The RDATA
+MUST be a FQDN that designates the IP addresses associated to the
+primary. There may be multiple IP addresses. These IP addresses MUST be
+provided in the additional section. The reason to provide these IP
+addresses is that it is NOT RECOMMENDED to publish these IP addresses.
+As a result, it is not expected to resolve them. IP addresses are
+provided via RRsets of type A or AAAA. The NAME associated to RRsets of
+type A and AAAA MUST be the Registered Homenet Domain. 
+
+A NOERROR response indicates the MD has configured the secondary and is
+committed to serve as a secondary. An error indicates the MD is not
+configured as a secondary. 
+
+The regular DNS error message SHOULD be returned to the HNA when an
+error occurs. In particular a FORMERR is returned when a format error is
+found, this error includes when unexpected RRSets are added or when
+RRsets are missing. A SERVFAIL error is returned when a internal error
+is encountered. a NOTZONE error is returned when update and Zone
+sections are not coherent, a NOTAUTH error is returned when the DM is
+not authoritative for the Zone section. A REFUSED error is returned when
+the DM refuses to proceed to the configuration and the requested action.  
+
+
+QUESTION: I am wondering why the SOA NAME MUST be the parent zone and
+not the zone itself. I also think we should detail carefully the errors
+that can be returned and associated meaning. I am not sure that NOTAUTH
+is appropriated for teh DS as teh DM IS NOT authoritative for the parent
+zone. 
+
+QUESTION: I am inclined to have the NOTIFY within the Synchronization
+Channel. The reason is that it is more part of the synchronization
+itself than a setting of it. More specially, having the NOTIFY in the CC
+would require the control channel to be a long term session. In this
+case, we do not necessarily needs that in my opinion. I have adopted
+that approach in the remaining of the text but feel free to discuss that
+further.  
+
+
+#The HNA SHOULD send an AXFR request to the DM on the Control Channel to retrieve template information
+#on how to construct the Public Homenet Zone in order to start the bootstrap process. The SOA of the AXFR SHOULD have an owner of the zone to be delegated.
+
+#When an AXFR query is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the owner of the zone corresponds to the certificate's common name used by the HNA), and then the DM SHOULD reply with an unsigned template zone, containing all of the relevant RR's required to contruct the Homenet Public zone e.g. ORIGIN, NS, AAAA and A records of the Public Authoritative Servers, and any keying material required for future UPDATE requests from the HNA to the DM.
+
+#The HNA SHOULD use the information in the template zone when contructing the Public Homenet Zone,
+#to ensure that resolution on the public Internet uses the NS records provided as part of the template.
+
+#How the template zone is created is outside the scope of this document, but it may
+#be produced "on the fly" by the DM, or it may be created as part of the provisioning process.
+
+#The HNA MAY also create the initial configuration of the Homenet Authorative Server at this point, including appropriate inbound ACLs to prevent amplification or DDoS attacks.
+
+
+#The HNA SHOULD send DNS UPDATE requests to the DM on the Control Channel to set any information required for
+#establishing the synchronization channel e.g. the AAAA or A RR and an NS RR of the HNA itself, plus an initial DS RR to bootstrap the DNSSEC chain of trust, plus any KEY RRs.
+
+#When an UPDATE is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the source zone corresponds to the certificate used by the HNA), and then the DM SHOULD use the received information
+#to configure the synchronization channel.
+
+#An incoming NS and AAAA records SHOULD be used to set the target address of the outbound AXFR on the Synchronization Channel. The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the notional glue records should be inserted). The NS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the NS RR SHOULD correspond to the owner of the AAAA and/or A RR's, which SHOULD be placed in the Additional section of the Update query.
+
+#An incoming UPDATE containing a DS MAY be used to establish the initial trust for DNSSEC (by inserting the DS RR in the parent zone). The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the DS records should be inserted). The DS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the DS RR SHOULD correspond to the DS record to be inserted in the parent domain.
+
+#Note: future key roll overs MAY be handled by "Managing DS Records from the Parent via CDS/CDNSKEY" {{!RFC8078}} without using the control channel.
+
+#The DM MUST NOT publish the information received on the Control Channel in the Public Homenet Zone.
+
+#Any NOTIFY requests received on the Control Channel MAY be checked for authenticity, and
+#then SHOULD be forwarded to the process providing the Synchronization Channel on the DM.
+
+#How this forwarding occurs is out of scope for this document, but could be achieved by generating
+#a second internal NOTIFY message from the DM to a standard DNS server, or via an internal software signal.
+
+
+#[Open Question: do updates for the DS RR flow via the control or synch channel?]
+
+
+
+### Securing the Control Channel between HNA and DM {#sec-ctrl-security}
 The control channel between the HNA and the DM MUST be secured at both the HNA and the DM.
 
 Secure protocols (like TLS {{!RFC5246}} / DTLS {{!RFC6347}}) SHOULD be used to
@@ -481,12 +684,24 @@ DM and the HNA. On the other hand, using TLS/DTLS
 requires implementing DNS exchanges over TLS/DTLS, as well as a new
 service port.  This document RECOMMENDS this option.
 
-The HNA SHOULD authenticate inbound connections from the DM using standard mechanisms,
-such as a public certificate with baked-in root certifcates on the HNA, or via DANE {!RFC6698}}.
+The HNA SHOULD authenticate inbound connections from the DM using
+standard mechanisms, such as a public certificate with baked-in root
+certificates on the HNA, or via DANE {!RFC6698}}.
 
-The DM SHOULD authenticate the HNA and check that inbound messages are from the appropriate client.
-The DM MAY use a self-signed CA certificate mechanism per HNA, or public certificates for this purpose.
+The DM SHOULD authenticate the HNA and check that inbound messages are
+from the appropriate client.  The DM MAY use a self-signed CA
+certificate mechanism per HNA, or public certificates for this purpose.
 [To Do appendix for certificates?]
+
+QUESTION: I believe that self signed certificate may be used because the
+HNA has been provisionned with this key to identify the DM via a trusted
+channel. However, if that is correct, it seems to me that a DNS
+infrastructure should provide a "real" certificate. Well re-reading the
+text, I have the impression that the self signed certificate is for the
+HNA. I believe the text needs to be clarified. Though that seems
+feasible, it also seems to me that the DM may have a CA for the
+registrant. I do not really see what are the pro an cons of having a CA
+verus s a set of keys.  
 
 IPsec {{!RFC4301}} IKEv2 {{!RFC7296}} MAY also be used to secure
 transactions between the HNA and the DM. Similarly
@@ -539,18 +754,30 @@ traffic and drop traffic not initiated by the DM.
 The HNA MUST listen for DNS on TCP and UDP and MUST at least allow SOA
 lookups of the Homenet Zone.
 
-## DM Synchronization Channel between HNA and DM {##sec-synch}
+## DM Synchronization Channel between HNA and DM {#sec-synch}
 
-THe DM Synchronization Channel is used for communication between the HNA and the DM
-for synchronizing the Public Homenet Zone.
+The DM Synchronization Channel is used for communication between the HNA
+and the DM for synchronizing the Public Homenet Zone.  Note that the
+Control Channel and the Synchronization Channel are by construction
+different channels even though there they MAY use the same IP addresses.
+In fact the Control Channel is set between the HNA working as a client
+using port YYYY (a high range port) toward a service provided by the MD
+at port XX (well known port). On the other hand, the Synchronization
+Channel is set between the MD working as a client using port ZZZZ ( a
+high range port) toward a service a service provided  by the HNA at port
+XX. As a result, even though the same couple of IP addresses may be
+involved the Control Channel and the Synchronization Channel are always
+disc tint channels.  
 
 Uploading and dynamically updating the zone file on the DM can be seen
 as zone provisioning between the HNA (Hidden Primary) and the DM
 (Secondary Server). This can be handled via AXFR + DNS UPDATE.
 
 This document RECOMMENDS use of a primary / secondary mechanism instead
-of the use of DNS UPDATE. The primary / secondary mechanism is RECOMMENDED as
-it scales better and avoids DoS attacks.
+of the use of DNS UPDATE. The primary / secondary mechanism is
+RECOMMENDED as it scales better and avoids DoS attacks. Note that even
+when UPDATE messages are used, these messages are using a distinct
+channel as those used to set the configuration. 
 
 Note that there is no standard way to distribute a DNS primary between
 multiple devices. As a result, if multiple devices are candidate for
@@ -558,43 +785,62 @@ hosting the Hidden Primary, some specific mechanisms should be designed
 so the home network only selects a single HNA for the Hidden Primary.
 Selection mechanisms based on HNCP {{!RFC7788}} are good candidates.
 
-The HNA acts as a Hidden Primary Server, which is a regular authoritative
-DNS Server listening on the WAN interface.
+The HNA acts as a Hidden Primary Server, which is a regular
+authoritative DNS Server listening on the WAN interface.
 
 The DM is configured as a secondary for the Homenet Domain Name. This
 secondary configuration has been previously agreed between the end user
-and the provider of the Outsourcing Infrastructure as part of either
-the provisionning or due to receipt of UPDATE messages on the DM Control Channel.
+and the provider of the Outsourcing Infrastructure as part of either the
+provisionning or due to receipt of UPDATE messages on the DM Control
+Channel.
 
-The Homenet Reverse Zone MAY also be updated either with DNS UPDATE {{!RFC2136}}
-or using a primary / secondary synchronization.
+The Homenet Reverse Zone MAY also be updated either with DNS UPDATE
+{{!RFC2136}} or using a primary / secondary synchronization.
 
-### Securing the Synchronization Channel between HNA and DM {##sec-synch-security}
+### Securing the Synchronization Channel between HNA and DM {#sec-synch-security}
 
 The Synchronization Channel used standard DNS request.
 
-First the primary notifies the secondary that the zone must be updated and 
-eaves the secondary to proceed with the update when possible/ convneient.
+First the primary notifies the secondary that the zone must be updated
+and eaves the secondary to proceed with the update when possible/
+convenient.
 
-Then, a NOTIFY message is sent by the primary, which is a
-small packet that is less likely to load the secondary.
+Then, a NOTIFY message is sent by the primary, which is a small packet
+that is less likely to load the secondary.
 
-Finally, the AXFR query performed by the secondary is a small packet sent
-over TCP (section 4.2 {{!RFC5936}}), which mitigates reflection attacks using
-a forged NOTIFY. 
+Finally, the AXFR query performed by the secondary is a small packet
+sent over TCP (section 4.2 {{!RFC5936}}), which mitigates reflection
+attacks using a forged NOTIFY. 
 
-The AXFR request from the DM to the HNA SHOULD be secured.
-DNS over TLS {{!RFC7858}} is RECOMMENDED.
+The AXFR request from the DM to the HNA SHOULD be secured.  DNS over TLS
+{{!RFC7858}} is RECOMMENDED.
 
-When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms,
-such as a public certificate with baked-in root certifcates on the HNA, or via DANE {!RFC6698}}
+When using TLS, the HNA MAY authenticate inbound connections from the DM
+using standard mechanisms, such as a public certificate with baked-in
+root certificates on the HNA, or via DANE {!RFC6698}}
+
+QUESTION: It is a bit unclear what baked in certificate means. I also
+have the impression that the section should be entitle Messages. The
+security considerations regarding TLS may be factorized with the ones of
+the Control Channel and moved to one level up. I also think that the
+details of the NOTIFY  is discuss din the security considerations so we
+may simplify have a reference to that section.   
 
 The HNA MAY apply a simple IP filter on inbound AXFR requests to ensure
 they only arrive from the DM Synchronization Channel. In this case, the
 HNA SHOULD regularly check (via DNS resolution) that the address of the
 DM in the filter is still valid.
 
+
+QUESTION: I believe that AXFR is straight forward for small zones. I
+suppose that is the reason we are not discussing IXFR. However, I
+believe that it might be beneficial for larger zones. The other thing I
+believe is missing is that the secondary check sthe SERIAL and performs
+a SOA request. Unless I am missing something I believe that is currently
+missing in the section, but again maybe I am missing something.   
+
 I THINK WE CAN REMOVE THE TEXT BELOW: SEE #sec-cpe-sec-policies
+> I believe yes, we may add  the refs to the policy section. 
 
 The Hidden Primary Server SHOULD accept SOA {{!RFC1033}}, AXFR
 {{!RFC1034}}, and  IXFR {{!RFC1995}} queries from its configured
@@ -603,7 +849,7 @@ messages {{!RFC1996}} in order to update Public DNS server zones as
 updates occur. Because, the Homenet Zones are likely to be small, the
 HNA MUST implement AXFR and SHOULD implement IXFR.
 
-## DM Distribution Channel between DM and Primary Authoritative Servers {##sec-dist}
+## DM Distribution Channel between DM and Primary Authoritative Servers {#sec-dist}
 
 The DM Distribution Channel is used for communication between the DM
 and the Public Authoritative Servers. The architecture and communication used for
