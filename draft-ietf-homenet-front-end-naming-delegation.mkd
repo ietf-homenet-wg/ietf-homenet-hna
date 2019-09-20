@@ -314,7 +314,7 @@ provision made in this architecture for transferring private DNSSEC
 related keying material between the HNA and the DM.
 
 Once the Public Homenet Zone has been built, the HNA outsources it to
-the Outsourcing Infrastructure as described in {{fig-auth-servers}}.
+the Outsourcing Infrastructure as described in {{fig-naming-arch}}.
 
 The HNA acts as a hidden primary while the DM behaves as a secondary
 responsible to distribute the Public Homenet Zone to the multiple Public
@@ -322,11 +322,11 @@ Authoritative Servers that Outsourcing Infrastructure is responsible
 for.
 
 The DM has 3 communication channels:
-  * a DM Control Channel (see section {{#sec-ctrl}}) to configure the
+  * a DM Control Channel (see section {{sec-ctrl}}) to configure the
 HNA and the Outsourcing Infrastructure,
-  * a DM Synchronization Channel (see section {{#sec-synch}} to
+  * a DM Synchronization Channel (see section {{sec-synch}} to
 synchronize the Public Homenet Zone on the HNA and on the DM.
-  * one or more Distribution Channels (see section {{#sec-dist}} that
+  * one or more Distribution Channels (see section {{sec-dist}} that
 distributes the Public Homenet Zone from the DM to the Public
 Authoritative Server serving the Public Homenet Zone on the Internet.
 
@@ -418,7 +418,7 @@ used between the HNA and the Outsourcing Infrastructure. The entity
 within the Outsourcing Infrastructure responsible to handle these
 communications is the DM and communications between the HNA and the DM
 SHOULD be protected and mutually authenticated. While section
-{{#sec-ctrl-security}} discusses in more depth the different security
+{{sec-ctrl-security}} discusses in more depth the different security
 protocols that could be used to secure, this specification RECOMMENDS
 the use of TLS with mutually authentication based on certificates to
 secure the channel between the HNA and the DM.
@@ -430,14 +430,15 @@ the IP address and port to use and protocol to set secure session.
 We also assume the DM has knowledge of the identity of the HNA (X509
 certificate) as well as the Registered Homenet Domain.
 
-[Comment Ray - This isn't true in my implementation. The synchronization channel uses standard DNS over TCP or UDP]
+Comment Ray: This isn't true in my implementation. The synchronization channel uses standard DNS over TCP or UDP
 This specification also assumes the same transport protocol and ports
 used by the DM to serve the Control Channel and by the HNA to serve the
 Synchronization Channel are the same. More specifically, if the HNA sets
 the Control Channel using UDP:53/DTLS, TLS/TCP:53, HTTPS:443 or any
 other combination, the same will be used for the synchronization
 Channel.
-[End Comment]
+
+END COMMENT.
 
 The Distribution Channel is internal to the Outsourcing Infrastructure
 and as such is not the primary concern of this specification.
@@ -495,6 +496,7 @@ It would also be good to have the DM sending warnings when there is no
 DS associated to the KSK. I am tempted to have the DM SHOULD try to
 configure the delegation... but I do not like having two entities doing
 the same thing.
+
 ANSWER: the DM can answer the UPDATE RR for the DS with a RCODE from RFC2136.
 REFUSED if the DM can't update the parent. SERVFAIL for temporary problems.
 Not yet in my implementation, but not difficult to do.
@@ -543,22 +545,31 @@ ANSWER: Yes it can: Send an UPDATE RR with DELETE NS. The DM can then delete the
 That's why I'd like to use explicit UPDATE RR's to do this, as there's already quite
 a lot of additional fucntionality that we may not have thought about.
 
-#A seperate control channel is required for communicating information that is not going
-#to be published in the Public Homenet Zone e.g. NS RR and AAAA RR for the HNA itself.
-#
-#There was consideration to using a standard TSIG {{!RFC2845}} or SIG(0) {{!RFC2931}} to
-#perform a dynamic DNS update to the DM.  There are a number of issues with this.  The main
-#one is that the Dynamic DNS update would also update the zone's NS records,
-#while the goal is to update the Distribution Master's configuration files.
-#The visible NS records SHOULD remain pointing at the cloud provider's anycast
-#addresses.  Revealing the address of the HNA in the DNS is not desireable.
-#
-#[Open Question: The proposal is to use DNS for control meesages. Should the messages be transported over DNS, or JSON?]
+{COMMENT}
+A seperate control channel is required for communicating information that is not going
+to be published in the Public Homenet Zone e.g. NS RR and AAAA RR for the HNA itself.
+
+There was consideration to using a standard TSIG {{!RFC2845}} or SIG(0) {{!RFC2931}} to
+perform a dynamic DNS update to the DM.  There are a number of issues with this.  The main
+one is that the Dynamic DNS update would also update the zone's NS records,
+while the goal is to update the Distribution Master's configuration files.
+The visible NS records SHOULD remain pointing at the cloud provider's anycast
+addresses.  Revealing the address of the HNA in the DNS is not desireable.
+
+Open Question: The proposal is to use DNS for control meesages. Should the
+messages be transported over DNS, or JSON?
+{/COMMENT}
 
 ### Messages {#sec-ctrl-messages}
 
 
-#The provisioning process SHOULD provide a method of securing the control channel, so that the content of messages can be authenticated. This authentication MAY be based on certificates for both the DM and each HNA. The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
+{COMMENT}
+The provisioning process SHOULD provide a method of securing the control
+channel, so that the content of messages can be authenticated. This
+authentication MAY be based on certificates for both the DM and each HNA. The
+DM may also create the initial configuration for the delegation zone in the
+parent zone during the provisioning process.
+{/COMMENT}
 
 The information provided by the DM to the HNA is retrieved by the HNA
 with a AXFR exchange. The AXFR message enables the response to contain
@@ -654,44 +665,44 @@ further.
 ANSWER: not necessarily, a new Control session could be set up specially for the NOTIFY, but I agree
 it's best in the Synchronization channel
 
+{COMMENT}
+The HNA SHOULD send an AXFR request to the DM on the Control Channel to retrieve template information
+on how to construct the Public Homenet Zone in order to start the bootstrap process. The SOA of the AXFR SHOULD have an owner of the zone to be delegated.
 
-#The HNA SHOULD send an AXFR request to the DM on the Control Channel to retrieve template information
-#on how to construct the Public Homenet Zone in order to start the bootstrap process. The SOA of the AXFR SHOULD have an owner of the zone to be delegated.
+When an AXFR query is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the owner of the zone corresponds to the certificate's common name used by the HNA), and then the DM SHOULD reply with an unsigned template zone, containing all of the relevant RR's required to contruct the Homenet Public zone e.g. ORIGIN, NS, AAAA and A records of the Public Authoritative Servers, and any keying material required for future UPDATE requests from the HNA to the DM.
 
-#When an AXFR query is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the owner of the zone corresponds to the certificate's common name used by the HNA), and then the DM SHOULD reply with an unsigned template zone, containing all of the relevant RR's required to contruct the Homenet Public zone e.g. ORIGIN, NS, AAAA and A records of the Public Authoritative Servers, and any keying material required for future UPDATE requests from the HNA to the DM.
+The HNA SHOULD use the information in the template zone when contructing the Public Homenet Zone,
+to ensure that resolution on the public Internet uses the NS records provided as part of the template.
 
-#The HNA SHOULD use the information in the template zone when contructing the Public Homenet Zone,
-#to ensure that resolution on the public Internet uses the NS records provided as part of the template.
+How the template zone is created is outside the scope of this document, but it may
+be produced "on the fly" by the DM, or it may be created as part of the provisioning process.
 
-#How the template zone is created is outside the scope of this document, but it may
-#be produced "on the fly" by the DM, or it may be created as part of the provisioning process.
-
-#The HNA MAY also create the initial configuration of the Homenet Authorative Server at this point, including appropriate inbound ACLs to prevent amplification or DDoS attacks.
-
-
-#The HNA SHOULD send DNS UPDATE requests to the DM on the Control Channel to set any information required for
-#establishing the synchronization channel e.g. the AAAA or A RR and an NS RR of the HNA itself, plus an initial DS RR to bootstrap the DNSSEC chain of trust, plus any KEY RRs.
-
-#When an UPDATE is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the source zone corresponds to the certificate used by the HNA), and then the DM SHOULD use the received information
-#to configure the synchronization channel.
-
-#An incoming NS and AAAA records SHOULD be used to set the target address of the outbound AXFR on the Synchronization Channel. The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the notional glue records should be inserted). The NS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the NS RR SHOULD correspond to the owner of the AAAA and/or A RR's, which SHOULD be placed in the Additional section of the Update query.
-
-#An incoming UPDATE containing a DS MAY be used to establish the initial trust for DNSSEC (by inserting the DS RR in the parent zone). The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the DS records should be inserted). The DS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the DS RR SHOULD correspond to the DS record to be inserted in the parent domain.
-
-#Note: future key roll overs MAY be handled by "Managing DS Records from the Parent via CDS/CDNSKEY" {{!RFC8078}} without using the control channel.
-
-#The DM MUST NOT publish the information received on the Control Channel in the Public Homenet Zone.
-
-#Any NOTIFY requests received on the Control Channel MAY be checked for authenticity, and
-#then SHOULD be forwarded to the process providing the Synchronization Channel on the DM.
-
-#How this forwarding occurs is out of scope for this document, but could be achieved by generating
-#a second internal NOTIFY message from the DM to a standard DNS server, or via an internal software signal.
+The HNA MAY also create the initial configuration of the Homenet Authorative Server at this point, including appropriate inbound ACLs to prevent amplification or DDoS attacks.
 
 
-#[Open Question: do updates for the DS RR flow via the control or synch channel?]
+The HNA SHOULD send DNS UPDATE requests to the DM on the Control Channel to set any information required for
+establishing the synchronization channel e.g. the AAAA or A RR and an NS RR of the HNA itself, plus an initial DS RR to bootstrap the DNSSEC chain of trust, plus any KEY RRs.
 
+When an UPDATE is received by the DM on the control channel, the message SHOULD be checked for authenticity (e.g. the source zone corresponds to the certificate used by the HNA), and then the DM SHOULD use the received information
+to configure the synchronization channel.
+
+An incoming NS and AAAA records SHOULD be used to set the target address of the outbound AXFR on the Synchronization Channel. The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the notional glue records should be inserted). The NS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the NS RR SHOULD correspond to the owner of the AAAA and/or A RR's, which SHOULD be placed in the Additional section of the Update query.
+
+An incoming UPDATE containing a DS MAY be used to establish the initial trust for DNSSEC (by inserting the DS RR in the parent zone). The owner of the SOA in the UPDATE query SHOULD be set to the parent domain (where the DS records should be inserted). The DS RR SHOULD be placed in the Update section of the UPDATE query, and the owner SHOULD be set to the delegated zone. The rdata of the DS RR SHOULD correspond to the DS record to be inserted in the parent domain.
+
+Note: future key roll overs MAY be handled by "Managing DS Records from the Parent via CDS/CDNSKEY" {{!RFC8078}} without using the control channel.
+
+The DM MUST NOT publish the information received on the Control Channel in the Public Homenet Zone.
+
+Any NOTIFY requests received on the Control Channel MAY be checked for authenticity, and
+then SHOULD be forwarded to the process providing the Synchronization Channel on the DM.
+
+How this forwarding occurs is out of scope for this document, but could be achieved by generating
+a second internal NOTIFY message from the DM to a standard DNS server, or via an internal software signal.
+
+
+[Open Question: do updates for the DS RR flow via the control or synch channel?]
+{/COMMENT}
 
 
 ### Securing the Control Channel between HNA and DM {#sec-ctrl-security}
@@ -1348,7 +1359,7 @@ Andrew and Peter Koch for clarifying the renumbering.
 This section is not normative and intends to illustrate how the HNA
 builds the Homenet Zone.
 
-As depicted in {{fig-naming-arch}} and {{fig-auth-servers}}, the Public
+As depicted in {{fig-naming-arch}}, the Public
 Homenet Zone is hosted on the Public Authoritative Server(s), whereas
 the Homenet Zone is hosted on the HNA. This section
 considers that the HNA builds the zone that will be effectively
