@@ -89,7 +89,7 @@ devices accessible from the Internet are stored in the Public Homenet
 Zone, served by a DNS authoritative server.   It is unlikely that home
 networks will contain sufficiently robust platforms designed to host a service
 such as the DNS on the Internet and as such would expose the home
-network to DDoS attacks. 
+network to DDoS attacks.
 
 This document describes a mechanism that enables the Home Network
 Authority (HNA) to outsource the naming service to the Outsourcing
