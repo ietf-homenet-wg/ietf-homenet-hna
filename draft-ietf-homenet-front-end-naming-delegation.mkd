@@ -75,6 +75,8 @@ author:
         country: BE
         email: wouter.cloetens@softathome.com
 
+informative:
+  RFC6763: DNS-SD
 
 
 
@@ -183,7 +185,7 @@ information required to construct this view is derived.
 It is also not in the scope of this document to define names for
 exclusive use within the boundaries of the local home network. Instead,
 local scope information is expected to be provided to the home network
-using local scope naming services. mDNS {{!RFC6762}} DNS-SD {{!RFC6763}}
+using local scope naming services. mDNS {{!RFC6762}}, DNS-SD {{-DNS-SD}}
 are two examples of these services. Currently mDNS is limited to a
 single link network. However, future protocols and architectures
 {{?I-D.ietf-homenet-simple-naming}} are expected to leverage this
@@ -320,8 +322,8 @@ be part of the Public Homenet Zone.
 How the Public Homenet Zone is populated is out of the scope of this
 document. The node providing the HNA function may also host or interact
 with multiple services to determine name-to-address mappings, such as a
-web GUI, DHCP {{!RFC6644}} or mDNS {{!RFC6762}}. These services may
-coexist and may be used to populate the Public Homenet Zone.
+web GUI, DHCP {{!RFC6644}}, mDNS {{!RFC6762}} and its evolution to {{-DNS-SD}}.
+These services may coexist and may be used to populate the Public Homenet Zone.
 
 The HNA also signs the Public Homenet Zone. The HNA handles all
 operations and keying material required for DNSSEC, so there is no
