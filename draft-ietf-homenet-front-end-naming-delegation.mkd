@@ -98,38 +98,55 @@ Infrastructure via a Distribution Master (DM).
 
 #Introduction
 
-IPv6 provides global end to end IP connectivity. End users prefer to use
-names instead of long and complex IPv6 addresses when accessing services
-hosted in the home network.
+The Homenet Naming authority is responsible for making devices within
+the home network accessible by name within the home network as well as
+from outside the home network (e.g. the Internet).  IPv6 connectivity
+provides for provides the possibility of global end to end IP connectivity.
+End users will be able to transparently make use of this connectivity if
+they can use names to access the services they want from their home network.
 
-{{!RFC7368}} recommends that home networks be resilient to connectivity
-disruption from the ISP. The public names should be resolvable within
-the home network and on the Internet, even when there are disruptions.
-This could be achieved by a device inside the home network that builds,
+The use of a DNS zone for each home network is a reasonable and scalable way
+to make the set of public names visible.
+There are a number of ways to populate such a zone.
+This specification proposes a way to do with based upon a number of
+assumptions about typical home networks.
+
+1. The names of the devices accessible from the Internet are stored in the
+   Public Homenet Zone, served by a DNS authoritative server.
+
+2. It is unlikely that home networks will contain sufficiently robust
+   platforms designed to host a service such as the DNS on the Internet and as
+   such would expose the home network to DDoS attacks.
+
+3. {{!RFC7368}} emphazes that the home network is subject to connectivity
+   disruptions with the ISP.
+   But, names used within the home MUST be resilient against such disruption.
+
+So a goal of this specification is to make the public names resolvable within
+both the home network and on the Internet, even when there are disruptions.
+
+This is achieved by having a device inside the home network that builds,
 publishes, and manages a Public Homenet Zone, thus providing bindings
 between public names, IP addresses, and other RR types.
 
 The management of the names can be a role that the Customer Premises
-Equipment (CPE) does. Other devices in the home network could fulfill
-this role e.g. a NAS server, but for simplicity, this document assumes
-the function is located on one of the CPE devices.
+Equipment (CPE) does.
+Other devices in the home network could fulfill this role e.g. a NAS server,
+but for simplicity, this document assumes the function is located on one of the CPE devices.
 
-A home network may have multiple CPEs. Since management of the Public
-Homenet Zone involves DNS specific mechanisms that cannot be distributed
-over multiple servers (primary server), when multiple nodes can
-potentially manage the Public Homenet Zone, a single node needs to be
-selected per outsourced zone. This selected node is designated as
-providing the Homenet Naming Authority (HNA) function.
+The homenet architecture {{!RFC7368}} makes it clear that a home network may have multiple CPEs.
+The management of the Public Homenet Zone involves DNS specific mechanisms
+that cannot be distributed over multiple servers (primary server), when
+multiple nodes can potentially manage the Public Homenet Zone, a single node
+needs to be selected per outsourced zone.
+This selected node is designated as providing the Homenet Naming Authority (HNA) function.
 
-The process by which a single HNA is selected per zone is not in scope
-for this document.
+The process by which a single HNA is selected per zone is not in scope for this document.
+It is envisioned that a future document will describe an HNCP mechanism to elect the single HNA.
 
-CPEs, which may host the HNA function, as well as home network devices,
-are usually low powered devices not designed for terminating heavy
-traffic. As a result, hosting an authoritative DNS service visible to
-the Internet may expose the home network to resource exhaustion and
-other attacks. Additionally, the names could become unavailable during
-disruptions of the upstream Internet connectivity.
+CPEs, which may host the HNA function, as well as home network devices, are usually low powered devices not designed for terminating heavy traffic.
+As a result, hosting an authoritative DNS service visible to the Internet may expose the home network to resource exhaustion and other attacks.
+Additionally, the names could become unavailable during disruptions of the upstream Internet connectivity.
 
 In order to avoid resource exhaustion and other attacks, this document
 describes an architecture that outsources the authoritative naming
@@ -441,7 +458,7 @@ Revealing the address of the HNA in the DNS is not desireable.
 
 This specification also assumes the same transport protocol and ports
 used by the DM to serve the Control Channel and by the HNA to serve the
-Synchronization Channel are the same. 
+Synchronization Channel are the same.
 
 The Distribution Channel is internal to the Outsourcing Infrastructure
 and as such is not the primary concern of this specification.
