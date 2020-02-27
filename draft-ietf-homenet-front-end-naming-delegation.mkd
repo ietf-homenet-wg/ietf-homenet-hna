@@ -9,7 +9,6 @@ wg: Homenet
 kw: Internet-Draft
 cat: info
 
-coding: us-ascii
 pi:
   rfcedstyle: yes
   toc: yes
@@ -96,13 +95,6 @@ Authority (HNA) to outsource the naming service to the Outsourcing
 Infrastructure via a Distribution Master (DM).
 
 --- middle
-
-#Requirements notation
-
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in {{!RFC2119}}.
-
 
 #Introduction
 
@@ -222,6 +214,8 @@ provide solutions to many of these problems, but this document describes
 a DNS based solution.
 
 #Terminology
+
+{::boilerplate bcp14}
 
 * Customer Premises Equipment: (CPE) is a router providing connectivity
 to the home network.
@@ -1219,7 +1213,7 @@ access. For example some servers may perform PTR DNS queries to grant
 access based on host names. DNSSEC mitigates lack of trust in DNS, and
 it is  RECOMMENDED to deploy DNSSEC on HNAs.
 
-  	-->)
+-->)
 
 
 
@@ -1389,7 +1383,7 @@ reduced, and 3600 (1 hour) seems more appropriate.
 
 
 [](<!-- ## Considerations on multiple Registered Homenet Domain Names
- 	## are left for future versions
+## are left for future versions
 When multiple Registered Homenet Domains are used
 -like example.com, example.net, example.org, a DNS Homenet
 Zone file per Registered Homenet Domain SHOULD be generated.
@@ -1447,7 +1441,7 @@ channel. This name is used by the DM and the HNA for
 the primary / secondary configuration as well as to index the NOTIFY
 queries of the HNA when the HNA has been renumbered.
 
-  	Setting the Homenet Zone requires the following information.
+Setting the Homenet Zone requires the following information.
 
 * Registered Homenet Domain: The Domain Name of the zone. Multiple
 Registered Homenet Domains may be provided. This will generate the
@@ -1460,10 +1454,10 @@ Authoritative Server(s) may be provided.
 Two possible methods of providing the required information would be:
 
 JSON for forward zones
-[should be standardized in a similar way to zone file layout in RFC1035]
+should be standardized in a similar way to zone file layout in RFC1035
 
 DHCP for reverse zones
-[needs a separate draft]
+needs a separate draft
 
 
 
