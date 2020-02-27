@@ -1261,6 +1261,12 @@ for their feedback on handling different views as well as clarifying the
 impact of outsourcing the zone signing operation outside the HNA; Mark
 Andrew and Peter Koch for clarifying the renumbering.
 
+--- back
+
+# Configuration of Homenet Recursive Servers {#zone-configuration}
+
+This is a non-normative section that describes ways to configure recursive resolver(s) so that name service is available in the Homenet even when Internet connectivity is unavailable.
+
 # Annex
 
 ## Envisioned deployment scenarios
@@ -1480,11 +1486,4 @@ should be standardized in a similar way to zone file layout in RFC1035
 
 DHCP for reverse zones
 needs a separate draft
-
---- back
-
-# Configuration of Homenet Recursive Servers {#zone-configuration}
-
-This is a non-normative section that describes ways to configure recursive resolver(s) so that name service is available in the Homenet even when Internet connectivity is unavailable.
-
 
