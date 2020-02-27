@@ -1256,7 +1256,7 @@ solutions; Paul Mockapetris, Christian Jacquenet, Francis Dupont and
 Ludovic Eschard for their remarks on HNA and low power devices; Olafur
 Gudmundsson for clarifying DNSSEC capabilities of small devices; Simon
 Kelley for its feedback as dnsmasq implementer; Andrew Sullivan, Mark
-Andrew, Ted Lemon, Mikael Abrahamson, Michael Richardson and Ray Bellis
+Andrew, Ted Lemon, Mikael Abrahamson, and Ray Bellis
 for their feedback on handling different views as well as clarifying the
 impact of outsourcing the zone signing operation outside the HNA; Mark
 Andrew and Peter Koch for clarifying the renumbering.
