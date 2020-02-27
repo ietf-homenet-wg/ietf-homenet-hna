@@ -354,8 +354,11 @@ the same code base.
 
 It is important to note that while the HNA is configured as an
 authoritative server, it is not expected to answer to DNS requests from
-the public Internet for the Public Homenet Zone. The function of the HNA
-is limited to building the zone and synchronization with the DM.
+the public Internet for the Public Homenet Zone.
+The function of the HNA is limited to building the zone and synchronization with the DM.
+The HNA is expected to be able answer queries from within the Homenet, particularly when connectivity to the Internet is unavailable.
+This may need some implicit configuration to the Homenet recursive DNS servers.
+{{zone-configuration}} provides some guidance on different ways to accomplish this.
 
 The addresses associated with the HNA SHOULD NOT be mentioned in the NS
 records of the Public Homenet zone, unless additional security
@@ -1478,5 +1481,10 @@ should be standardized in a similar way to zone file layout in RFC1035
 DHCP for reverse zones
 needs a separate draft
 
+--- back
+
+# Configuration of Homenet Recursive Servers {#zone-configuration}
+
+This is a non-normative section that describes ways to configure recursive resolver(s) so that name service is available in the Homenet even when Internet connectivity is unavailable.
 
 
