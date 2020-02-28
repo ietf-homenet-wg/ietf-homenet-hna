@@ -101,7 +101,7 @@ Infrastructure via a Distribution Master (DM).
 The Homenet Naming authority is responsible for making devices within
 the home network accessible by name within the home network as well as
 from outside the home network (e.g. the Internet).  IPv6 connectivity
-provides for provides the possibility of global end to end IP connectivity.
+provides the possibility of global end to end IP connectivity.
 End users will be able to transparently make use of this connectivity if
 they can use names to access the services they want from their home network.
 
@@ -146,7 +146,9 @@ It is envisioned that a future document will describe an HNCP mechanism to elect
 
 CPEs, which may host the HNA function, as well as home network devices, are usually low powered devices not designed for terminating heavy traffic.
 As a result, hosting an authoritative DNS service visible to the Internet may expose the home network to resource exhaustion and other attacks.
-Additionally, the names could become unavailable during disruptions of the upstream Internet connectivity.
+On the other hand, if the only copy of the public zone is on the Internet,
+then Internet connectivity disruptions would make the names unavailable
+inside the homenet.
 
 In order to avoid resource exhaustion and other attacks, this document
 describes an architecture that outsources the authoritative naming
