@@ -314,11 +314,6 @@ The HNA SHOULD build the Public Homenet Zone in a single view populated
 with all resource records that are expected to be published on the
 Internet.
 
-Resource records associated with services or devices that are not
-expected to be resolvable from outside the home network, or resource
-records bound to non-globally reachable IP addresses e.g. ULA, MUST NOT
-be part of the Public Homenet Zone.
-
 How the Public Homenet Zone is populated is out of the scope of this
 document. The node providing the HNA function may also host or interact
 with multiple services to determine name-to-address mappings, such as a
