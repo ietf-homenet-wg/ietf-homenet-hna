@@ -639,7 +639,7 @@ is set by setting the TTL to 0, the CLass to ANY, the RDLENGTH to 0 and
 the RDATA MUST be empty.
 
 
-## Securing the Control Channel between HNA and DM {#sec-ctrl-security}
+## Securing the Control Channel between Homenet Naming Authority (HNA) and Distribution Master (DM)  {#sec-ctrl-security}
 
 The control channel between the HNA and the DM MUST be secured at both
 the HNA and the DM.
