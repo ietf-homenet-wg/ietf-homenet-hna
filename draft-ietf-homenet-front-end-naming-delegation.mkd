@@ -1262,15 +1262,15 @@ for their feedback on handling different views as well as clarifying the
 impact of outsourcing the zone signing operation outside the HNA; Mark
 Andrew and Peter Koch for clarifying the renumbering.
 
-# Annex
+--- back
 
-## Envisioned deployment scenarios
+# Envisioned deployment scenarios
 
 A number of deployment have been envisionned, this section aims at
 providing a brief description. The use cases are not limitatives and
 this section is not normative.
 
-### CPE Vendor
+## CPE Vendor
 
 A specific vendor with specific relations with a registrar or a registry
 may sell a CPE that is provisioned with provisioned domain name. Such
@@ -1289,7 +1289,7 @@ key to be regenerated.
 When the home network owner plugs the CPE at home, the relation between
 HNA and DM is expected to work out-of-the-box.
 
-### Agnostic CPE
+## Agnostic CPE
 
 An CPE that is not preconfigured may also take advanatge to the protocol
 defined in this document but some configuration steps will be needed.
@@ -1320,7 +1320,7 @@ outsourcing infrastructure. With that being done, the outsourcing
 infrastructure has a roof of ownership and can proceed as above.
 
 
-## Example: Homenet Zone {#sec-homenet-zone}
+# Example: Homenet Zone {#sec-homenet-zone}
 
 This section is not normative and intends to illustrate how the HNA
 builds the Homenet Zone.
@@ -1425,7 +1425,7 @@ preferred for large Homenet Zones, or when the number
 of Registered Homenet Domain becomes quite large.
 -->)
 
-## Example: HNA necessary parameters for outsourcing {#sec-configuration-parameters}
+# Example: HNA necessary parameters for outsourcing {#sec-configuration-parameters}
 
 This section specifies the various parameters required by the HNA to
 configure the naming architecture of this document. This section is
