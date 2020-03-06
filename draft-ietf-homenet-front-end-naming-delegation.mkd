@@ -505,7 +505,7 @@ exchange is OPTIONAL.
 
 By accepting the DS, the DM commits in taking care of advertising
 the DS to the parent zone. Upon refusal, the DM MUST clearly indicate
-the DM does not have the capacity to proceed to the update.  
+the DM does not have the capacity to proceed to the update.
 
 ## Information to set the Synchronization Channel,
 
@@ -520,12 +520,12 @@ those used by the Control Channel. By default, the same IP address used
 by the HNA is considered by the DM. Exchange of this information is
 OPTIONAL.
 
-## Deleting the delegation 
+## Deleting the delegation
 
 The purpose of the previous sections were to exchange information in
 order to set a delegation. The HNA MUST also be able to delete a
 delegation with a specific DM. Upon an instruction of deleting the
-delegation, the DM MUST stop serving the Public Homenet Zone. 
+delegation, the DM MUST stop serving the Public Homenet Zone.
 
 ## Messages Exchange Description {#sec-ctrl-messages}
 
@@ -547,7 +547,7 @@ The provisioning process SHOULD provide a method of securing the control
 channel, so that the content of messages can be authenticated. This
 authentication MAY be based on certificates for both the DM and each
 HNA. The DM may also create the initial configuration for the delegation
-zone in the parent zone during the provisioning process.  
+zone in the parent zone during the provisioning process.
 
 ### Retrieving information for the Public Homenet Zone.
 
@@ -636,7 +636,7 @@ Registered Homenet Domain. The Update section MUST be a RRset of Type
 NS. The NAME associated to the NS RRSet MUST be the Registered Domain
 Name. As indictaed by {{!RFC2136}} section 2.5.2 the delete instruction
 is set by setting the TTL to 0, the CLass to ANY, the RDLENGTH to 0 and
-the RDATA MUST be empty.   
+the RDATA MUST be empty.
 
 
 ## Securing the Control Channel between HNA and DM {#sec-ctrl-security}
@@ -759,7 +759,7 @@ The Homenet Reverse Zone MAY also be updated either with DNS UPDATE
 
 ## Securing the Synchronization Channel between HNA and DM {#sec-synch-security}
 
-The Synchronization Channel used standard DNS request. 
+The Synchronization Channel used standard DNS request.
 
 First the primary notifies the secondary that the zone must be updated
 and eaves the secondary to proceed with the update when possible/
@@ -1259,13 +1259,13 @@ Andrew and Peter Koch for clarifying the renumbering.
 
 A number of deployment have been envisionned, this section aims at
 providing a brief description. The use cases are not limitatives and
-this section is not normative. 
+this section is not normative.
 
 ### CPE Vendor
 
 A specific vendor with specific relations with a registrar or a registry
 may sell a CPE that is provisioned with provisioned domain name. Such
-domain name does not need to be necessary human readable. 
+domain name does not need to be necessary human readable.
 
 One possible way is that the vendor also provisions the HNA with a
 private and public keys as well as a certificate. Note that these keys
@@ -1275,22 +1275,22 @@ keys should be necessary and sufficient to proceed to the
 authentication. The reason to combine the domain name and the key is
 that outsourcing infrastructure are likely handle names better than
 keys and that domain names might be used as a login which enables the
-key to be regenerated. 
+key to be regenerated.
 
 When the home network owner plugs the CPE at home, the relation between
-HNA and DM is expected to work out-of-the-box. 
+HNA and DM is expected to work out-of-the-box.
 
 ### Agnostic CPE
 
 An CPE that is not preconfigured may also take advanatge to the protocol
-defined in this document but some configuration steps will be needed. 
+defined in this document but some configuration steps will be needed.
 
 1. The owner of the home network buys a domain name to a registrar, and
 as such creates an account on that registrar
 
 2. Either the registrar is also providing the outsourcing infrastructure
 or the home network needs to create a specific account on the
-outsourcing infrastructure. 
+outsourcing infrastructure.
   * If the outsourcing provider is the registrar, the outsourcing has by
 design a proof of ownership of the domain name by the homenet owner. In
 this case, it is expected the infrastructure provides the necessary
@@ -1300,7 +1300,7 @@ copy/paste a JSON object. What matters at that point is the outsourcing
 infrastructure being able to generate authentication credentials for the
 HNA to authenticate itself to the outsourcing infrastructure. This
 obviously requires the home network to provide the public key gnerated
-by the HNA in a CSR. 
+by the HNA in a CSR.
 
   * If the outsourcing infrastructure is
 not the registrar, then the proof of ownership needs to be established
@@ -1308,7 +1308,7 @@ using protocols like ACME for example that will end in the generation of
 a certificate. ACME is used here to the purpose of automating the
 generation of the certificate, the CA may be a specific CA or the
 outsourcing infrastructure. With that being done, the outsourcing
-infrastructure has a roof of ownership and can proceed as above. 
+infrastructure has a roof of ownership and can proceed as above.
 
 
 ## Example: Homenet Zone {#sec-homenet-zone}
