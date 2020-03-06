@@ -658,6 +658,7 @@ service port.  This document RECOMMENDS this option.
 The HNA SHOULD authenticate inbound connections from the DM using
 standard mechanisms, such as a public certificate with baked-in root
 certificates on the HNA, or via DANE {!RFC6698}}.
+The HNA is expected to be provisioned with a connection to the DM by the manufacturer, or during some user-initiated onboarding process, see {{hna-provisioning}}.
 
 The DM SHOULD authenticate the HNA and check that inbound messages are
 from the appropriate client.  The DM MAY use a self-signed CA
@@ -958,6 +959,14 @@ home networks.
 
 This section is non-normative.
 It provides suggestions on operational consideration.  TBD.
+
+# provisioning of the Homenet Naming Authority (HNA) {#hna-provisioning}
+
+This document does not deal with how the HNA is provisioned with a trusted relationship to the Distribution Master for the forward zone.
+Provisioning of the relationship with an ISP-connection specific Distribution Master for reverse zones is dealt with in REFERENCE-TO-MGLT-DHCPV6-PD-WORK.
+
+This section details what needs to be provisioned into the HNA and serves as a requirements statement for mechanisms.
+
 
 # Privacy Considerations {#sec-privacy}
 
