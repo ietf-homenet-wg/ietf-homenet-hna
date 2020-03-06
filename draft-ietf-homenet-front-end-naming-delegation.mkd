@@ -649,11 +649,9 @@ used to secure the transactions between the DM and the HNA.
 
 The advantage of TLS/DTLS is that this technology is widely deployed,
 and most of the devices already embed TLS/DTLS libraries, possibly also
-taking advantage of hardware acceleration. Further, TLS/DTLS provides
-authentication facilities and can use certificates to authenticate the
-DM and the HNA. On the other hand, using TLS/DTLS
-requires implementing DNS exchanges over TLS/DTLS, as well as a new
-service port.  This document RECOMMENDS this option.
+taking advantage of hardware acceleration.
+Further, TLS/DTLS provides authentication facilities and can use certificates to  mutually authenticate the DM and HNA at the applicationlayer, including available API.
+On the other hand, using TLS/DTLS requires implementing DNS exchanges over TLS/DTLS, as  well as a new service port.
 
 The HNA SHOULD authenticate inbound connections from the DM using
 standard mechanisms, such as a public certificate with baked-in root
@@ -661,36 +659,22 @@ certificates on the HNA, or via DANE {!RFC6698}}.
 The HNA is expected to be provisioned with a connection to the DM by the manufacturer, or during some user-initiated onboarding process, see {{hna-provisioning}}.
 
 The DM SHOULD authenticate the HNA and check that inbound messages are
-from the appropriate client.  The DM MAY use a self-signed CA
-certificate mechanism per HNA, or public certificates for this purpose.
+from the appropriate client.
+The DM MAY use a self-signed CA certificate mechanism per HNA, or public certificates for this purpose.
 
-IPsec {{!RFC4301}} IKEv2 {{!RFC7296}} MAY also be used to secure
-transactions between the HNA and the DM. Similarly to TLS/DTLS, most
-HNAs already embed an IPsec stack, and IKEv2 supports multiple
-authentication mechanisms via the EAP framework. In addition, IPsec can
-be used to protect DNS exchanges between the HNA and the DM without any
-modifications of the DNS server or client. DNS integration over IPsec
-only requires an additional security policy in the Security Policy
-Database (SPD). One disadvantage of IPsec is that NATs and firewall
-traversal may be problematic. However, in our case, the HNA is connected
-to the Internet, and IPsec communication between the HNA and the DM
-should not be impacted by middle boxes.
+IPsec {{!RFC4301}} and IKEv2 {{!RFC7296}} were considered.
+They would need to operate in transport mode, and the authenticated end points would need to be visible to the applications, and this is not commonly available at the time of this writing.
 
-How the PSK can be used by any of the TSIG, TLS/DTLS or IPsec protocols:
-Authentication based on certificates implies a mutual authentication and
-thus requires the HNA to manage a private key, a public key, or
-certificates, as well as Certificate Authorities. This adds complexity
-to the configuration especially on the HNA side. For this reason, we
-RECOMMEND that the HNA MAY use PSK or certificate based authentication,
-and that the DM MUST support PSK and certificate based authentication.
+A pure DNS solution using TSIG and/or SIG(0) to authenticate message was also considered.
+{{hna-provisioning}} envisions one mechanism would involve the end user, with a browser, signing up to a service provider, with a resulting OAUTH2 token to be provided to the HNA.
+A way to translate this OAUTH2 token from HTTPS web space to DNS SIG(0) space seems overly problematic, and so the enrollment protocol using web APIs was determined to be easier to implement at scale.
 
 Note also that authentication of message exchanges between the HNA and
 the DM SHOULD NOT use the external IP address of the HNA to index the
-appropriate keys. As detailed in {{sec-renumbering}}, the IP addresses
-of the DM and the Hidden Primary are subject to change, for example
-while the network is being renumbered. This means that the necessary
-keys to authenticate transaction SHOULD NOT be indexed using the IP
-address, and SHOULD be resilient to IP address changes.
+appropriate keys.
+As detailed in {{sec-renumbering}}, the IP addresses of the DM and the Hidden Primary are subject to change, for example while the network is being renumbered.
+This means that the necessary keys to authenticate transaction SHOULD NOT be indexed  using the IP address, and SHOULD be resilient to IP address changes.
+This should apply to any OAUTH2 token produced as envisioned by {{hna-provisioning}}.
 
 ## Implementation Tips {#sec-ctrl-implementation}
 
@@ -1444,8 +1428,7 @@ exchange is required. Otherwise, the IP addresses should be entered
 manually.
 
 * Authentication Method: How the HNA authenticates itself to the
-DM. This MAY depend on the implementation but this
-should cover at least IPsec, DTLS and TSIG
+DM.
 
 * Authentication data: Associated Data. PSK only requires a single
 argument. If other authentication mechanisms based on certificates are
