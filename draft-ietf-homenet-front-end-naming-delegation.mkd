@@ -947,7 +947,7 @@ It provides suggestions on operational consideration.  TBD.
 # provisioning of the Homenet Naming Authority (HNA) {#hna-provisioning}
 
 This document does not deal with how the HNA is provisioned with a trusted relationship to the Distribution Master for the forward zone.
-Provisioning of the relationship with an ISP-connection specific Distribution Master for reverse zones is dealt with in REFERENCE-TO-MGLT-DHCPV6-PD-WORK.
+Provisioning of the relationship with an ISP-connection specific Distribution Master for reverse zones is dealt with in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}
 
 This section details what needs to be provisioned into the HNA and serves as a requirements statement for mechanisms.
 
