@@ -302,7 +302,7 @@ configure the HNA.
 
 ## Architecture Overview {#sec-arch-overview}
 
-Figure {{fig-naming-arch}} illustrates the architecture where the HNA
+{{fig-naming-arch}} illustrates the architecture where the HNA
 outsources the publication of the Public Homenet Zone to the Outsourcing
 Infrastructure.
 
@@ -336,13 +336,16 @@ Authoritative Servers that Outsourcing Infrastructure is responsible
 for.
 
 The DM has 3 communication channels:
-  * a DM Control Channel (see section {{sec-ctrl}}) to configure the
-HNA and the Outsourcing Infrastructure,
-  * a DM Synchronization Channel (see section {{sec-synch}} to
-synchronize the Public Homenet Zone on the HNA and on the DM.
-  * one or more Distribution Channels (see section {{sec-dist}} that
-distributes the Public Homenet Zone from the DM to the Public
-Authoritative Server serving the Public Homenet Zone on the Internet.
+
+* a DM Control Channel (see section {{sec-ctrl}}) to configure the
+  HNA and the Outsourcing Infrastructure,
+
+* a DM Synchronization Channel (see section {{sec-synch}} to
+  synchronize the Public Homenet Zone on the HNA and on the DM.
+
+* one or more Distribution Channels (see section {{sec-dist}} that
+  distributes the Public Homenet Zone from the DM to the Public
+  Authoritative Server serving the Public Homenet Zone on the Internet.
 
 There MAY be multiple DM's, and multiple servers per DM. This text
 assumes a single DM server for simplicity, but there is no reason why
@@ -462,7 +465,7 @@ Synchronization Channel are the same.
 The Distribution Channel is internal to the Outsourcing Infrastructure
 and as such is not the primary concern of this specification.
 
-# Control Channel between HNA and DM {#sec-ctrl}
+# Control Channel between Homenet Naming Authority (HNA) and Distribution Master (DM) {#sec-ctrl}
 
 The DM Control Channel is used by the HNA and the Outsourcing
 Infrastructure to exchange information related to the configuration of
@@ -470,20 +473,24 @@ the delegation which includes:
 
 ## Information to build the Public Homenet Zone.
 
-More specifically, the Public Homenet Zone contains information that is
-related to the infrastructure serving the zone. In our case, the
-infrastructure serving the Public Homenet Zone is the Outsourcing
-Infrastructure, so this information MUST reflect that Outsourcing
-Infrastructure and MUST be provided to the HNA.
+When the Homenet Naming Authority builds the public zone, it must include
+information that it retrieves from the Distribution Master relating to how
+the zone is to be published.
 
 The information includes at least names and IP addresses of the Public
-Authoritative Servers. In term of RRset information this corresponds,
-for the Registered Homenet Domain the MNAME of the SOA, the NS and
-associated A and AAA RRsets. Optionally the Outsourcing Infrastructure
-MAY also provide operational parameters such as other fields of SOA
-(SERIAL, RNAME, REFRESH, RETRY, EXPIRE and MINIMUM). As the information
-is necessary for the HNA to proceed and the information is associated to
-the Outsourcing Infrastructure, this information exchange is mandatory.
+Authoritative Name Servers.
+In term of RRset information:
+
+* this includes the MNAME of the SOA,
+* the NS and associated A and AAA RRsets of the name servers.
+
+Optionally the Outsourcing Infrastructure MAY also provide operational
+parameters such as other fields of SOA (SERIAL, RNAME, REFRESH, RETRY, EXPIRE
+and MINIMUM).
+As the information is necessary for the HNA to proceed and the information is
+associated to the Outsourcing Infrastructure, this information exchange is mandatory.
+
+
 
 ## Information to build the DNSSEC chain of trust.
 
@@ -562,19 +569,24 @@ exchange.
 
 To retrieve the necessary information to build the Public Homenet Zone,
 the HNA MUST send an DNS request of type AXFR associated to the
-Registered Homenet Domain. The DM MUST respond with a zone template. The
-zone template MUST contain a RRset of type SOA, one or multiple RRset of
-type NS and at least one RRset of type A or AAAA. The SOA RR is used to
-indicate to the HNA the value of the MNAME of the Public Homenet Zone.
-The NAME of the SOA RR MUST be the Registered Homenet Domain. The MNAME
-value of the SOA RDATA is the value provided by the Outsourcing
+Registered Homenet Domain.
+The DM MUST respond with a zone template.
+The zone template MUST contain a RRset of type SOA, one or multiple RRset of
+type NS and zero or more RRset of type A or AAAA.
+
+The SOA RR is used to indicate to the HNA the value of the MNAME of the Public Homenet Zone.
+The NAME of the SOA RR MUST be the Registered Homenet Domain.
+The MNAME value of the SOA RDATA is the value provided by the Outsourcing
 Infrastructure to the HNA. Other RDATA values (RNAME, REFRESH, RETRY,
 EXPIRE and MINIMUM) are provided by the Outsourcing Infrastructure as
-suggestions. The NS RRsets are used to carry the Public Authoritative
-Servers of the Outsourcing Infrastructure. Their associated NAME MUST be
-the Registered Homenet Domain. The TTL and RDATA are those expected to
-be published on the Public Homenet Zone. The RRsets of Type A and AAAA
-MUST have their NAME matching the NSDNAME of one of the NS RRsets.
+suggestions.
+The NS RRsets are used to carry the Public Authoritative Servers of the
+Outsourcing Infrastructure.
+Their associated NAME MUST be the Registered Homenet Domain.
+The TTL and RDATA are  those expected to be published on the Public Homenet
+Zone.
+The RRsets of Type A and AAAA MUST have their NAME matching the NSDNAME of
+one of the NS RRsets.
 
 Upon receiving the response, the HNA MUST validate the conditions on the
 SOA, NS and A or AAAA RRsets. If an error occurs, the HNA MUST stop
@@ -821,21 +833,21 @@ may use Automating DNSSEC Delegation Trust Maintenance  {{!RFC7344}}.
 
 # Homenet Reverse Zone {#sec-reverse}
 
-The Public Homenet Zone is associated to a Registered Homenet Domain and the ownership of that domain requires a specific registration from the end user as well as the HNA being provisioned with some authentication credentials . 
-Such steps are mandatory unless the Outsourcing Infrastructure has some other means to authenticate the HNA. 
-Such situation may occur, for example, when the ISP provides the Homenet Domain as well as the Outsourcing Infrastructure. 
-In this case, the HNA may be authenticated by the physical link layer, in which case the authentication of the HNA may be performed without additional provisioning of the HNA. 
-While this may be not so common for the Public Homenet Zone, this situation is expected to be quite common for the Reverse Homenet Zone. 
+The Public Homenet Zone is associated to a Registered Homenet Domain and the ownership of that domain requires a specific registration from the end user as well as the HNA being provisioned with some authentication credentials .
+Such steps are mandatory unless the Outsourcing Infrastructure has some other means to authenticate the HNA.
+Such situation may occur, for example, when the ISP provides the Homenet Domain as well as the Outsourcing Infrastructure.
+In this case, the HNA may be authenticated by the physical link layer, in which case the authentication of the HNA may be performed without additional provisioning of the HNA.
+While this may be not so common for the Public Homenet Zone, this situation is expected to be quite common for the Reverse Homenet Zone.
 
-More specifically, a common case is that the upstream ISP provides the IPv6 prefix to the Homenet with a IA_PD {{!RFC8415}} option and manages the Outsourcing Infrastructure of the associated reverse zone. 
-This leave place for setting up automatically the relation between HNA and the Outsourcing infrastructure as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}. 
+More specifically, a common case is that the upstream ISP provides the IPv6 prefix to the Homenet with a IA_PD {{!RFC8415}} option and manages the Outsourcing Infrastructure of the associated reverse zone.
+This leave place for setting up automatically the relation between HNA and the Outsourcing infrastructure as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
 
-With this relation automatically configured, the synchronization between the Home network and the Outsourcing infrastructure happens similarly as for the Public Homenet Zone described earlier in this document. 
+With this relation automatically configured, the synchronization between the Home network and the Outsourcing infrastructure happens similarly as for the Public Homenet Zone described earlier in this document.
 
-Note that for home networks hosted by multiple ISPs, each ISP provides only the Outsourcing Infrastructure of the reverse zones associated to the delegated prefix.  
+Note that for home networks hosted by multiple ISPs, each ISP provides only the Outsourcing Infrastructure of the reverse zones associated to the delegated prefix.
 It is also likely that the DNS exchanges will need to be performed on dedicated interfaces as to be accepted by the ISP.
-More specifically, the reverse zone associated to prefix 1 will not be possible to be performs by the HNA using an IP address that belongs to prefix 2. 
-Such constraints does not raise major concerns either for hot standby or load sharing configuration.  
+More specifically, the reverse zone associated to prefix 1 will not be possible to be performs by the HNA using an IP address that belongs to prefix 2.
+Such constraints does not raise major concerns either for hot standby or load sharing configuration.
 
 With IPv6, the domain space for IP addresses is so large that reverse zone may be confronted with scalability issues. How the reverse zone is generated is out of scope of this document. {{?I-D.howard-dnsop-ip6rdns}} provides guidance on how to address scalability issues.
 
@@ -995,14 +1007,14 @@ exposing the HNA's DNS service as a DoS attack vector.
 ## HNA DM channels
 The HNA DM channels are specified to include their own security mechanisms
 that are designed to provide the minimum attacke surface, and to authenticate
-transactions where necessary. 
+transactions where necessary.
 
 Note that in the case of the Reverse Homenet Zone, the data is less subject to attacks than in the Public Homenet Zone.
-In addition, the HNA and the DM MAY belong to the same administrative domain, i.e. the ISP. 
-More specifically, the WAN interface is located in the ISP network. 
+In addition, the HNA and the DM MAY belong to the same administrative domain, i.e. the ISP.
+More specifically, the WAN interface is located in the ISP network.
 As a result, if provisioned using DHCPv6, the security credential may not even transit in the home network.
-On the other hand, if the HNA is not hosted at the border of the home network, the credential may rely on the security associated to DHCPv6. 
-Even if HNA and DM are in the same administrative domain it is strongly RECOMMENDED to use a secure channel. 
+On the other hand, if the HNA is not hosted at the border of the home network, the credential may rely on the security associated to DHCPv6.
+Even if HNA and DM are in the same administrative domain it is strongly RECOMMENDED to use a secure channel.
 
 
 
