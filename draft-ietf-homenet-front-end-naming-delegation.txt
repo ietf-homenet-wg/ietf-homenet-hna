@@ -5,7 +5,7 @@
 Homenet                                                       D. Migault
 Internet-Draft                                                  Ericsson
 Intended status: Informational                                  R. Weber
-Expires: September 10, 2020                                      Nominum
+Expires: April 12, 2021                                          Nominum
                                                            M. Richardson
                                                 Sandelman Software Works
                                                                R. Hunter
@@ -14,11 +14,11 @@ Expires: September 10, 2020                                      Nominum
 
                                                              W. Cloetens
                                                               SoftAtHome
-                                                          March 09, 2020
+                                                        October 09, 2020
 
 
          Outsourcing Home Network Authoritative Naming Service
-           draft-ietf-homenet-front-end-naming-delegation-10
+           draft-ietf-homenet-front-end-naming-delegation-11
 
 Abstract
 
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Migault, et al.        Expires September 10, 2020               [Page 1]
+Migault, et al.          Expires April 12, 2021                 [Page 1]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
-   This Internet-Draft will expire on September 10, 2020.
+   This Internet-Draft will expire on April 12, 2021.
 
 Copyright Notice
 
@@ -82,62 +82,62 @@ Table of Contents
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   6
    3.  Architecture Description  . . . . . . . . . . . . . . . . . .   8
      3.1.  Architecture Overview . . . . . . . . . . . . . . . . . .   8
-     3.2.  Distribution Master Communication Channels  . . . . . . .  10
-   4.  Control Channel between HNA and DM  . . . . . . . . . . . . .  11
-     4.1.  Information to build the Public Homenet Zone. . . . . . .  11
-     4.2.  Information to build the DNSSEC chain of trust. . . . . .  12
-     4.3.  Information to set the Synchronization Channel, . . . . .  12
+     3.2.  Distribution Master Communication Channels  . . . . . . .  11
+   4.  Control Channel between Homenet Naming Authority (HNA) and
+       Distribution Master (DM)  . . . . . . . . . . . . . . . . . .  12
+     4.1.  Information to build the Public Homenet Zone. . . . . . .  12
+     4.2.  Information to build the DNSSEC chain of trust  . . . . .  12
+     4.3.  Information to set the Synchronization Channel  . . . . .  13
      4.4.  Deleting the delegation . . . . . . . . . . . . . . . . .  13
      4.5.  Messages Exchange Description . . . . . . . . . . . . . .  13
-       4.5.1.  Retrieving information for the Public Homenet Zone. .  13
+       4.5.1.  Retrieving information for the Public Homenet Zone. .  14
        4.5.2.  Providing information for the DNSSEC chain of trust .  14
-       4.5.3.  Providing information for the Synchronization Channel  14
+       4.5.3.  Providing information for the Synchronization Channel  15
        4.5.4.  HNA instructing deleting the delegation . . . . . . .  15
-     4.6.  Securing the Control Channel between HNA and DM . . . . .  15
-     4.7.  Implementation Tips . . . . . . . . . . . . . . . . . . .  16
+     4.6.  Securing the Control Channel between Homenet Naming
+           Authority (HNA) and Distribution Master (DM)  . . . . . .  16
+     4.7.  Implementation Tips . . . . . . . . . . . . . . . . . . .  17
    5.  DM Synchronization Channel between HNA and DM . . . . . . . .  17
      5.1.  Securing the Synchronization Channel between HNA and DM .  18
-   6.  DM Distribution Channel . . . . . . . . . . . . . . . . . . .  18
-   7.  HNA Security Policies . . . . . . . . . . . . . . . . . . . .  18
+   6.  DM Distribution Channel . . . . . . . . . . . . . . . . . . .  19
+   7.  HNA Security Policies . . . . . . . . . . . . . . . . . . . .  19
    8.  DNSSEC compliant Homenet Architecture . . . . . . . . . . . .  19
-   9.  Homenet Reverse Zone  . . . . . . . . . . . . . . . . . . . .  19
-   10. Renumbering . . . . . . . . . . . . . . . . . . . . . . . . .  20
-     10.1.  Hidden Primary . . . . . . . . . . . . . . . . . . . . .  21
-     10.2.  Distribution Master  . . . . . . . . . . . . . . . . . .  22
-   11. Operational considerations for Offline/Disconnected
-       resolution  . . . . . . . . . . . . . . . . . . . . . . . . .  22
+   9.  Homenet Reverse Zone Channels Configuration . . . . . . . . .  20
+   10. Homenet Public Zone Channel Configurations  . . . . . . . . .  21
+   11. Renumbering . . . . . . . . . . . . . . . . . . . . . . . . .  21
+     11.1.  Hidden Primary . . . . . . . . . . . . . . . . . . . . .  22
 
 
 
-Migault, et al.        Expires September 10, 2020               [Page 2]
+Migault, et al.          Expires April 12, 2021                 [Page 2]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
-   12. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  22
-   13. Security Considerations . . . . . . . . . . . . . . . . . . .  23
-     13.1.  HNA DM channels  . . . . . . . . . . . . . . . . . . . .  23
-     13.2.  Names are less secure than IP addresses  . . . . . . . .  24
-     13.3.  Names are less volatile than IP addresses  . . . . . . .  24
-     13.4.  DNS Reflection Attacks . . . . . . . . . . . . . . . . .  24
-     13.5.  Reflection Attack involving the Hidden Primary . . . . .  25
-     13.6.  Reflection Attacks involving the DM  . . . . . . . . . .  26
+     11.2.  Distribution Master  . . . . . . . . . . . . . . . . . .  23
+   12. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  23
+   13. Security Considerations . . . . . . . . . . . . . . . . . . .  24
+     13.1.  HNA DM channels  . . . . . . . . . . . . . . . . . . . .  24
+     13.2.  Names are less secure than IP addresses  . . . . . . . .  25
+     13.3.  Names are less volatile than IP addresses  . . . . . . .  25
+     13.4.  DNS Reflection Attacks . . . . . . . . . . . . . . . . .  25
+     13.5.  Reflection Attack involving the Hidden Primary . . . . .  26
+     13.6.  Reflection Attacks involving the DM  . . . . . . . . . .  27
      13.7.  Reflection Attacks involving the Public Authoritative
-            Servers  . . . . . . . . . . . . . . . . . . . . . . . .  27
-     13.8.  Flooding Attack  . . . . . . . . . . . . . . . . . . . .  27
-     13.9.  Replay Attack  . . . . . . . . . . . . . . . . . . . . .  27
-   14. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  28
-   15. Acknowledgment  . . . . . . . . . . . . . . . . . . . . . . .  28
-   16. Annex . . . . . . . . . . . . . . . . . . . . . . . . . . . .  29
-     16.1.  Envisioned deployment scenarios  . . . . . . . . . . . .  29
-       16.1.1.  CPE Vendor . . . . . . . . . . . . . . . . . . . . .  29
-       16.1.2.  Agnostic CPE . . . . . . . . . . . . . . . . . . . .  29
-     16.2.  Example: Homenet Zone  . . . . . . . . . . . . . . . . .  30
-     16.3.  Example: HNA necessary parameters for outsourcing  . . .  32
-   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  33
-     17.1.  Normative References . . . . . . . . . . . . . . . . . .  33
-     17.2.  Informative References . . . . . . . . . . . . . . . . .  37
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  37
+            Servers  . . . . . . . . . . . . . . . . . . . . . . . .  28
+     13.8.  Flooding Attack  . . . . . . . . . . . . . . . . . . . .  28
+     13.9.  Replay Attack  . . . . . . . . . . . . . . . . . . . . .  28
+   14. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  29
+   15. Acknowledgment  . . . . . . . . . . . . . . . . . . . . . . .  29
+   16. References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
+     16.1.  Normative References . . . . . . . . . . . . . . . . . .  30
+     16.2.  Informative References . . . . . . . . . . . . . . . . .  33
+   Appendix A.  Envisioned deployment scenarios  . . . . . . . . . .  34
+     A.1.  CPE Vendor  . . . . . . . . . . . . . . . . . . . . . . .  34
+     A.2.  Agnostic CPE  . . . . . . . . . . . . . . . . . . . . . .  34
+   Appendix B.  Example: Homenet Zone  . . . . . . . . . . . . . . .  35
+   Appendix C.  Example: HNA necessary parameters for outsourcing  .  37
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  38
 
 1.  Introduction
 
@@ -152,8 +152,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    The use of a DNS zone for each home network is a reasonable and
    scalable way to make the set of public names visible.  There are a
    number of ways to populate such a zone.  This specification proposes
-   a way to do with based upon a number of assumptions about typical
-   home networks.
+   a way based on a number of assumptions about typical home networks.
 
    1.  The names of the devices accessible from the Internet are stored
        in the Public Homenet Zone, served by a DNS authoritative server.
@@ -165,18 +164,18 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
 
-Migault, et al.        Expires September 10, 2020               [Page 3]
+
+Migault, et al.          Expires April 12, 2021                 [Page 3]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
-   3.  [RFC7368] emphazes that the home network is subject to
+   3.  [RFC7368] emphasizes that the home network is subject to
        connectivity disruptions with the ISP.  But, names used within
        the home MUST be resilient against such disruption.
 
-   So a goal of this specification is to make the public names
-   resolvable within both the home network and on the Internet, even
-   when there are disruptions.
+   This specification makes the public names resolvable within both the
+   home network and on the Internet, even when there are disruptions.
 
    This is achieved by having a device inside the home network that
    builds, publishes, and manages a Public Homenet Zone, thus providing
@@ -221,9 +220,10 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
 
-Migault, et al.        Expires September 10, 2020               [Page 4]
+
+Migault, et al.          Expires April 12, 2021                 [Page 4]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
    Section 3.1 provides an architecture description that describes the
@@ -237,13 +237,20 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    signed with a secure delegation.  DNSSEC key management and zone
    signing is handled by the HNA.
 
+   Section 10 discusses management and configuration of the Public
+   Homenet Zone.  It shows that the HNA configuration of the Outsourcing
+   infrastructure can involve no or little interaction with the end
+   user.  More specifically, it shows that the existence of an account
+   in the Outsourcing Infrastructure is sufficient for the Outsourcing
+   Infrastructure to push the necessary configuration.
+
    Section 9 discusses management of one or more reverse zones.  It
    shows that management of the reverse zones can be entirely automated
    and benefit from a pre-established relation between the ISP and the
    home network.  Note that such scenarios may also be met for the
    Public Homenet Zone, but not necessarily.
 
-   Section 10 discusses how renumbering should be handled.  Finally,
+   Section 11 discusses how renumbering should be handled.  Finally,
    Section 12 and Section 13 respectively discuss privacy and security
    considerations when outsourcing the Public Homenet Zone.
 
@@ -267,20 +274,20 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    into a common public zone.  This is often called "Dynamic DNS", and
    there are a number of commercial providers, including Dyn, Gandi etc.
    These solutions were typically used by a host behind the CPE to make
+
+
+
+Migault, et al.          Expires April 12, 2021                 [Page 5]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    it's CPE IPv4 address visible, usually in order to enable incoming
    connections.
 
    For a small number (one to three) of hosts, use of such a system
    provides an alternative to the architecture described in this
    document.
-
-
-
-
-Migault, et al.        Expires September 10, 2020               [Page 5]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
 
    The alternative does suffer from some severe limitations:
 
@@ -323,20 +330,20 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
+
+
+
+Migault, et al.          Expires April 12, 2021                 [Page 6]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    o  Customer Premises Equipment: (CPE) is a router providing
       connectivity to the home network.
 
    o  Homenet Zone: is the DNS zone for use within the boundaries of the
       home network: home.arpa, see [RFC8375]).  This zone is not
       considered public and is out of scope for this document.
-
-
-
-
-Migault, et al.        Expires September 10, 2020               [Page 6]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
 
    o  Registered Homenet Domain: is the Domain Name associated with the
       home network.
@@ -379,6 +386,14 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    o  Homenet DNSSEC Resolver: a resolver that performs a DNSSEC
       resolution on the home network for the Public Homenet Zone.  The
+
+
+
+Migault, et al.          Expires April 12, 2021                 [Page 7]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
       resolution is performed requesting the Homenet Authoritative
       Servers.
 
@@ -386,26 +401,18 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
       the Internet for the Public Homenet Zone.  The resolution is
       performed requesting the Public Authoritative Servers.
 
-
-
-
-Migault, et al.        Expires September 10, 2020               [Page 7]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
 3.  Architecture Description
 
    This section provides an overview of the architecture for outsourcing
    the authoritative naming service from the HNA to the Outsourcing
-   Infrastructure in Section 3.1.  Section Section 16.2 and Section 16.3
+   Infrastructure in Section 3.1.  Section Appendix B and Appendix C
    illustrates this architecture with the example of a Public Homenet
    Zone as well as necessary parameter to configure the HNA.
 
 3.1.  Architecture Overview
 
-   Figure Figure 1 illustrates the architecture where the HNA outsources
-   the publication of the Public Homenet Zone to the Outsourcing
+   Figure 1 illustrates the architecture where the HNA outsources the
+   publication of the Public Homenet Zone to the Outsourcing
    Infrastructure.
 
    The Public Homenet Zone is identified by the Registered Homenet
@@ -435,24 +442,29 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    The HNA acts as a hidden primary while the DM behaves as a secondary
    responsible to distribute the Public Homenet Zone to the multiple
+
+
+
+Migault, et al.          Expires April 12, 2021                 [Page 8]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    Public Authoritative Servers that Outsourcing Infrastructure is
    responsible for.
 
-   The DM has 3 communication channels: * a DM Control Channel (see
-   section Section 4) to configure the HNA and the Outsourcing
-   Infrastructure, * a DM Synchronization Channel (see section Section 5
-   to synchronize the Public Homenet Zone on the HNA and on the DM.  *
+   The DM has 3 communication channels:
 
+   o  a DM Control Channel (see section Section 4) to configure the HNA
+      and the Outsourcing Infrastructure,
 
+   o  a DM Synchronization Channel (see section Section 5 to synchronize
+      the Public Homenet Zone on the HNA and on the DM.
 
-Migault, et al.        Expires September 10, 2020               [Page 8]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
-   one or more Distribution Channels (see section Section 6 that
-   distributes the Public Homenet Zone from the DM to the Public
-   Authoritative Server serving the Public Homenet Zone on the Internet.
+   o  one or more Distribution Channels (see section Section 6 that
+      distributes the Public Homenet Zone from the DM to the Public
+      Authoritative Server serving the Public Homenet Zone on the
+      Internet.
 
    There MAY be multiple DM's, and multiple servers per DM.  This text
    assumes a single DM server for simplicity, but there is no reason why
@@ -486,6 +498,14 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    the Homenet Authoritative Servers.  These servers are not expected to
    be mentioned in the Public Homenet Zone, nor to be accessible from
    the Internet.  As such their information as well as the corresponding
+
+
+
+Migault, et al.          Expires April 12, 2021                 [Page 9]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    signed DS record MAY be provided by the HNA to the Homenet DNSSEC
    Resolvers e.g. using HNCP.  Such configuration is outside the scope
    of this document.
@@ -496,15 +516,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    Homenet Authoritative Servers may be combined together which would
    result in a common instantiation of an authoritative server on the
    WAN and inner interface.  Other mechanisms may also be used.
-
-
-
-
-
-Migault, et al.        Expires September 10, 2020               [Page 9]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
 
            Home network                 |         Internet
                                         |
@@ -540,6 +551,17 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
            Figure 1: Homenet Naming Architecture Name Resolution
 
+
+
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 10]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
 3.2.  Distribution Master Communication Channels
 
    This section details the interfaces and channels of the DM, that is
@@ -553,15 +575,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    HNA and the DM SHOULD be protected and mutually authenticated.  While
    section Section 4.6 discusses in more depth the different security
    protocols that could be used to secure, this specification RECOMMENDS
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 10]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
    the use of TLS with mutually authentication based on certificates to
    secure the channel between the HNA and the DM.
 
@@ -571,7 +584,8 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    certificate), the IP address and port to use and protocol to set
    secure session.  We also assume the DM has knowledge of the identity
    of the HNA (X509 certificate) as well as the Registered Homenet
-   Domain.
+   Domain.  For more detail to see how this can be achieved, please see
+   section Section 10.
 
    The information exchanged between the HNA and the DM is using DNS
    messages.  DNS messages can be protected using various kind of
@@ -583,17 +597,29 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    update the Distribution Master's configuration files.  The visible NS
    records SHOULD remain pointing at the cloud provider's anycast
    addresses.  Revealing the address of the HNA in the DNS is not
-   desireable.
+   desirable.
 
-   This specification also assumes the same transport protocol and ports
-   used by the DM to serve the Control Channel and by the HNA to serve
-   the Synchronization Channel are the same.
+   This specification also assumes: * the DM serves both the Control
+   Channel and Synchronization Channel on a single IP address, single
+   port and with a single transport protocol.  * the HNA uses a single
+   IP address for both the Control and Synchronization channel by
+   default.  However, the HNA MAY use distinct IP addresses - see
+   section Section 5 and section {sec-sync-info}} for more details.
 
    The Distribution Channel is internal to the Outsourcing
    Infrastructure and as such is not the primary concern of this
    specification.
 
-4.  Control Channel between HNA and DM
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 11]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+4.  Control Channel between Homenet Naming Authority (HNA) and
+    Distribution Master (DM)
 
    The DM Control Channel is used by the HNA and the Outsourcing
    Infrastructure to exchange information related to the configuration
@@ -601,31 +627,24 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 4.1.  Information to build the Public Homenet Zone.
 
-   More specifically, the Public Homenet Zone contains information that
-   is related to the infrastructure serving the zone.  In our case, the
-   infrastructure serving the Public Homenet Zone is the Outsourcing
-   Infrastructure, so this information MUST reflect that Outsourcing
-   Infrastructure and MUST be provided to the HNA.
+   When the HNA builds the public zone, it must include information that
+   it retrieves from the DM relating to how the zone is to be published.
 
    The information includes at least names and IP addresses of the
-   Public Authoritative Servers.  In term of RRset information this
-   corresponds, for the Registered Homenet Domain the MNAME of the SOA,
+   Public Authoritative Name Servers.  In term of RRset information this
+   includes:
 
+   o  the MNAME of the SOA,
 
+   o  the NS and associated A and AAA RRsets of the name servers.
 
-Migault, et al.        Expires September 10, 2020              [Page 11]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+   Optionally the Outsourcing Infrastructure MAY also provide
+   operational parameters such as other fields of SOA (SERIAL, RNAME,
+   REFRESH, RETRY, EXPIRE and MINIMUM).  As the information is necessary
+   for the HNA to proceed and the information is associated to the
+   Outsourcing Infrastructure, this information exchange is mandatory.
 
-
-   the NS and associated A and AAA RRsets.  Optionally the Outsourcing
-   Infrastructure MAY also provide operational parameters such as other
-   fields of SOA (SERIAL, RNAME, REFRESH, RETRY, EXPIRE and MINIMUM).
-   As the information is necessary for the HNA to proceed and the
-   information is associated to the Outsourcing Infrastructure, this
-   information exchange is mandatory.
-
-4.2.  Information to build the DNSSEC chain of trust.
+4.2.  Information to build the DNSSEC chain of trust
 
    The HNA SHOULD provide the hash of the KSK (DS RRset), so the that
    Outsourcing Infrastructure provides this value to the parent zone.  A
@@ -639,17 +658,27 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    Though the HNA may also later directly update the values of the DS
    via the Control Channel, it is RECOMMENDED to use other mechanisms
-   such as CDS and CDNSKEY [RFC7344] are used for key roll overs.
+   such as CDS and CDNSKEY [RFC7344] for transparent updates during key
+   roll overs.
 
    As some deployment may not provide an Outsourcing Infrastructure that
    will be able to update the DS in the parent zone, this information
    exchange is OPTIONAL.
 
-   By accepting the DS, the DM commits in taking care of advertising the
-   DS to the parent zone.  Upon refusal, the DM MUST clearly indicate
-   the DM does not have the capacity to proceed to the update.
 
-4.3.  Information to set the Synchronization Channel,
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 12]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+   By accepting the DS, the DM commits in taking care of advertising the
+   DS to the parent zone.  Upon refusal, the DM clearly indicates it
+   does not have the capacity to proceed to the update.
+
+4.3.  Information to set the Synchronization Channel
 
    That information sets the primary/secondary relation between the HNA
    and the DM.  The HNA works as a primary authoritative DNS server, and
@@ -661,18 +690,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    as those used by the Control Channel.  By default, the same IP
    address used by the HNA is considered by the DM.  Exchange of this
    information is OPTIONAL.
-
-
-
-
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 12]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
 
 4.4.  Deleting the delegation
 
@@ -704,6 +721,15 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    configuration for the delegation zone in the parent zone during the
    provisioning process.
 
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 13]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
 4.5.1.  Retrieving information for the Public Homenet Zone.
 
    The information provided by the DM to the HNA is retrieved by the HNA
@@ -717,40 +743,33 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    Zone, the HNA MUST send an DNS request of type AXFR associated to the
    Registered Homenet Domain.  The DM MUST respond with a zone template.
    The zone template MUST contain a RRset of type SOA, one or multiple
-   RRset of type NS and at least one RRset of type A or AAAA.  The SOA
-   RR is used to indicate to the HNA the value of the MNAME of the
-   Public Homenet Zone.  The NAME of the SOA RR MUST be the Registered
-   Homenet Domain.  The MNAME value of the SOA RDATA is the value
-   provided by the Outsourcing Infrastructure to the HNA.  Other RDATA
+   RRset of type NS and zero or more RRset of type A or AAAA.
 
-
-
-Migault, et al.        Expires September 10, 2020              [Page 13]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
-   values (RNAME, REFRESH, RETRY, EXPIRE and MINIMUM) are provided by
-   the Outsourcing Infrastructure as suggestions.  The NS RRsets are
+   The SOA RR is used to indicate to the HNA the value of the MNAME of
+   the Public Homenet Zone.  The NAME of the SOA RR MUST be the
+   Registered Homenet Domain.  The MNAME value of the SOA RDATA is the
+   value provided by the Outsourcing Infrastructure to the HNA.  Other
+   RDATA values (RNAME, REFRESH, RETRY, EXPIRE and MINIMUM) are provided
+   by the Outsourcing Infrastructure as suggestions.  The NS RRsets are
    used to carry the Public Authoritative Servers of the Outsourcing
    Infrastructure.  Their associated NAME MUST be the Registered Homenet
    Domain.  The TTL and RDATA are those expected to be published on the
    Public Homenet Zone.  The RRsets of Type A and AAAA MUST have their
    NAME matching the NSDNAME of one of the NS RRsets.
 
-   Upon receiving the response, the HNA MUST validate the conditions on
-   the SOA, NS and A or AAAA RRsets.  If an error occurs, the HNA MUST
-   stop proceeding and MUST report an error.  Otherwise, the HNA builds
-   the Public Homenet Zone by setting the MNAME value of the SOA as
-   indicated by the SOA provided by the AXFR response.  The HNA SHOULD
-   set the value of NAME, REFRESH, RETRY, EXPIRE and MINIMUM of the SOA
-   to those provided by the AXFR response.  The HNA MUST insert the NS
-   and corresponding A or AAAA RRset in its Public Homenet Zone.  The
-   HNA MUST ignore other RRsets.  If an error message is returned by the
-   DM, the HNA MUST proceed as a regular DNS resolution.  Error messages
-   SHOULD be logged for further analysis.  If the resolution does not
-   succeed, the outsourcing operation is aborted and the HNA MUST close
-   the Control Channel.
+   Upon receiving the response, the HNA MUST validate format and
+   properties of the SOA, NS and A or AAAA RRsets.  If an error occurs,
+   the HNA MUST stop proceeding and MUST report an error.  Otherwise,
+   the HNA builds the Public Homenet Zone by setting the MNAME value of
+   the SOA as indicated by the SOA provided by the AXFR response.  The
+   HNA SHOULD set the value of NAME, REFRESH, RETRY, EXPIRE and MINIMUM
+   of the SOA to those provided by the AXFR response.  The HNA MUST
+   insert the NS and corresponding A or AAAA RRset in its Public Homenet
+   Zone.  The HNA MUST ignore other RRsets.  If an error message is
+   returned by the DM, the HNA MUST proceed as a regular DNS resolution.
+   Error messages SHOULD be logged for further analysis.  If the
+   resolution does not succeed, the outsourcing operation is aborted and
+   the HNA MUST close the Control Channel.
 
 4.5.2.  Providing information for the DNSSEC chain of trust
 
@@ -759,7 +778,15 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    MUST be set to the parent zone of the Registered Homenet Domain -
    that is where the DS records should be inserted.  The DS RRset MUST
    be placed in the Update section of the UPDATE query, and the NAME
-   SHOULD be set to the Registered Homenet Domain.  The rdata of the DS
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 14]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+   SHOULD be set to the Registered Homenet Domain.  The RDATA of the DS
    RR SHOULD correspond to the DS record to be inserted in the parent
    zone.
 
@@ -772,23 +799,12 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    To provide the IP address of the primary, the HNA MAY send a DNS
    UPDATE message.  The NAME in the SOA MUST be the parent zone of the
    Registered Homenet Domain.  The Update section MUST be a RRset of
-   Type NS.  The NAME associated to the NS RRSet MUST be the Registered
-   Domain Name.  The RDATA MUST be a FQDN that designates the IP
-   addresses associated to the primary.  There may be multiple IP
+   Type NS.  The RDATA MUST be a RRset of type A or AAAA that designates
+   the IP addresses associated to the primary.  There may be multiple IP
    addresses.  These IP addresses MUST be provided in the additional
    section.  The reason to provide these IP addresses is that it is NOT
    RECOMMENDED to publish these IP addresses.  As a result, it is not
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 14]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
-   expected to resolve them.  IP addresses are provided via RRsets of
-   type A or AAAA.  The NAME associated to RRsets of type A and AAAA
-   MUST be the Registered Homenet Domain.
+   expected to resolve them.
 
    A NOERROR response indicates the DM has configured the secondary and
    is committed to serve as a secondary.  An error indicates the DM is
@@ -796,9 +812,9 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    The regular DNS error message SHOULD be returned to the HNA when an
    error occurs.  In particular a FORMERR is returned when a format
-   error is found, this error includes when unexpected RRSets are added
-   or when RRsets are missing.  A SERVFAIL error is returned when a
-   internal error is encountered. a NOTZONE error is returned when
+   error is found, this includes when unexpected RRSets are added or
+   when RRsets are missing.  A SERVFAIL error is returned when a
+   internal error is encountered.  A NOTZONE error is returned when
    update and Zone sections are not coherent, a NOTAUTH error is
    returned when the DM is not authoritative for the Zone section.  A
    REFUSED error is returned when the DM refuses to proceed to the
@@ -810,71 +826,81 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    Delete message.  The NAME in the SOA MUST be the parent zone of the
    Registered Homenet Domain.  The Update section MUST be a RRset of
    Type NS.  The NAME associated to the NS RRSet MUST be the Registered
-   Domain Name.  As indictaed by [RFC2136] section 2.5.2 the delete
+   Domain Name.  As indicated by [RFC2136] section 2.5.2 the delete
    instruction is set by setting the TTL to 0, the CLass to ANY, the
    RDLENGTH to 0 and the RDATA MUST be empty.
 
-4.6.  Securing the Control Channel between HNA and DM
+
+
+
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 15]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+4.6.  Securing the Control Channel between Homenet Naming Authority
+      (HNA) and Distribution Master (DM)
 
    The control channel between the HNA and the DM MUST be secured at
    both the HNA and the DM.
 
-   Secure protocols (like TLS [RFC5246] / DTLS [RFC6347]) SHOULD be used
-   to secure the transactions between the DM and the HNA.
+   Secure protocols (like TLS [RFC8446] / DTLS [I-D.ietf-tls-dtls13])
+   SHOULD be used to secure the transactions between the DM and the HNA.
 
    The advantage of TLS/DTLS is that this technology is widely deployed,
    and most of the devices already embed TLS/DTLS libraries, possibly
    also taking advantage of hardware acceleration.  Further, TLS/DTLS
    provides authentication facilities and can use certificates to
-   authenticate the DM and the HNA.  On the other hand, using TLS/DTLS
-   requires implementing DNS exchanges over TLS/DTLS, as well as a new
-   service port.  This document RECOMMENDS this option.
+   mutually authenticate the DM and HNA at the application layer,
+   including available API.  On the other hand, using TLS/DTLS requires
+   implementing DNS exchanges over TLS/DTLS, as well as a new service
+   port.
 
    The HNA SHOULD authenticate inbound connections from the DM using
    standard mechanisms, such as a public certificate with baked-in root
-   certificates on the HNA, or via DANE {!RFC6698}}.
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 15]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
+   certificates on the HNA, or via DANE {!RFC6698}}.  The HNA is
+   expected to be provisioned with a connection to the DM by the
+   manufacturer, or during some user-initiated onboarding process, see
+   Section 10.
 
    The DM SHOULD authenticate the HNA and check that inbound messages
    are from the appropriate client.  The DM MAY use a self-signed CA
    certificate mechanism per HNA, or public certificates for this
    purpose.
 
-   IPsec [RFC4301] IKEv2 [RFC7296] MAY also be used to secure
-   transactions between the HNA and the DM.  Similarly to TLS/DTLS, most
-   HNAs already embed an IPsec stack, and IKEv2 supports multiple
-   authentication mechanisms via the EAP framework.  In addition, IPsec
-   can be used to protect DNS exchanges between the HNA and the DM
-   without any modifications of the DNS server or client.  DNS
-   integration over IPsec only requires an additional security policy in
-   the Security Policy Database (SPD).  One disadvantage of IPsec is
-   that NATs and firewall traversal may be problematic.  However, in our
-   case, the HNA is connected to the Internet, and IPsec communication
-   between the HNA and the DM should not be impacted by middle boxes.
+   IPsec [RFC4301] and IKEv2 [RFC7296] were considered.  They would need
+   to operate in transport mode, and the authenticated end points would
+   need to be visible to the applications, and this is not commonly
+   available at the time of this writing.
 
-   How the PSK can be used by any of the TSIG, TLS/DTLS or IPsec
-   protocols: Authentication based on certificates implies a mutual
-   authentication and thus requires the HNA to manage a private key, a
-   public key, or certificates, as well as Certificate Authorities.
-   This adds complexity to the configuration especially on the HNA side.
-   For this reason, we RECOMMEND that the HNA MAY use PSK or certificate
-   based authentication, and that the DM MUST support PSK and
-   certificate based authentication.
+   A pure DNS solution using TSIG and/or SIG(0) to authenticate message
+   was also considered.  Section 10 envisions one mechanism would
+   involve the end user, with a browser, signing up to a service
+   provider, with a resulting OAUTH2 token to be provided to the HNA.  A
+   way to translate this OAUTH2 token from HTTPS web space to DNS SIG(0)
+   space seems overly problematic, and so the enrollment protocol using
+   web APIs was determined to be easier to implement at scale.
 
    Note also that authentication of message exchanges between the HNA
    and the DM SHOULD NOT use the external IP address of the HNA to index
-   the appropriate keys.  As detailed in Section 10, the IP addresses of
+   the appropriate keys.  As detailed in Section 11, the IP addresses of
    the DM and the Hidden Primary are subject to change, for example
    while the network is being renumbered.  This means that the necessary
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 16]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    keys to authenticate transaction SHOULD NOT be indexed using the IP
-   address, and SHOULD be resilient to IP address changes.
+   address, and SHOULD be resilient to IP address changes.  This should
+   apply to any OAUTH2 token produced as envisioned by Section 10.
 
 4.7.  Implementation Tips
 
@@ -889,14 +915,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    o  Limited exchanges: the purpose of the Hidden Primary Server is to
       synchronize with the DM, not to serve any zones to end users, or
       the public Internet.
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 16]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
 
    As a result, exchanges are performed with specific nodes (the DM).
    Further, exchange types are limited.  The only legitimate exchanges
@@ -916,11 +934,11 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    same IP addresses.  In fact the Control Channel is set between the
    HNA working as a client using port YYYY (a high range port) toward a
    service provided by the MD at port XX (well known port).  On the
-   other hand, the Synchronization Channel is set between the MD working
+   other hand, the Synchronization Channel is set between the DM working
    as a client using port ZZZZ ( a high range port) toward a service a
    service provided by the HNA at port XX.  As a result, even though the
    same couple of IP addresses may be involved the Control Channel and
-   the Synchronization Channel are always disc tint channels.
+   the Synchronization Channel are always distinct channels.
 
    Uploading and dynamically updating the zone file on the DM can be
    seen as zone provisioning between the HNA (Hidden Primary) and the DM
@@ -928,6 +946,14 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    This document RECOMMENDS use of a primary / secondary mechanism
    instead of the use of DNS UPDATE.  The primary / secondary mechanism
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 17]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    is RECOMMENDED as it scales better and avoids DoS attacks.  Note that
    even when UPDATE messages are used, these messages are using a
    distinct channel as those used to set the configuration.
@@ -945,15 +971,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    The DM is configured as a secondary for the Homenet Domain Name.
    This secondary configuration has been previously agreed between the
    end user and the provider of the Outsourcing Infrastructure as part
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 17]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
    of either the provisioning or due to receipt of UPDATE messages on
    the DM Control Channel.
 
@@ -984,6 +1001,15 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    The HNA MAY apply a simple IP filter on inbound AXFR requests to
    ensure they only arrive from the DM Synchronization Channel.  In this
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 18]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    case, the HNA SHOULD regularly check (via DNS resolution) that the
    address of the DM in the filter is still valid.
 
@@ -1002,14 +1028,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    The Hidden Primary, as described in this document SHOULD drop any
    queries from the home network.  This could be implemented via port
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 18]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
    binding and/or firewall rules.  The precise mechanism deployed is out
    of scope of this document.  The Hidden Primary SHOULD drop any DNS
    queries arriving on the WAN interface that are not issued from the
@@ -1039,10 +1057,19 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    Homenet Zone.  Such a trust channel between the HNA and the parent
    DNS server may be hard to maintain with HNAs, and thus may be easier
    to establish with the Outsourcing Infrastructure.  In fact, the
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 19]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    Public Authoritative Server(s) may use Automating DNSSEC Delegation
    Trust Maintenance [RFC7344].
 
-9.  Homenet Reverse Zone
+9.  Homenet Reverse Zone Channels Configuration
 
    The Public Homenet Zone is associated to a Registered Homenet Domain
    and the ownership of that domain requires a specific registration
@@ -1056,15 +1083,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    additional provisioning of the HNA.  While this may be not so common
    for the Public Homenet Zone, this situation is expected to be quite
    common for the Reverse Homenet Zone.
-
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 19]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
 
    More specifically, a common case is that the upstream ISP provides
    the IPv6 prefix to the Homenet with a IA_PD [RFC8415] option and
@@ -1080,13 +1098,12 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    Note that for home networks hosted by multiple ISPs, each ISP
    provides only the Outsourcing Infrastructure of the reverse zones
-   associated to the delegated prefix.
-   It is also likely that the DNS exchanges will need to be performed on
-   dedicated interfaces as to be accepted by the ISP.  More
-   specifically, the reverse zone associated to prefix 1 will not be
-   possible to be performs by the HNA using an IP address that belongs
-   to prefix 2.  Such constraints does not raise major concerns either
-   for hot standby or load sharing configuration.
+   associated to the delegated prefix.  It is also likely that the DNS
+   exchanges will need to be performed on dedicated interfaces as to be
+   accepted by the ISP.  More specifically, the reverse zone associated
+   to prefix 1 will not be possible to be performs by the HNA using an
+   IP address that belongs to prefix 2.  Such constraints does not raise
+   major concerns either for hot standby or load sharing configuration.
 
    With IPv6, the domain space for IP addresses is so large that reverse
    zone may be confronted with scalability issues.  How the reverse zone
@@ -1094,7 +1111,57 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    [I-D.howard-dnsop-ip6rdns] provides guidance on how to address
    scalability issues.
 
-10.  Renumbering
+
+
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 20]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+10.  Homenet Public Zone Channel Configurations
+
+   This document does not deal with how the HNA is provisioned with a
+   trusted relationship to the Distribution Master for the forward zone.
+
+   This section details what needs to be provisioned into the HNA and
+   serves as a requirements statement for mechanisms.  The HNA needs to
+   be provisioned with: * the Registered Domain * the DM ( FQDN, IP,
+   certificate ) in order to reach the DM and be able to authenticate
+   the channels between the HNA and the DM * the DM transport protocol
+   and port (default DNS over TLS) * the HNA IP address used for the
+   Synchronization Channel ( by default the same as the one used for the
+   control channel) * the HNA credentials used by the DM for its
+   authentication.
+
+   Provisioning of the relationship with an ISP-connection specific
+   Distribution Master for forward and reverse zones is dealt with in
+   [I-D.ietf-homenet-naming-architecture-dhc-options]
+
+   Similarly, it the HNA is provided by a registrar, the HNA may be
+   given configured to end user.
+
+   In the absence of specific pre-established relation, these pieces of
+   information may be entered manually by the end user.  In order to
+   ease the configuration from the end user the following scheme may be
+   implemented.
+
+   The HNA may present the end user a web interface where it provides
+   the end user the ability to indicate the Registered Domain or the
+   registrar for example a preselected list.  Once the regsitrar has
+   been selected, the HNA redirects the end user to that registrar in
+   order to receive a access token.  The access token will enable the
+   HNA to retrieve the DM parameters associated to the Registered
+   Domain.  These parameters will include the credentials used by the
+   HNA to establish the Control and Synchronization Channels.
+
+   Such architecture limits the necessary steps to configure the HNA
+   from the end user.
+
+11.  Renumbering
 
    This section details how renumbering is handled by the Hidden Primary
    server or the DM.  Both types of renumbering are discussed i.e.
@@ -1103,6 +1170,14 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    In the make-before-break renumbering scenario, the new prefix is
    advertised, the network is configured to prepare the transition to
    the new prefix.  During a period of time, the two prefixes old and
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 21]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    new coexist, before the old prefix is completely removed.  In the
    break-before-make renumbering scenario, the new prefix is advertised
    making the old prefix obsolete.
@@ -1111,18 +1186,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    in [RFC7010] and the reader is expected to be familiar with them
    before reading this section.
 
-
-
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 20]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
-10.1.  Hidden Primary
+11.1.  Hidden Primary
 
    In a renumbering scenario, the Hidden Primary is informed it is being
    renumbered.  In most cases, this occurs because the whole home
@@ -1162,6 +1226,14 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    or TSIG.  When the DM receives the NOTIFY payload, it MUST
    authenticate it.  Note that the cryptographic key used for the
    authentication SHOULD be indexed by the Registered Homenet Domain
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 22]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    contained in the NOTIFY payload as well as the RRSIG.  In other
    words, the IP address SHOULD NOT be used as an index.  If
    authentication succeeds, the DM MUST also notice the IP address has
@@ -1170,14 +1242,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    sending a SOA request to the Hidden Primary using the source IP
    address of the NOTIFY.  This exchange is also secured, and if an
    authenticated response is received from the Hidden Primary with the
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 21]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
    new IP address, the DM SHOULD update its configuration file and
    retrieve the Public Homenet Zone using an AXFR or a IXFR exchange.
 
@@ -1185,9 +1249,9 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    Hidden Primary is not publicly announced in the DNS.  If the Hidden
    Primary were publicly announced in the DNS, then the IP address
    update could have been performed using the DNS as described in
-   Section 10.2.
+   Section 11.2.
 
-10.2.  Distribution Master
+11.2.  Distribution Master
 
    Renumbering of the Distribution Master results in it changing its IP
    address.  As the DM is a secondary, the destination of DNS NOTIFY
@@ -1200,7 +1264,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    performs a DNS resolution to retrieve the IP address of the
    secondary.
 
-   As described in Section 10.1, the DM DNS information SHOULD be
+   As described in Section 11.1, the DM DNS information SHOULD be
    coherent with the IP plane.  The TTL of the Distribution Master name
    SHOULD be adjusted appropriately prior to changing the IP address.
 
@@ -1211,11 +1275,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    potential bootstrap problems.  Such scenarios are considered as out
    of scope in the case of home networks.
 
-11.  Operational considerations for Offline/Disconnected resolution
-
-   This section is non-normative.  It provides suggestions on
-   operational consideration.  TBD.
-
 12.  Privacy Considerations
 
    Outsourcing the DNS Authoritative service from the HNA to a third
@@ -1223,17 +1282,17 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    The Public Homenet Zone contains a full description of the services
    hosted in the network.  These services may not be expected to be
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 23]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    publicly shared although their names remain accessible through the
    Internet.  Even though DNS makes information public, the DNS does not
    expect to make the complete list of services public.  In fact, making
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 22]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
    information public still requires the key (or FQDN) of each service
    to be known by the resolver in order to retrieve information about
    the services.  More specifically, making mywebsite.example.com public
@@ -1269,7 +1328,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 13.1.  HNA DM channels
 
    The HNA DM channels are specified to include their own security
-   mechanisms that are designed to provide the minimum attacke surface,
+   mechanisms that are designed to provide the minimum attack surface,
    and to authenticate transactions where necessary.
 
    Note that in the case of the Reverse Homenet Zone, the data is less
@@ -1279,16 +1338,17 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    network.  As a result, if provisioned using DHCPv6, the security
    credential may not even transit in the home network.  On the other
    hand, if the HNA is not hosted at the border of the home network, the
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 24]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
    credential may rely on the security associated to DHCPv6.  Even if
    HNA and DM are in the same administrative domain it is strongly
    RECOMMENDED to use a secure channel.
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 23]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
 
 13.2.  Names are less secure than IP addresses
 
@@ -1337,13 +1397,9 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
 
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 24]
+Migault, et al.          Expires April 12, 2021                [Page 25]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
 13.5.  Reflection Attack involving the Hidden Primary
@@ -1372,7 +1428,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    also be a resource exhaustion attack performed against the Hidden
    Primary.  The Hidden Primary only expects to exchange traffic with
    the DM, that is its associated secondary.  Even though secondary
-   servers may be renumbered as mentioned in Section 10, the Hidden
+   servers may be renumbered as mentioned in Section 11, the Hidden
    Primary is likely to perform a DNSSEC resolution and find out the
    associated secondary's IP addresses in use.  As a result, the Hidden
    Primary is likely to limit the origin of its incoming traffic based
@@ -1397,9 +1453,9 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
 
-Migault, et al.        Expires September 10, 2020              [Page 25]
+Migault, et al.          Expires April 12, 2021                [Page 26]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
    There are few legitimate time slots when the secondary is expected to
@@ -1453,9 +1509,9 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
 
-Migault, et al.        Expires September 10, 2020              [Page 26]
+Migault, et al.          Expires April 12, 2021                [Page 27]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
    On the Hidden Primary side, it is recommended that the Hidden Primary
@@ -1509,9 +1565,9 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
 
-Migault, et al.        Expires September 10, 2020              [Page 27]
+Migault, et al.          Expires April 12, 2021                [Page 28]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
    From the perspective of an attacker, using a correctly authenticated
@@ -1535,17 +1591,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    lifetime of the message.  As a result, better time synchronization
    policies could reduce the time window of the attack.
 
-   [](<!- <section title="DNSSEC is recommended to authenticate DNS
-   hosted data
-
-   Deploying DNSSEC is recommended, since in some cases the information
-   stored in the DNS is used by the ISP or an IT department to grant
-   access.  For example some servers may perform PTR DNS queries to
-   grant access based on host names.  DNSSEC mitigates lack of trust in
-   DNS, and it is RECOMMENDED to deploy DNSSEC on HNAs.
-
-   ->)
-
 14.  IANA Considerations
 
    This document has no actions for IANA.
@@ -1562,28 +1607,256 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    HNA and low power devices; Olafur Gudmundsson for clarifying DNSSEC
    capabilities of small devices; Simon Kelley for its feedback as
    dnsmasq implementer; Andrew Sullivan, Mark Andrew, Ted Lemon, Mikael
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 28]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
    Abrahamson, Michael Richardson and Ray Bellis for their feedback on
    handling different views as well as clarifying the impact of
    outsourcing the zone signing operation outside the HNA; Mark Andrew
    and Peter Koch for clarifying the renumbering.
 
-16.  Annex
+16.  References
 
-16.1.  Envisioned deployment scenarios
 
-   A number of deployment have been envisionned, this section aims at
-   providing a brief description.  The use cases are not limitatives and
+
+
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 29]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+16.1.  Normative References
+
+   [RFC1033]  Lottor, M., "Domain Administrators Operations Guide",
+              RFC 1033, DOI 10.17487/RFC1033, November 1987,
+              <https://www.rfc-editor.org/info/rfc1033>.
+
+   [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
+              STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
+              <https://www.rfc-editor.org/info/rfc1034>.
+
+   [RFC1035]  Mockapetris, P., "Domain names - implementation and
+              specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
+              November 1987, <https://www.rfc-editor.org/info/rfc1035>.
+
+   [RFC1995]  Ohta, M., "Incremental Zone Transfer in DNS", RFC 1995,
+              DOI 10.17487/RFC1995, August 1996, <https://www.rfc-
+              editor.org/info/rfc1995>.
+
+   [RFC1996]  Vixie, P., "A Mechanism for Prompt Notification of Zone
+              Changes (DNS NOTIFY)", RFC 1996, DOI 10.17487/RFC1996,
+              August 1996, <https://www.rfc-editor.org/info/rfc1996>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
+
+   [RFC2136]  Vixie, P., Ed., Thomson, S., Rekhter, Y., and J. Bound,
+              "Dynamic Updates in the Domain Name System (DNS UPDATE)",
+              RFC 2136, DOI 10.17487/RFC2136, April 1997,
+              <https://www.rfc-editor.org/info/rfc2136>.
+
+   [RFC2142]  Crocker, D., "Mailbox Names for Common Services, Roles and
+              Functions", RFC 2142, DOI 10.17487/RFC2142, May 1997,
+              <https://www.rfc-editor.org/info/rfc2142>.
+
+   [RFC2308]  Andrews, M., "Negative Caching of DNS Queries (DNS
+              NCACHE)", RFC 2308, DOI 10.17487/RFC2308, March 1998,
+              <https://www.rfc-editor.org/info/rfc2308>.
+
+   [RFC2845]  Vixie, P., Gudmundsson, O., Eastlake 3rd, D., and B.
+              Wellington, "Secret Key Transaction Authentication for DNS
+              (TSIG)", RFC 2845, DOI 10.17487/RFC2845, May 2000,
+              <https://www.rfc-editor.org/info/rfc2845>.
+
+   [RFC2931]  Eastlake 3rd, D., "DNS Request and Transaction Signatures
+              ( SIG(0)s )", RFC 2931, DOI 10.17487/RFC2931, September
+              2000, <https://www.rfc-editor.org/info/rfc2931>.
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 30]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+   [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, "Resource Records for the DNS Security Extensions",
+              RFC 4034, DOI 10.17487/RFC4034, March 2005,
+              <https://www.rfc-editor.org/info/rfc4034>.
+
+   [RFC4192]  Baker, F., Lear, E., and R. Droms, "Procedures for
+              Renumbering an IPv6 Network without a Flag Day", RFC 4192,
+              DOI 10.17487/RFC4192, September 2005, <https://www.rfc-
+              editor.org/info/rfc4192>.
+
+   [RFC4301]  Kent, S. and K. Seo, "Security Architecture for the
+              Internet Protocol", RFC 4301, DOI 10.17487/RFC4301,
+              December 2005, <https://www.rfc-editor.org/info/rfc4301>.
+
+   [RFC4555]  Eronen, P., "IKEv2 Mobility and Multihoming Protocol
+              (MOBIKE)", RFC 4555, DOI 10.17487/RFC4555, June 2006,
+              <https://www.rfc-editor.org/info/rfc4555>.
+
+   [RFC4960]  Stewart, R., Ed., "Stream Control Transmission Protocol",
+              RFC 4960, DOI 10.17487/RFC4960, September 2007,
+              <https://www.rfc-editor.org/info/rfc4960>.
+
+   [RFC5155]  Laurie, B., Sisson, G., Arends, R., and D. Blacka, "DNS
+              Security (DNSSEC) Hashed Authenticated Denial of
+              Existence", RFC 5155, DOI 10.17487/RFC5155, March 2008,
+              <https://www.rfc-editor.org/info/rfc5155>.
+
+   [RFC5936]  Lewis, E. and A. Hoenes, Ed., "DNS Zone Transfer Protocol
+              (AXFR)", RFC 5936, DOI 10.17487/RFC5936, June 2010,
+              <https://www.rfc-editor.org/info/rfc5936>.
+
+   [RFC6644]  Evans, D., Droms, R., and S. Jiang, "Rebind Capability in
+              DHCPv6 Reconfigure Messages", RFC 6644,
+              DOI 10.17487/RFC6644, July 2012, <https://www.rfc-
+              editor.org/info/rfc6644>.
+
+   [RFC6762]  Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
+              DOI 10.17487/RFC6762, February 2013, <https://www.rfc-
+              editor.org/info/rfc6762>.
+
+   [RFC6763]  Cheshire, S. and M. Krochmal, "DNS-Based Service
+              Discovery", RFC 6763, DOI 10.17487/RFC6763, February 2013,
+              <https://www.rfc-editor.org/info/rfc6763>.
+
+   [RFC7010]  Liu, B., Jiang, S., Carpenter, B., Venaas, S., and W.
+              George, "IPv6 Site Renumbering Gap Analysis", RFC 7010,
+              DOI 10.17487/RFC7010, September 2013, <https://www.rfc-
+              editor.org/info/rfc7010>.
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 31]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+   [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
+              Kivinen, "Internet Key Exchange Protocol Version 2
+              (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
+              2014, <https://www.rfc-editor.org/info/rfc7296>.
+
+   [RFC7344]  Kumari, W., Gudmundsson, O., and G. Barwood, "Automating
+              DNSSEC Delegation Trust Maintenance", RFC 7344,
+              DOI 10.17487/RFC7344, September 2014, <https://www.rfc-
+              editor.org/info/rfc7344>.
+
+   [RFC7368]  Chown, T., Ed., Arkko, J., Brandt, A., Troan, O., and J.
+              Weil, "IPv6 Home Networking Architecture Principles",
+              RFC 7368, DOI 10.17487/RFC7368, October 2014,
+              <https://www.rfc-editor.org/info/rfc7368>.
+
+   [RFC7558]  Lynn, K., Cheshire, S., Blanchet, M., and D. Migault,
+              "Requirements for Scalable DNS-Based Service Discovery
+              (DNS-SD) / Multicast DNS (mDNS) Extensions", RFC 7558,
+              DOI 10.17487/RFC7558, July 2015, <https://www.rfc-
+              editor.org/info/rfc7558>.
+
+   [RFC7707]  Gont, F. and T. Chown, "Network Reconnaissance in IPv6
+              Networks", RFC 7707, DOI 10.17487/RFC7707, March 2016,
+              <https://www.rfc-editor.org/info/rfc7707>.
+
+   [RFC7788]  Stenberg, M., Barth, S., and P. Pfister, "Home Networking
+              Control Protocol", RFC 7788, DOI 10.17487/RFC7788, April
+              2016, <https://www.rfc-editor.org/info/rfc7788>.
+
+   [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
+              and P. Hoffman, "Specification for DNS over Transport
+              Layer Security (TLS)", RFC 7858, DOI 10.17487/RFC7858, May
+              2016, <https://www.rfc-editor.org/info/rfc7858>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [RFC8375]  Pfister, P. and T. Lemon, "Special-Use Domain
+              'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
+              <https://www.rfc-editor.org/info/rfc8375>.
+
+   [RFC8415]  Mrugalski, T., Siodelski, M., Volz, B., Yourtchenko, A.,
+              Richardson, M., Jiang, S., Lemon, T., and T. Winters,
+              "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)",
+              RFC 8415, DOI 10.17487/RFC8415, November 2018,
+              <https://www.rfc-editor.org/info/rfc8415>.
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 32]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
+              <https://www.rfc-editor.org/info/rfc8446>.
+
+16.2.  Informative References
+
+   [I-D.howard-dnsop-ip6rdns]
+              Howard, L., "Reverse DNS in IPv6 for Internet Service
+              Providers", draft-howard-dnsop-ip6rdns-00 (work in
+              progress), June 2014.
+
+   [I-D.ietf-homenet-naming-architecture-dhc-options]
+              Migault, D., Weber, R., Mrugalski, T., Griffiths, C., and
+              W. Cloetens, "DHCPv6 Options for Home Network
+              Authoritative Naming Service", draft-ietf-homenet-naming-
+              architecture-dhc-options-07 (work in progress), April
+              2020.
+
+   [I-D.ietf-homenet-simple-naming]
+              Lemon, T., Migault, D., and S. Cheshire, "Homenet Naming
+              and Service Discovery Architecture", draft-ietf-homenet-
+              simple-naming-03 (work in progress), October 2018.
+
+   [I-D.ietf-tls-dtls13]
+              Rescorla, E., Tschofenig, H., and N. Modadugu, "The
+              Datagram Transport Layer Security (DTLS) Protocol Version
+              1.3", draft-ietf-tls-dtls13-38 (work in progress), May
+              2020.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 33]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
+Appendix A.  Envisioned deployment scenarios
+
+   A number of deployment have been envisioned, this section aims at
+   providing a brief description.  The use cases are not limitations and
    this section is not normative.
 
-16.1.1.  CPE Vendor
+A.1.  CPE Vendor
 
    A specific vendor with specific relations with a registrar or a
    registry may sell a CPE that is provisioned with provisioned domain
@@ -1602,7 +1875,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    When the home network owner plugs the CPE at home, the relation
    between HNA and DM is expected to work out-of-the-box.
 
-16.1.2.  Agnostic CPE
+A.2.  Agnostic CPE
 
    An CPE that is not preconfigured may also take advanatge to the
    protocol defined in this document but some configuration steps will
@@ -1618,20 +1891,20 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
        of ownership of the domain name by the homenet owner.  In this
        case, it is expected the infrastructure provides the necessary
        parameters to the home network owner to configure the HNA.  A
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 29]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
        good way to provide the parameters would be the home network be
        able to copy/paste a JSON object.  What matters at that point is
        the outsourcing infrastructure being able to generate
        authentication credentials for the HNA to authenticate itself to
        the outsourcing infrastructure.  This obviously requires the home
        network to provide the public key gnerated by the HNA in a CSR.
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 34]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
 
    o  If the outsourcing infrastructure is not the registrar, then the
       proof of ownership needs to be established using protocols like
@@ -1641,7 +1914,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
       infrastructure.  With that being done, the outsourcing
       infrastructure has a roof of ownership and can proceed as above.
 
-16.2.  Example: Homenet Zone
+Appendix B.  Example: Homenet Zone
 
    This section is not normative and intends to illustrate how the HNA
    builds the Homenet Zone.
@@ -1677,9 +1950,16 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
 
-Migault, et al.        Expires September 10, 2020              [Page 30]
+
+
+
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 35]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
    $ORIGIN example.com
@@ -1733,9 +2013,9 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
 
-Migault, et al.        Expires September 10, 2020              [Page 31]
+Migault, et al.          Expires April 12, 2021                [Page 36]
 
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
       Outsourcing Infrastructure and the Hidden Master.  As a result,
@@ -1752,23 +2032,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
       by [RFC1033] is 86400 (1 day).  For home network, this value MAY
       be reduced, and 3600 (1 hour) seems more appropriate.
 
-   <<!-- ## Considerations on multiple Registered Homenet Domain Names
-   ## are left for future versions When multiple Registered Homenet
-   Domains are used -like example.com, example.net, example.org, a DNS
-   Homenet Zone file per Registered Homenet Domain SHOULD be generated.
-   In order to synchronize the zone contents, the HNA may provide all
-   bindings in each zone files.  As a result, any update MUST be
-   performed on all zone files, i.e. for all Registered Homenet Domains.
-   To limit thees updates when multiple Registered Homenet Domains are
-   involved, the HNA MAY fill all bindings in a specific zone file and
-   redirect all other zones to that zone.  This can be achieved with
-   redirecting mechanisms like CNAME {{RFC2181}}, {{RFC1034}}, DNAME
-   {{RFC6672}} or CNAME+DNAME {{I-D.sury-dnsext-cname-dname}}. This is
-   an implementation issue to determine whether redirection mechanisms
-   MAY be preferred for large Homenet Zones, or when the number of
-   Registered Homenet Domain becomes quite large. -->>
-
-16.3.  Example: HNA necessary parameters for outsourcing
+Appendix C.  Example: HNA necessary parameters for outsourcing
 
    This section specifies the various parameters required by the HNA to
    configure the naming architecture of this document.  This section is
@@ -1785,18 +2049,7 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
       name and IP addresses, a DNSSEC exchange is required.  Otherwise,
       the IP addresses should be entered manually.
 
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 32]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
    o  Authentication Method: How the HNA authenticates itself to the DM.
-      This MAY depend on the implementation but this should cover at
-      least IPsec, DTLS and TSIG
 
    o  Authentication data: Associated Data.  PSK only requires a single
       argument.  If other authentication mechanisms based on
@@ -1812,6 +2065,15 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    o  Registered Homenet Domain: The domain name used to establish the
       secure channel.  This name is used by the DM and the HNA for the
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 37]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
+
+
       primary / secondary configuration as well as to index the NOTIFY
       queries of the HNA when the HNA has been renumbered.
 
@@ -1832,228 +2094,6 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
    DHCP for reverse zones needs a separate draft
 
-17.  References
-
-17.1.  Normative References
-
-   [RFC1033]  Lottor, M., "Domain Administrators Operations Guide",
-              RFC 1033, DOI 10.17487/RFC1033, November 1987,
-              <https://www.rfc-editor.org/info/rfc1033>.
-
-
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 33]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
-   [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
-              STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
-              <https://www.rfc-editor.org/info/rfc1034>.
-
-   [RFC1035]  Mockapetris, P., "Domain names - implementation and
-              specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
-              November 1987, <https://www.rfc-editor.org/info/rfc1035>.
-
-   [RFC1995]  Ohta, M., "Incremental Zone Transfer in DNS", RFC 1995,
-              DOI 10.17487/RFC1995, August 1996, <https://www.rfc-
-              editor.org/info/rfc1995>.
-
-   [RFC1996]  Vixie, P., "A Mechanism for Prompt Notification of Zone
-              Changes (DNS NOTIFY)", RFC 1996, DOI 10.17487/RFC1996,
-              August 1996, <https://www.rfc-editor.org/info/rfc1996>.
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
-              editor.org/info/rfc2119>.
-
-   [RFC2136]  Vixie, P., Ed., Thomson, S., Rekhter, Y., and J. Bound,
-              "Dynamic Updates in the Domain Name System (DNS UPDATE)",
-              RFC 2136, DOI 10.17487/RFC2136, April 1997,
-              <https://www.rfc-editor.org/info/rfc2136>.
-
-   [RFC2142]  Crocker, D., "Mailbox Names for Common Services, Roles and
-              Functions", RFC 2142, DOI 10.17487/RFC2142, May 1997,
-              <https://www.rfc-editor.org/info/rfc2142>.
-
-   [RFC2181]  Elz, R. and R. Bush, "Clarifications to the DNS
-              Specification", RFC 2181, DOI 10.17487/RFC2181, July 1997,
-              <https://www.rfc-editor.org/info/rfc2181>.
-
-   [RFC2308]  Andrews, M., "Negative Caching of DNS Queries (DNS
-              NCACHE)", RFC 2308, DOI 10.17487/RFC2308, March 1998,
-              <https://www.rfc-editor.org/info/rfc2308>.
-
-   [RFC2845]  Vixie, P., Gudmundsson, O., Eastlake 3rd, D., and B.
-              Wellington, "Secret Key Transaction Authentication for DNS
-              (TSIG)", RFC 2845, DOI 10.17487/RFC2845, May 2000,
-              <https://www.rfc-editor.org/info/rfc2845>.
-
-   [RFC2931]  Eastlake 3rd, D., "DNS Request and Transaction Signatures
-              ( SIG(0)s )", RFC 2931, DOI 10.17487/RFC2931, September
-              2000, <https://www.rfc-editor.org/info/rfc2931>.
-
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 34]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
-   [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "Resource Records for the DNS Security Extensions",
-              RFC 4034, DOI 10.17487/RFC4034, March 2005,
-              <https://www.rfc-editor.org/info/rfc4034>.
-
-   [RFC4192]  Baker, F., Lear, E., and R. Droms, "Procedures for
-              Renumbering an IPv6 Network without a Flag Day", RFC 4192,
-              DOI 10.17487/RFC4192, September 2005, <https://www.rfc-
-              editor.org/info/rfc4192>.
-
-   [RFC4301]  Kent, S. and K. Seo, "Security Architecture for the
-              Internet Protocol", RFC 4301, DOI 10.17487/RFC4301,
-              December 2005, <https://www.rfc-editor.org/info/rfc4301>.
-
-   [RFC4555]  Eronen, P., "IKEv2 Mobility and Multihoming Protocol
-              (MOBIKE)", RFC 4555, DOI 10.17487/RFC4555, June 2006,
-              <https://www.rfc-editor.org/info/rfc4555>.
-
-   [RFC4960]  Stewart, R., Ed., "Stream Control Transmission Protocol",
-              RFC 4960, DOI 10.17487/RFC4960, September 2007,
-              <https://www.rfc-editor.org/info/rfc4960>.
-
-   [RFC5155]  Laurie, B., Sisson, G., Arends, R., and D. Blacka, "DNS
-              Security (DNSSEC) Hashed Authenticated Denial of
-              Existence", RFC 5155, DOI 10.17487/RFC5155, March 2008,
-              <https://www.rfc-editor.org/info/rfc5155>.
-
-   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
-              (TLS) Protocol Version 1.2", RFC 5246,
-              DOI 10.17487/RFC5246, August 2008, <https://www.rfc-
-              editor.org/info/rfc5246>.
-
-   [RFC5936]  Lewis, E. and A. Hoenes, Ed., "DNS Zone Transfer Protocol
-              (AXFR)", RFC 5936, DOI 10.17487/RFC5936, June 2010,
-              <https://www.rfc-editor.org/info/rfc5936>.
-
-   [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
-              Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
-              January 2012, <https://www.rfc-editor.org/info/rfc6347>.
-
-   [RFC6644]  Evans, D., Droms, R., and S. Jiang, "Rebind Capability in
-              DHCPv6 Reconfigure Messages", RFC 6644,
-              DOI 10.17487/RFC6644, July 2012, <https://www.rfc-
-              editor.org/info/rfc6644>.
-
-   [RFC6672]  Rose, S. and W. Wijngaards, "DNAME Redirection in the
-              DNS", RFC 6672, DOI 10.17487/RFC6672, June 2012,
-              <https://www.rfc-editor.org/info/rfc6672>.
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 35]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
-   [RFC6762]  Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
-              DOI 10.17487/RFC6762, February 2013, <https://www.rfc-
-              editor.org/info/rfc6762>.
-
-   [RFC6763]  Cheshire, S. and M. Krochmal, "DNS-Based Service
-              Discovery", RFC 6763, DOI 10.17487/RFC6763, February 2013,
-              <https://www.rfc-editor.org/info/rfc6763>.
-
-   [RFC7010]  Liu, B., Jiang, S., Carpenter, B., Venaas, S., and W.
-              George, "IPv6 Site Renumbering Gap Analysis", RFC 7010,
-              DOI 10.17487/RFC7010, September 2013, <https://www.rfc-
-              editor.org/info/rfc7010>.
-
-   [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
-              Kivinen, "Internet Key Exchange Protocol Version 2
-              (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
-              2014, <https://www.rfc-editor.org/info/rfc7296>.
-
-   [RFC7344]  Kumari, W., Gudmundsson, O., and G. Barwood, "Automating
-              DNSSEC Delegation Trust Maintenance", RFC 7344,
-              DOI 10.17487/RFC7344, September 2014, <https://www.rfc-
-              editor.org/info/rfc7344>.
-
-   [RFC7368]  Chown, T., Ed., Arkko, J., Brandt, A., Troan, O., and J.
-              Weil, "IPv6 Home Networking Architecture Principles",
-              RFC 7368, DOI 10.17487/RFC7368, October 2014,
-              <https://www.rfc-editor.org/info/rfc7368>.
-
-   [RFC7558]  Lynn, K., Cheshire, S., Blanchet, M., and D. Migault,
-              "Requirements for Scalable DNS-Based Service Discovery
-              (DNS-SD) / Multicast DNS (mDNS) Extensions", RFC 7558,
-              DOI 10.17487/RFC7558, July 2015, <https://www.rfc-
-              editor.org/info/rfc7558>.
-
-   [RFC7707]  Gont, F. and T. Chown, "Network Reconnaissance in IPv6
-              Networks", RFC 7707, DOI 10.17487/RFC7707, March 2016,
-              <https://www.rfc-editor.org/info/rfc7707>.
-
-   [RFC7788]  Stenberg, M., Barth, S., and P. Pfister, "Home Networking
-              Control Protocol", RFC 7788, DOI 10.17487/RFC7788, April
-              2016, <https://www.rfc-editor.org/info/rfc7788>.
-
-   [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
-              and P. Hoffman, "Specification for DNS over Transport
-              Layer Security (TLS)", RFC 7858, DOI 10.17487/RFC7858, May
-              2016, <https://www.rfc-editor.org/info/rfc7858>.
-
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 36]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
-
-
-   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-   [RFC8375]  Pfister, P. and T. Lemon, "Special-Use Domain
-              'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
-              <https://www.rfc-editor.org/info/rfc8375>.
-
-   [RFC8415]  Mrugalski, T., Siodelski, M., Volz, B., Yourtchenko, A.,
-              Richardson, M., Jiang, S., Lemon, T., and T. Winters,
-              "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)",
-              RFC 8415, DOI 10.17487/RFC8415, November 2018,
-              <https://www.rfc-editor.org/info/rfc8415>.
-
-17.2.  Informative References
-
-   [I-D.howard-dnsop-ip6rdns]
-              Howard, L., "Reverse DNS in IPv6 for Internet Service
-              Providers", draft-howard-dnsop-ip6rdns-00 (work in
-              progress), June 2014.
-
-   [I-D.ietf-homenet-naming-architecture-dhc-options]
-              Migault, D., Mrugalski, T., Griffiths, C., Weber, R., and
-              W. Cloetens, "DHCPv6 Options for Homenet Naming
-              Architecture", draft-ietf-homenet-naming-architecture-dhc-
-              options-06 (work in progress), June 2018.
-
-   [I-D.ietf-homenet-simple-naming]
-              Lemon, T., Migault, D., and S. Cheshire, "Homenet Naming
-              and Service Discovery Architecture", draft-ietf-homenet-
-              simple-naming-03 (work in progress), October 2018.
-
-   [I-D.sury-dnsext-cname-dname]
-              Sury, O., "CNAME+DNAME Name Redirection", draft-sury-
-              dnsext-cname-dname-00 (work in progress), April 2010.
-
 Authors' Addresses
 
    Daniel Migault
@@ -2063,15 +2103,6 @@ Authors' Addresses
    Canada
 
    EMail: daniel.migault@ericsson.com
-
-
-
-
-
-
-Migault, et al.        Expires September 10, 2020              [Page 37]
-
-Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
    Ralf Weber
@@ -2090,6 +2121,13 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
    Canada
 
    EMail: mcr+ietf@sandelman.ca
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 38]
+
+Internet-Draft  Outsourcing Authoritative Naming Service    October 2020
 
 
    Ray Hunter
@@ -2125,4 +2163,22 @@ Internet-Draft  Outsourcing Authoritative Naming Service      March 2020
 
 
 
-Migault, et al.        Expires September 10, 2020              [Page 38]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Migault, et al.          Expires April 12, 2021                [Page 39]
