@@ -1002,7 +1002,7 @@ network this information will not be cached.
 The Homenet Naming Architecture described in this document solves
 exposing the HNA's DNS service as a DoS attack vector.
 
-## HNA DM channels
+## HNA DMand RDM channels
 
 The HNA DM channels are specified to include their own security mechanisms
 that are designed to provide the minimum attack surface, and to authenticate
@@ -1015,6 +1015,8 @@ As a result, if provisioned using DHCPv6, the security credential may not even t
 On the other hand, if the HNA is not hosted at the border of the home network, the credential may rely on the security associated to DHCPv6.
 Even if HNA and DM are in the same administrative domain it is strongly RECOMMENDED to use a secure channel.
 
+The security of these channels heavily relies on TLS and the DM or RDM is authenticated by its certificate. 
+To ensure the multiple TLS session are are continuously authenticating the same entity, TLS may take advantage of second factor authentication as described in {{?RFC8672}}. 
 
 
 ## Names are less secure than IP addresses {#sec-name-less-secure}
