@@ -69,12 +69,12 @@ author:
       -
         ins: W. Cloetens
         name: Wouter Cloetens
-        org: SoftAtHome
-        street: vaartdijk 3 701
-        city: Wijgmaal
-        code: 3018
-        country: BE
-        email: wouter.cloetens@softathome.com
+        org: Deutsche Telekom
+        street: 
+        city: 
+        code: 
+        country:
+        email: wouter.cloetens@external.telekom.de
 
 
 
