@@ -452,11 +452,12 @@ messages. DNS messages can be protected using various kind of transport
 layers, among others, UDP:53/DTLS, TLS/TCP:53, HTTPS:443. There was
 consideration to using a standard TSIG {{!RFC2845}} or SIG(0)
 {{!RFC2931}} to perform a dynamic DNS update to the DM. There are a
-number of issues with this.  The main one is that the Dynamic DNS update
-would also update the zone's NS records, while the goal is to update the
+number of issues with this.  
+The main one is that the Dynamic DNS update
+would also update the parent zone's (NS, DS and associated A or AAAA records) while the goal is to update the
 Distribution Master's configuration files.  The visible NS records
 SHOULD remain pointing at the cloud provider's anycast addresses.
-Revealing the address of the HNA in the DNS is not desirable.
+Revealing the address of the HNA in the DNS is not desirable. Please see section {{#sec-chain-of-trust}} for more details.
 
 This specification also assumes:
 * the DM serves both the Control Channel and Synchronization Channel on a single IP address, single port and with a single transport protocol.
@@ -484,7 +485,7 @@ Optionally the Outsourcing Infrastructure MAY also provide operational parameter
 As the information is necessary for the HNA to proceed and the information is
 associated to the Outsourcing Infrastructure, this information exchange is mandatory.
 
-## Information to build the DNSSEC chain of trust
+## Information to build the DNSSEC chain of trust {#sec-chain-of-trust} 
 
 The HNA SHOULD provide the hash of the KSK (DS RRset), so the that
 Outsourcing Infrastructure provides this value to the parent zone.  A
