@@ -966,35 +966,28 @@ home networks.
 Outsourcing the DNS Authoritative service from the HNA to a third party
 raises a few privacy related concerns.
 
-The Public Homenet Zone contains a full description of the services
-hosted in the network. These services may not be expected to be publicly
-shared although their names remain accessible through the Internet. Even
-though DNS makes information public, the DNS does not expect to make the
-complete list of services public. In fact, making information public
-still requires the key (or FQDN) of each service to be known by the
-resolver in order to retrieve information about the services. More
-specifically, making mywebsite.example.com public in the DNS, is not
-sufficient to make resolvers aware of the existence web site. However,
-an attacker may walk the reverse DNS zone, or use other reconnaissance
+The Public Homenet Zone lists the names of services hosted in the home network.
+Combined with blocking of AXFR queries, the use of NSEC3 {{!RFC5155}} (vs NSEC {{!RFC4034}}) prevents an  attacker from being able to walk the zone, to discover all the names.
+However, the attacker may be able to walk the reverse DNS zone, or use other reconnaissance
 techniques to learn this information as described in {{!RFC7707}}.
 
-In order to prevent the complete Public Homenet Zone being published on
-the Internet, AXFR queries SHOULD be blocked on the Public Authoritative
-Server(s). Similarly, to avoid zone-walking NSEC3 {{!RFC5155}} SHOULD be
-preferred over NSEC {{!RFC4034}}.  When the Public Homenet Zone is
-outsourced, the end user should be aware that it provides a complete
-description of the services available on the home network. More
-specifically, names usually provides a clear indication of the service
-and possibly even the device type, and as the Public Homenet Zone
-contains the IP addresses associated with the service, they also limit
-the scope of the scan space.
+In general a home owner is expected only to publish names for which there is some need to be able to reference externally.
+Publication of the name does not imply that the service is necessarily reachable from any or all parts of the Internet.
+{{!RFC7084}} mandates that the outgoing-only policy {{RFC6092}} be available, and in many cases it is configured by default.
+A well designed User Interface would combine a policy for making a service public by a name with a policy on who may access it.
 
-In addition to the Public Homenet Zone, the third party can also monitor
-the traffic associated with the Public Homenet Zone. This traffic may
-provide an indication of the services an end user accesses, plus how and
-when they use these services. Although, caching may obfuscate this
-information inside the home network, it is likely that outside your home
-network this information will not be cached.
+In many cases, the home owner wishes to publish names for services that only they will be able to access.
+The access control may consist of an IP source address range, or access may be restricted via some VPN functionality.
+The purpose of publishing the name is so that the service may be access by the same name both within the home, and outside the home.
+Sending traffic to the relevant IPv6 address causes the relevant VPN policy to be enacted upon.
+
+While the problem of getting access to internal names has been solved in Enterprise configurations with a  split-DNS, and such a thing could be done in the home, many recent improvements to VPN user interfaces make it more likely that an individual might have multiple connections configured.
+For instance, an adult child checking on the state of a home automation system for a parent.
+
+In addition to the Public Homenet Zone, pervasive DNS monitoring can also monitor
+the traffic associated with the Public Homenet Zone.
+This traffic may provide an indication of the services an end user accesses, plus how and when they use these services.
+Although, caching may obfuscate this information inside the home network, it is likely that outside your  home network this information will not be cached.
 
 # Security Considerations {#sec-security}
 
