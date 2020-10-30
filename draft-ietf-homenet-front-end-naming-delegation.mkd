@@ -1234,7 +1234,9 @@ The following is an abbridged example of a set of data that represents the neede
   "dm_acl"    : "2001:db8:1f15:62e:21c::/64",
   "dm_ctrl"   : "192.168.1.18",
   "dm_port"   : "4433",
+  "ns_list"   : [ "ns1.publicdns.example", "ns2.publicdns.example"],
   "zone"      : "daniel.homenetdns.example",
+  "auth_method" : "certificate",
   "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCAjYCFGy....",
   "hna_key"   : "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQE...."
 }
@@ -1418,34 +1420,36 @@ HNA and the various settings to be done.
 The HNA needs to be configured with the following parameters.
 These parameters are necessary to establish a secure channel between the HNA and the DM as well as to specify the DNS zone that is in the scope of the communication:
 
-Distribution Master (DM):
-: The associated FQDNs or IP addresses of the DM.
+Distribution Master notification address (dm\_notify):
+: The associated FQDNs or IP addresses of the DM to which DNS notifies should be sent.
 IP addresses are optional and the FQDN is sufficient and preferred.
 If there are concerns about the security of the name to IP translation, then DNSSEC should be employed.
 
-Authentication Method:
-: How the HNA authenticates itself to the DM.
+Authentication Method ("method"):
+: How the HNA authenticates itself to the DM.  This specification defines only "certificate"
 
-Authentication data:
+Authentication data ("hna_certificate", "hna_key"):
 : While a PSK can be used used as part of TSIG authentication, it has poor security properties and is hard to scale.
 Better solutions use public key mechanisms, leveraging private keys built into the HNA.
 
-Public Authoritative Server(s):
-: The FQDN or IP addresses of the Public Authoritative Server(s).
-It MAY correspond to the data that will be sent in the NS RRsets and SOA of the Homenet Zone.
+Public Authoritative Server(s) (dm\_ctrl and dm\_port):
+: The FQDN or IP addresses of the Public Authoritative Server(s) to which control messages will be sent.
 IP addresses are optional and the FQDN is sufficient.
 
-Registered Homenet Domain:
+(XXX? what? It MAY correspond to the data that will be sent in the NS RRsets and SOA of the Homenet Zone.)
+
+Registered Homenet Domain (???):
 : The domain name used to establish the secure channel.
 This name is used by the DM and the HNA for the primary / secondary configuration as well as to index the   NOTIFY queries of the HNA when the HNA has been renumbered.
 
-Registered Homenet Domain:
+Registered Homenet Domain (zone):
 : The Domain Name of the zone. Multiple Registered Homenet Domains may be provided. This will generate the
 creation of multiple Public Homenet Zones.
 
-Public Authoritative Server(s):
+Public Authoritative Server (ns-list):
 : The Public Authoritative Server(s) associated with the Registered Homenet Domain. Multiple Public
 Authoritative Server(s) may be provided.
+
 
 For forward zones, the relationship between the HNA and the forward zone provider may be the result of a number of transactions:
 
