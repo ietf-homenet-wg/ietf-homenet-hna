@@ -3,11 +3,11 @@ title: Outsourcing Home Network Authoritative Naming Service
 abbrev: Outsourcing Authoritative Naming Service
 docname: draft-ietf-homenet-front-end-naming-delegation-11
 
-
+ipr: trust200902
 area: Internet
 wg: Homenet
 kw: Internet-Draft
-cat: info
+cat: std
 
 pi:
   rfcedstyle: yes
@@ -381,38 +381,39 @@ Authoritative Servers may be combined together which would result in a
 common instantiation of an authoritative server on the WAN and inner
 interface.  Other mechanisms may also be used.
 
-~~~
-         Home network                 |         Internet
-                                      |
-                                      | +----------------------------+
-                                      | | Outsourcing Infrastructure |
-                           Control    | |                            |
-  +-----------------------+Channel    | |  +-----------------------+ |
-  |         HNA           |<-------------->| Distribution Master   | |
-  |+---------------------+|           | |  |+---------------------+| |
-  || Public Homenet Zone ||Synchronization || Public Homenet Zone || |
-  || (example.com)       ||Channel    | |  ||  (example.com)      || |
-  |+---------------------+|<-------------->|+---------------------+| |
-  +----------------------+|           | |  +-----------------------+ |
-                                      | |           ^ Distribution   |
-                                      | |           | Channel        |
-  +-----------------------+           | |           v                |
-  | Homenet Authoritative |           | |  +-----------------------+ |
-  | Server(s)             |           | |  | Public Authoritative  | |
-  |+---------------------+|           | |  | Server(s)             | |
-  ||Public Homenet Zone  ||           | |  |+---------------------+| |
-  || (example.com)       ||           | |  || Public Homenet Zone || |
-  |+---------------------+|           | |  ||  (example.com)      || |
-  +-----------------------+           | |  |+---------------------+| |
-             ^   |                    | |  +-----------------------+ |
-             |   |                    | +----------^---|-------------+
-             |   |                    |            |   |
-             |   |           name resolution       |   |
-             |   v                    |            |   v
-   +----------------------+           | +-----------------------+
-   |       Homenet        |           | |       Internet        |
-   |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
-   +----------------------+           | +-----------------------+
+~~~~
+
+       Home network                 |         Internet
+                                    |
+                                    | +----------------------------+
+                                    | | Outsourcing Infrastructure |
+                          Control   | |                            |
++-----------------------+ Channel   | |  +-----------------------+ |
+|         HNA           |<-------------->| Distribution Master   | |
+|+---------------------+|           | |  |+---------------------+| |
+|| Public Homenet Zone ||Synchronization || Public Homenet Zone || |
+|| (example.com)       || Channel   | |  ||  (example.com)      || |
+|+---------------------+|<-------------->|+---------------------+| |
++----------------------+|           | |  +-----------------------+ |
+                                    | |           ^ Distribution   |
+                                    | |           | Channel        |
++-----------------------+           | |           v                |
+| Homenet Authoritative |           | |  +-----------------------+ |
+| Server(s)             |           | |  | Public Authoritative  | |
+|+---------------------+|           | |  | Server(s)             | |
+||Public Homenet Zone  ||           | |  |+---------------------+| |
+|| (example.com)       ||           | |  || Public Homenet Zone || |
+|+---------------------+|           | |  ||  (example.com)      || |
++-----------------------+           | |  |+---------------------+| |
+           ^   |                    | |  +-----------------------+ |
+           |   |                    | +----------^---|-------------+
+           |   |                    |            |   |
+           |   |           name resolution       |   |
+           |   v                    |            |   v
+ +----------------------+           | +-----------------------+
+ |       Homenet        |           | |       Internet        |
+ |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
+ +----------------------+           | +-----------------------+
 ~~~
 {: #fig-naming-arch title="Homenet Naming Architecture Name Resolution" }
 
@@ -450,7 +451,7 @@ The main one is that the Dynamic DNS update
 would also update the parent zone's (NS, DS and associated A or AAAA records) while the goal is to update the
 Distribution Master's configuration files.  The visible NS records
 SHOULD remain pointing at the cloud provider's anycast addresses.
-Revealing the address of the HNA in the DNS is not desirable. Please see section {{#sec-chain-of-trust}} for more details.
+Revealing the address of the HNA in the DNS is not desirable. Please see section {{sec-chain-of-trust}} for more details.
 
 This specification also assumes:
 * the DM serves both the Control Channel and Synchronization Channel on a single IP address, single port and with a single transport protocol.
