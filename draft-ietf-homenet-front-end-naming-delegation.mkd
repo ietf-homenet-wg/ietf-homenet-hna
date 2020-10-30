@@ -1224,6 +1224,25 @@ time synchronization between devices and the valid lifetime of the
 message. As a result, better time synchronization policies could reduce
 the time window of the attack.
 
+# Data Model for Outsourced information {#yang-model}
+
+The following is an abbridged example of a set of data that represents the needed configuration parameters for outsourcing.
+
+~~~~
+{
+  "dm_notify" : "2001:db8:1f15:62e:21c::2",
+  "dm_acl"    : "2001:db8:1f15:62e:21c::/64",
+  "dm_ctrl"   : "192.168.1.18",
+  "dm_port"   : "4433",
+  "zone"      : "daniel.homenetdns.example",
+  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCAjYCFGy....",
+  "hna_key"   : "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQE...."
+}
+~~~~
+
+Here goes a YANG MODULE description of the above.
+
+
 
 #IANA Considerations
 
@@ -1241,7 +1260,7 @@ solutions; Paul Mockapetris, Christian Jacquenet, Francis Dupont and
 Ludovic Eschard for their remarks on HNA and low power devices; Olafur
 Gudmundsson for clarifying DNSSEC capabilities of small devices; Simon
 Kelley for its feedback as dnsmasq implementer; Andrew Sullivan, Mark
-Andrew, Ted Lemon, Mikael Abrahamson, Michael Richardson and Ray Bellis
+Andrew, Ted Lemon, Mikael Abrahamson, and Ray Bellis
 for their feedback on handling different views as well as clarifying the
 impact of outsourcing the zone signing operation outside the HNA; Mark
 Andrew and Peter Koch for clarifying the renumbering.
@@ -1392,58 +1411,52 @@ reduced, and 3600 (1 hour) seems more appropriate.
 # Example: HNA necessary parameters for outsourcing {#sec-configuration-parameters}
 
 This section specifies the various parameters required by the HNA to
-configure the naming architecture of this document. This section is
-informational, and is intended to clarify the information handled by the
+configure the naming architecture of this document.
+This section is informational, and is intended to clarify the information handled by the
 HNA and the various settings to be done.
 
-DM may be configured with the following parameters.
-These parameters are necessary to establish a secure channel between the
-HNA and the DM as well as to specify the DNS zone
-that is in the scope of the communication:
+The HNA needs to be configured with the following parameters.
+These parameters are necessary to establish a secure channel between the HNA and the DM as well as to specify the DNS zone that is in the scope of the communication:
 
-* DM: The associated FQDNs or IP addresses of the
-DM. IP addresses are optional and the FQDN is
-sufficient. To secure the binding name and IP addresses, a DNSSEC
-exchange is required. Otherwise, the IP addresses should be entered
-manually.
+Distribution Master (DM):
+: The associated FQDNs or IP addresses of the DM.
+IP addresses are optional and the FQDN is sufficient and preferred.
+If there are concerns about the security of the name to IP translation, then DNSSEC should be employed.
 
-* Authentication Method: How the HNA authenticates itself to the
-DM.
+Authentication Method:
+: How the HNA authenticates itself to the DM.
 
-* Authentication data: Associated Data. PSK only requires a single
-argument. If other authentication mechanisms based on certificates are
-used, then HNA private keys, certificates and certification authority
-should be specified.
+Authentication data:
+: While a PSK can be used used as part of TSIG authentication, it has poor security properties and is hard to scale.
+Better solutions use public key mechanisms, leveraging private keys built into the HNA.
 
-* Public Authoritative Server(s):  The FQDN or IP addresses of the Public
-Authoritative Server(s). It MAY correspond to the data that will be set
-in the NS RRsets and SOA of the Homenet Zone. IP addresses are optional
-and the FQDN is sufficient. To secure the binding between name and IP
-addresses, a DNSSEC exchange is required. Otherwise, the IP addresses
-should be entered manually.
+Public Authoritative Server(s):
+: The FQDN or IP addresses of the Public Authoritative Server(s).
+It MAY correspond to the data that will be sent in the NS RRsets and SOA of the Homenet Zone.
+IP addresses are optional and the FQDN is sufficient.
 
-* Registered Homenet Domain:  The domain name used to establish the secure
-channel. This name is used by the DM and the HNA for
-the primary / secondary configuration as well as to index the NOTIFY
-queries of the HNA when the HNA has been renumbered.
+Registered Homenet Domain:
+: The domain name used to establish the secure channel.
+This name is used by the DM and the HNA for the primary / secondary configuration as well as to index the   NOTIFY queries of the HNA when the HNA has been renumbered.
 
-Setting the Homenet Zone requires the following information.
-
-* Registered Homenet Domain: The Domain Name of the zone. Multiple
-Registered Homenet Domains may be provided. This will generate the
+Registered Homenet Domain:
+: The Domain Name of the zone. Multiple Registered Homenet Domains may be provided. This will generate the
 creation of multiple Public Homenet Zones.
 
-* Public Authoritative Server(s): The Public Authoritative Server(s)
-associated with the Registered Homenet Domain. Multiple Public
+Public Authoritative Server(s):
+: The Public Authoritative Server(s) associated with the Registered Homenet Domain. Multiple Public
 Authoritative Server(s) may be provided.
 
-Two possible methods of providing the required information would be:
+For forward zones, the relationship between the HNA and the forward zone provider may be the result of a number of transactions:
 
-JSON for forward zones
-should be standardized in a similar way to zone file layout in RFC1035
+1. The forward zone outsourcing may be provided by the maker of the Homenet router.
+In this case, the identity and authorization could be built in the device at manufacturer provisioning time.  The device would need to be provisioned with a device-unique credential, and it is likely that the Registered Homenet Domain would be derived from a public attribute of the device, such as a serial number.
 
-DHCP for reverse zones
-needs a separate draft
+2. The forward zone outsourcing may be provided by the Internet Service Provider.
+In this case, the use of {{I-D.ietf-homenet-naming-architecture-dhc-options}} to provide the credentials is appropriate.
 
+3. The forward zone may be outsourced to a third party, such as a domain registrar.
+In this case, the use of the JSON-serialized YANG data model described in section {{yang-model}} is appropriate, as it can easily be copy and pasted by the user, or downloaded as part of a web transaction.
 
+For reverse zones, the relationship is always with the upstream ISP (although there may be more than one), and so {{I-D.ietf-homenet-naming-architecture-dhc-options}} is always the appropriate interface.
 
