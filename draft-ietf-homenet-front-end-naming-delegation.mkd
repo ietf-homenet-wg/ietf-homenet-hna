@@ -414,7 +414,7 @@ interface.  Other mechanisms may also be used.
  |       Homenet        |           | |       Internet        |
  |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
  +----------------------+           | +-----------------------+
-~~~
+~~~~
 {: #fig-naming-arch title="Homenet Naming Architecture Name Resolution" }
 
 
@@ -973,7 +973,7 @@ techniques to learn this information as described in {{!RFC7707}}.
 
 In general a home owner is expected only to publish names for which there is some need to be able to reference externally.
 Publication of the name does not imply that the service is necessarily reachable from any or all parts of the Internet.
-{{!RFC7084}} mandates that the outgoing-only policy {{RFC6092}} be available, and in many cases it is configured by default.
+{{!RFC7084}} mandates that the outgoing-only policy {{!RFC6092}} be available, and in many cases it is configured by default.
 A well designed User Interface would combine a policy for making a service public by a name with a policy on who may access it.
 
 In many cases, the home owner wishes to publish names for services that only they will be able to access.
@@ -1237,8 +1237,8 @@ The following is an abbridged example of a set of data that represents the neede
   "ns_list"   : [ "ns1.publicdns.example", "ns2.publicdns.example"],
   "zone"      : "daniel.homenetdns.example",
   "auth_method" : "certificate",
-  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCAjYCFGy....",
-  "hna_key"   : "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQE...."
+  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
+  "hna_key"   : "-----BEGIN RSA PRIVATE KEY-----\nMIIEowICAQE...."
 }
 ~~~~
 
