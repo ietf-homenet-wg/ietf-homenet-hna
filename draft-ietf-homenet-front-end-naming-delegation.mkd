@@ -84,9 +84,7 @@ responsibility is to select, sign and publish names to a set of publically visib
 
 The use of an outsourced primary DNS server deals with possible renumbering of the home network, and with possible denial of service attacks against the DNS infrastructure.
 
-This document describes the mechanism that enables the Home Network
-Authority (HNA) to outsource the naming service to the Outsourcing
-Infrastructure via a Distribution Master (DM).
+This document describes the mechanism that enables the Home Network Authority (HNA) to outsource the naming service to the DNS Outsourcing Infrastructure via a Distribution Master (DM).
 
 In addition, this document deals with publication of a corresponding reverse zone.
 
