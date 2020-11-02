@@ -77,14 +77,18 @@ author:
 
 --- abstract
 
-The Homenet Naming authority is responsible for making devices within the home network accessible by name within the home network as well as from outside the home network (e.g. the Internet).
-The names of the devices accessible from the Internet are stored in the Public Homenet Zone, served by a DNS authoritative server.
-In order to avoid DDoS attacks on the home infrastructure, this
-document puts the primary DNS servers on an outsourced DNS infrastructure.
+Home owners often have IPv6 devices that they wish to access over the Internet using names.
+It has been possible to register and populate a DNS Zone with names since DNS became a thing, but it has been an activity typically reserved for experts.
+This document automates the process through creation of a Homenet Naming Authority, whose
+responsibility is to select, sign and publish names to a set of publically visible servers.
 
-This document describes a mechanism that enables the Home Network
+The use of an outsourced primary DNS server deals with possible renumbering of the home network, and with possible denial of service attacks against the DNS infrastructure.
+
+This document describes the mechanism that enables the Home Network
 Authority (HNA) to outsource the naming service to the Outsourcing
 Infrastructure via a Distribution Master (DM).
+
+In addition, this document deals with publication of a corresponding reverse zone.
 
 --- middle
 
