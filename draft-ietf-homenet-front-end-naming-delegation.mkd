@@ -161,13 +161,13 @@ mDNS {{!RFC6762}} DNS-SD {{!RFC6763}} are two examples of these services.
 Currently mDNS is limited to a single link network.
 However, future protocols and architectures {{?I-D.ietf-homenet-simple-naming}} are expected to leverage this constraint as pointed out in {{!RFC7558}}.
 
-## Selecting Names to Publish
+## Selecting Names to Publish {#selectingnames}
 
 While this document does not create any normative mechanism by which the selection of names to publish, this document anticipates that the home network administrator (a humuan), will be presented with a list of current names and addresses present on the inside of the home network.
 
 The administrator would mark which devices (by name), are to be published.
 The HNA would then collect the IPv6 address(es) associated with that device, and put the name into the Public Homenet Zone.
-The address of the device can be collected from a number of places: mDNS, DHCPv6, UPnP, PCP, or manual configuration.
+The address of the device can be collected from a number of places: mDNS {{!RFC6762}}, DHCP {{!RFC6644}}, UPnP, PCP {{!RFC6887}}, or manual configuration.
 
 A device may have a Global Unicast Address (GUA), a Unique Local IPv6 Address (ULA), as as well IPv6-Link-Local addresses, IPv4-Link-Local Addresses, and RFC1918 addresses.
 Of these the link-local are never useful for the Public Zone, and should be ommitted.
@@ -263,21 +263,14 @@ The resolution is performed requesting the Public Authoritative Servers.
 
 # Architecture Description  {#sec-arc-desc}
 
-This section provides an overview of the architecture for outsourcing
-the authoritative naming service from the HNA to the Outsourcing
-Infrastructure in {{sec-arch-overview}}. Section {{sec-homenet-zone}}
-and {{sec-configuration-parameters}} illustrates this architecture with
-the example of a Public Homenet Zone as well as necessary parameter to
-configure the HNA.
+This section provides an overview of the architecture for outsourcing the authoritative naming service fromn the HNA to the DNS Outsourcing Infrastructure in {{sec-arch-overview}}.
+Section {{sec-homenet-zone}} and {{sec-configuration-parameters}} illustrates this architecture with the example of a Public Homenet Zone as well as necessary parameter to configure the HNA.
 
 ## Architecture Overview {#sec-arch-overview}
 
-{{fig-naming-arch}} illustrates the architecture where the HNA
-outsources the publication of the Public Homenet Zone to the Outsourcing
-Infrastructure.
+{{fig-naming-arch}} illustrates the architecture where the HNA outsources the publication of the Public Homenet Zone to the DNS Outsourcing Infrastructure (DOI).
 
-The Public Homenet Zone is identified by the Registered Homenet Domain
-Name -- example.com.
+The Public Homenet Zone is identified by the Registered Homenet Domain Name -- example.com.
 
 ".local" as well as ".home.arpa" are explicitly not considered as Public
 Homenet zones.
@@ -286,83 +279,53 @@ The HNA SHOULD build the Public Homenet Zone in a single view populated
 with all resource records that are expected to be published on the
 Internet.
 
-How the Public Homenet Zone is populated is out of the scope of this
-document. The node providing the HNA function may also host or interact
-with multiple services to determine name-to-address mappings, such as a
-web GUI, DHCP {{!RFC6644}} or mDNS {{!RFC6762}}. These services may
-coexist and may be used to populate the Public Homenet Zone.
+As explained in {#selectingnames}, how the Public Homenet Zone is populated is out of the scope of this document.
 
-The HNA also signs the Public Homenet Zone. The HNA handles all
-operations and keying material required for DNSSEC, so there is no
-provision made in this architecture for transferring private DNSSEC
-related keying material between the HNA and the DM.
+The HNA also signs the Public Homenet Zone.
+The HNA handles all operations and keying material required for DNSSEC, so there is no provision made in this architecture for transferring private DNSSEC related keying material between the HNA and the DM.
 
-Once the Public Homenet Zone has been built, the HNA outsources it to
-the Outsourcing Infrastructure as described in {{fig-naming-arch}}.
+Once the Public Homenet Zone has been built, the HNA outsources it to the DNS Outsourcing Infrastructure as described in {{fig-naming-arch}}.
 
-The HNA acts as a hidden primary while the DM behaves as a secondary
-responsible to distribute the Public Homenet Zone to the multiple Public
-Authoritative Servers that Outsourcing Infrastructure is responsible
+The HNA acts as a hidden primary while the DM behaves as a secondary responsible to distribute the Public Homenet Zone to the multiple Public Authoritative Servers that DNS Outsourcing Infrastructure is responsible
 for.
 
 The DM has 3 communication channels:
 
-* a DM Control Channel (see section {{sec-ctrl}}) to configure the
-  HNA and the Outsourcing Infrastructure,
+* a DM Control Channel (see section {{sec-ctrl}}) to configure the HNA and the Outsourcing Infrastructure,
 
-* a DM Synchronization Channel (see section {{sec-synch}} to
-  synchronize the Public Homenet Zone on the HNA and on the DM.
+* a DM Synchronization Channel (see section {{sec-synch}} to synchronize the Public Homenet Zone on the HNA and on the DM.
 
-* one or more Distribution Channels (see section {{sec-dist}} that
-  distributes the Public Homenet Zone from the DM to the Public
-  Authoritative Server serving the Public Homenet Zone on the Internet.
+* one or more Distribution Channels (see section {{sec-dist}} that distributes the Public Homenet Zone from the DM to the Public Authoritative Server serving the Public Homenet Zone on the Internet.
 
-There MAY be multiple DM's, and multiple servers per DM. This text
-assumes a single DM server for simplicity, but there is no reason why
-each channel need to be implemented on the same server, or indeed use
-the same code base.
+There MAY be multiple DM's, and multiple servers per DM.
+This text assumes a single DM server for simplicity, but there is no reason why each channel need to be implemented on the same server, or indeed use the same code base.
 
-It is important to note that while the HNA is configured as an
-authoritative server, it is not expected to answer to DNS requests from
-the public Internet for the Public Homenet Zone. The function of the HNA
-is limited to building the zone and synchronization with the DM.
+It is important to note that while the HNA is configured as an authoritative server, it is not expected to answer to DNS requests from the public Internet for the Public Homenet Zone.
+The function of the HNA is limited to building the zone and synchronization with the DM.
 
-The addresses associated with the HNA SHOULD NOT be mentioned in the NS
-records of the Public Homenet zone, unless additional security
-provisions necessary to protect the HNA from external attack have been
-taken.
+The addresses associated with the HNA SHOULD NOT be mentioned in the NS records of the Public Homenet zone, unless additional security provisions necessary to protect the HNA from external attack have been taken.
 
-The Outsourcing Infrastructure is also responsible for ensuring the DS
-record has been updated in the parent zone.
+The DNS Outsourcing Infrastructure is also responsible for ensuring the DS record has been updated in the parent zone.
 
-Resolution is performed by the DNSSEC resolvers. When the resolution is
-performed outside the home network, the DNSSEC Resolver resolves the DS
-record on the Global DNS and the name associated to the Public Homenet
-Zone (example.com) on the Public Authoritative Servers.
+Resolution is performed by the DNSSEC resolvers.
+When the resolution is performed outside the home network, the DNSSEC Resolver resolves the DS record on the Global DNS and the name associated to the Public Homenet Zone (example.com) on the Public Authoritative Servers.
 
-When the resolution is performed from within the home network, the
-Homenet DNSSEC Resolver may proceed similarly. On the other hand, to
-provide resilience to the Public Homenet Zone in case of disruption, the
-Homenet DNSSEC Resolver SHOULD be able to perform the resolution on the
-authoritative name service of the home network implemented by the
-Homenet Authoritative Servers. These servers are not expected to be
-mentioned in the Public Homenet Zone, nor to be accessible from the
-Internet. As such their information as well as the corresponding signed
-DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers
-e.g. using HNCP. Such configuration is outside the scope of this document.
+When the resolution is performed from within the home network, the Homenet DNSSEC Resolver may proceed similarly.
+On the other hand, to provide resilience to the Public Homenet Zone in case of disruption, the Homenet DNSSEC Resolver SHOULD be able to perform the resolution on the authoritative name service of the home network implemented by the Homenet Authoritative Servers.
+These servers are not expected to be mentioned in the Public Homenet Zone, nor to be accessible from the
+Internet. As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP. Such configuration is outside the scope of this document.
 
-How the Homenet Authoritative Servers are provisioned is also out of
-scope of this specification. It could be implemented using primary
-secondaries servers, or via rsync. In some cases, the HNA and Homenet
-Authoritative Servers may be combined together which would result in a
-common instantiation of an authoritative server on the WAN and inner
-interface.  Other mechanisms may also be used.
+How the Homenet Authoritative Servers are provisioned is also out of scope of this specification.
+It could be implemented using primary secondaries servers, or via rsync.
+In some cases, the HNA and Homenet Authoritative Servers may be combined together which would result in a common instantiation of an authoritative server on the WAN and inner interface.
+Other mechanisms may also be used.
 
 ~~~~
 
        Home network                 |         Internet
                                     |
                                     | +----------------------------+
+                                    | |          DNS               |
                                     | | Outsourcing Infrastructure |
                           Control   | |                            |
 +-----------------------+ Channel   | |  +-----------------------+ |
