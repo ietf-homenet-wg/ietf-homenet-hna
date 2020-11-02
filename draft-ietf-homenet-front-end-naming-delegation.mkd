@@ -270,7 +270,7 @@ Section {{sec-homenet-zone}} and {{sec-configuration-parameters}} illustrates th
 
 {{fig-naming-arch}} illustrates the architecture where the HNA outsources the publication of the Public Homenet Zone to the DNS Outsourcing Infrastructure (DOI).
 
-The Public Homenet Zone is identified by the Registered Homenet Domain Name -- myhome.example.
+The Public Homenet Zone is identified by the Registered Homenet Domain Name -- myhome.isp.example.
 
 The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones.
 
@@ -678,13 +678,15 @@ How the reverse zone is generated is out of scope of this document. {{?I-D.howar
 
 This document does not deal with how the HNA is provisioned with a trusted relationship to the Distribution Master for the forward zone.
 
-This section details what needs to be provisioned into the HNA and serves as a requirements statement for mechanisms. The HNA needs to be provisioned with:
+This section details what needs to be provisioned into the HNA and serves as a requirements statement for mechanisms.
+
+
+The HNA needs to be provisioned with:
 
 * the Registered Domain (e.g., myhome.isp.example )
 * the contact info for the Distribution Master (DM), including the DNS name (FQDN), possibly including the IP literal, and a certificate (or anchor) to be used to authenticate the service
 * the DM transport protocol and port (the default is DNS over TLS, on port 853)
 * the HNA credentials used by the DM for its authentication.
-
 
 The HNA will need to select an IP address for communication for the Synchronization Channel.
 This is typically the outside WAN address of the router, but could be an IPv6 LAN address in the case of a home with multiple ISPs (and multiple border routers).
@@ -695,87 +697,60 @@ ISP-specific forward zones MAY also be provisioned using {{?I-D.ietf-homenet-nam
 
 Similarly, it the HNA is provided by a registrar, the HNA may be given configured to end user.
 
-In the absence of specific pre-established relation, these pieces of information may be entered manually by the end user. In order to ease the configuration from the end user the following scheme may be implemented.
+In the absence of specific pre-established relation, these pieces of information may be entered manually by the end user.
+In order to ease the configuration from the end user the following scheme may be implemented.
 
 The HNA may present the end user a web interface where it provides the end user the ability to indicate the Registered Domain or the registrar for example a preselected list.
-Once the regsitrar has been selected, the HNA redirects the end user to that registrar in order to receive a access token. The access token will enable the HNA to retrieve the DM parameters associated to the Registered Domain. These parameters will include the credentials used by the HNA to establish the Control and Synchronization Channels.
+Once the regsitrar has been selected, the HNA redirects the end user to that registrar in order to receive a access token.
+The access token will enable the HNA to retrieve the DM parameters associated to the Registered Domain.
+These parameters will include the credentials used by the HNA to establish the Control and Synchronization Channels.
 
 Such architecture limits the necessary steps to configure the HNA from the end user.
 
 # Renumbering {#sec-renumbering}
 
+This section details how renumbering is handled by the Hidden Primary server or the DM.
+Both types of renumbering are discussed i.e. "make-before-break" and "break-before-make" (aka flash renumbering).
 
-This section details how renumbering is handled by the Hidden Primary
-server or the DM. Both types of renumbering are
-discussed i.e. "make-before-break" and "break-before-make".
+In the make-before-break renumbering scenario, the new prefix is advertised, the network is configured to prepare the transition to the new prefix.
+During a period of time, the two prefixes old and new coexist, before the old prefix is completely removed.
 
-In the make-before-break renumbering scenario, the new prefix is
-advertised, the network is configured to prepare the transition to the
-new prefix. During a period of time, the two prefixes old and new
-coexist, before the old prefix is completely removed. In the
-break-before-make renumbering scenario, the new prefix is advertised
-making the old prefix obsolete.
+In the break-before-make renumbering scenario, the new prefix is advertised making the old prefix obsolete.
 
-Renumbering has been extensively described in {{!RFC4192}} and analyzed
-in {{!RFC7010}} and the reader is expected to be familiar with them
-before reading this section.
+Renumbering has been extensively described in {{!RFC4192}} and analyzed in {{!RFC7010}} and the reader is expected to be familiar with them before reading this section.
 
 ## Hidden Primary {#sec-primary}
 
-In a renumbering scenario, the Hidden Primary is informed it is being
-renumbered. In most cases, this occurs because the whole home network is
-being renumbered. As a result, the Public Homenet Zone will also be
-updated.  Although the new and old IP addresses may be stored in the
-Public Homenet Zone, we recommend that only the newly reachable IP
-addresses be published.
+In a renumbering scenario, the Hidden Primary is informed it is being renumbered.
+In most cases, this occurs because the whole home network is being renumbered.
+As a result, the Public Homenet Zone will also be updated.
+Although the new and old IP addresses may be stored in the Public Homenet Zone, we recommend that only the  newly reachable IP addresses be published.
 
-To avoid reachability disruption, IP connectivity information provided
-by the DNS SHOULD be coherent with the IP plane. In our case, this means
-the old IP address SHOULD NOT be provided via the DNS when it is not
-reachable anymore. Let for example TTL be the TTL associated with a
-RRset of the Public Homenet Zone, it may be cached for TTL seconds. Let
-T_NEW be the time the new IP address replaces the old IP address in the
-Homenet Zone, and T_OLD_UNREACHABLE the time the old IP is not reachable
-anymore.
+To avoid reachability disruption, IP connectivity information provided by the DNS SHOULD be coherent with the IP plane.
+In our case, this means the old IP address SHOULD NOT be provided via the DNS when it is not reachable anymore.
+Let for example TTL be the TTL associated with a RRset of the Public Homenet Zone, it may be cached for TTL  seconds.
+Let T_NEW be the time the new IP address replaces the old IP address in the Homenet Zone, and T_OLD_UNREACHABLE the time the old IP is not reachable anymore.
 
-In the case of the make-before-break, seamless reachability is provided
-as long as T_OLD_UNREACHABLE - T_NEW > 2 * TTL. If this is not
-satisfied, then devices associated with the old IP address in the home
-network may become unreachable for 2 * TTL - (T_OLD_UNREACHABLE -
-T_NEW). In the case of a break-before-make, T_OLD_UNREACHABLE = T_NEW,
-and the device may become unreachable up to 2 * TTL.
+In the case of the make-before-break, seamless reachability is provided as long as T_OLD_UNREACHABLE - T_NEW > 2 * TTL.
+If this is not satisfied, then devices associated with the old IP address in the home network may become unreachable for 2 * TTL - (T_OLD_UNREACHABLE - T_NEW).
+In the case of a break-before-make, T_OLD_UNREACHABLE = T_NEW, and the device may become unreachable up to 2 * TTL.
 
-Once the Public Homenet Zone file has been updated on the Hidden
-Primary, the Hidden Primary needs to inform the Outsourcing
-Infrastructure that the Public Homenet Zone has been updated and that
-the IP address to use to retrieve the updated zone has also been
-updated. Both notifications are performed using regular DNS exchanges.
-Mechanisms to update an IP address provided by lower layers with
-protocols like SCTP {{!RFC4960}}, MOBIKE {{!RFC4555}} are not considered
-in this document.
+Once the Public Homenet Zone file has been updated on the Hidden Primary, the Hidden Primary needs to inform the DNS Outsourcing Infrastructure that the Public Homenet Zone has been updated and that the IP address to use to retrieve the updated zone has also been updated.
+Both notifications are performed using regular DNS exchanges.
+Mechanisms to update an IP address provided by lower layers with protocols like SCTP {{!RFC4960}}, MOBIKE {{!RFC4555}} are not considered in this document.
 
-The Hidden Primary SHOULD inform the DM that the Public Homenet Zone has
-been updated by sending a NOTIFY payload with the new IP address. In
-addition, this NOTIFY payload SHOULD be authenticated using SIG(0) or
-TSIG. When the DM receives the NOTIFY payload, it
-MUST authenticate it. Note that the cryptographic key used for the
-authentication SHOULD be indexed by the Registered Homenet Domain
-contained in the NOTIFY payload as well as the RRSIG. In other words,
-the IP address SHOULD NOT be used as an index. If authentication
-succeeds, the DM MUST also notice the IP address has been modified and
-perform a reachability check before updating its primary configuration.
-The routability check MAY performed by sending a SOA request to the
-Hidden Primary using the source IP address of the NOTIFY. This exchange
-is also secured, and if an authenticated response is received from the
-Hidden Primary with the new IP address, the DM SHOULD update its
-configuration file and retrieve the Public Homenet Zone using an AXFR or
-a IXFR exchange.
+The Hidden Primary SHOULD inform the DM that the Public Homenet Zone has been updated by sending a NOTIFY payload with the new IP address.
+In addition, this NOTIFY payload SHOULD be authenticated using SIG(0) or TSIG.
+When the DM receives the NOTIFY payload, it MUST authenticate it.
+Note that the cryptographic key used for the authentication SHOULD be indexed by the Registered Homenet Domain contained in the NOTIFY payload as well as the RRSIG.
+In other words, the IP address SHOULD NOT be used as an index.
 
-Note that the primary reason for providing the IP address is that the
-Hidden Primary is not publicly announced in the DNS. If the Hidden
-Primary were publicly announced in the DNS, then the IP address update
-could have been performed using the DNS as described in
-{{sec-secondary}}.
+If authentication succeeds, the DM MUST also notice the IP address has been modified and perform a reachability check before updating its primary configuration.
+The routability check MAY performed by sending a SOA request to the Hidden Primary using the source IP  address of the NOTIFY.
+This exchange is also secured, and if an authenticated response is received from the Hidden Primary with the new IP address, the DM SHOULD update its configuration file and retrieve the Public Homenet Zone using an AXFR or a IXFR exchange.
+
+Note that the primary reason for providing the IP address is that the Hidden Primary is not publicly announced in the DNS.
+If the Hidden Primary were publicly announced in the DNS, then the IP address update could have been performed using the DNS as described in {{sec-secondary}}.
 
 
 ## Distribution Master {#sec-secondary}
