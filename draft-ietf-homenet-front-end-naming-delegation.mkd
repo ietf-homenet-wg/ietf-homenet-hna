@@ -555,104 +555,72 @@ This means that the necessary keys to authenticate transaction SHOULD NOT be ind
 
 ## Implementation Tips {#sec-ctrl-implementation}
 
-The Hidden Primary Server on the HNA differs from a regular
-authoritative server for the home network due to:
+The Hidden Primary Server on the HNA differs from a regular authoritative server for the home network due to:
 
-* Interface Binding: the Hidden Primary Server will almost certainly
-listen on the WAN Interface, whereas a regular authoritative server for
-the home network would listen on the internal home network interface.
+Interface Binding:
+: the Hidden Primary Server will almost certainly listen on the WAN Interface, whereas a regular authoritative server for the home network would listen on the internal home network interface.
 
-* Limited exchanges: the purpose of the Hidden Primary Server is to
-synchronize with the DM, not to serve any zones to end users, or the
-public Internet.
+Limited exchanges:
+: the purpose of the Hidden Primary Server is to synchronize with the DM, not to serve any zones to end users, or the public Internet.
 
 As a result, exchanges are performed with specific nodes (the DM).
-Further, exchange types are limited. The only legitimate exchanges are:
-NOTIFY initiated by the Hidden Primary and IXFR or AXFR exchanges
-initiated by the DM. On the other hand, regular authoritative servers
-would respond to any hosts, and any DNS query would be processed. The
-HNA SHOULD filter IXFR/AXFR traffic and drop traffic not initiated by
-the DM.  The HNA MUST listen for DNS on TCP and UDP and MUST at least
-allow SOA lookups of the Homenet Zone.
+Further, exchange types are limited.
+The only legitimate exchanges are: NOTIFY initiated by the Hidden Primary and IXFR or AXFR exchanges initiated by the DM.
 
+On the other hand, regular authoritative servers would respond to any hosts, and any DNS query would be  processed.
+The HNA SHOULD filter IXFR/AXFR traffic and drop traffic not initiated by the DM.
+The HNA MUST listen for DNS on TCP and UDP and MUST at least allow SOA lookups of the Homenet Zone.
 
 # DM Synchronization Channel between HNA and DM {#sec-synch}
 
-The DM Synchronization Channel is used for communication between the HNA
-and the DM for synchronizing the Public Homenet Zone.  Note that the
-Control Channel and the Synchronization Channel are by construction
-different channels even though there they MAY use the same IP addresses.
-In fact the Control Channel is set between the HNA working as a client
-using port YYYY (a high range port) toward a service provided by the MD
-at port XX (well known port). On the other hand, the Synchronization
-Channel is set between the DM working as a client using port ZZZZ ( a
-high range port) toward a service a service provided  by the HNA at port
-XX. As a result, even though the same couple of IP addresses may be
-involved the Control Channel and the Synchronization Channel are always
-distinct channels.
+The DM Synchronization Channel is used for communication between the HNA and the DM for synchronizing the Public Homenet Zone.
+Note that the Control Channel and the Synchronization Channel are by construction different channels even though there they MAY use the same IP addresses.
+In fact the Control Channel is set between the HNA working as a client using port YYYY (a high range port) toward a service provided by the MD at port XX (well known port).
 
-Uploading and dynamically updating the zone file on the DM can be seen
-as zone provisioning between the HNA (Hidden Primary) and the DM
-(Secondary Server). This can be handled via AXFR + DNS UPDATE.
+On the other hand, the Synchronization Channel is set between the DM working as a client using port ZZZZ ( a high range port) toward a service a service provided  by the HNA at port XX.
 
-This document RECOMMENDS use of a primary / secondary mechanism instead
-of the use of DNS UPDATE. The primary / secondary mechanism is
-RECOMMENDED as it scales better and avoids DoS attacks. Note that even
-when UPDATE messages are used, these messages are using a distinct
-channel as those used to set the configuration.
+As a result, even though the same couple of IP addresses may be involved the Control Channel and the  Synchronization Channel are always distinct channels.
 
-Note that there is no standard way to distribute a DNS primary between
-multiple devices. As a result, if multiple devices are candidate for
-hosting the Hidden Primary, some specific mechanisms should be designed
-so the home network only selects a single HNA for the Hidden Primary.
+Uploading and dynamically updating the zone file on the DM can be seen as zone provisioning between the HNA (Hidden Primary) and the DM (Secondary Server).
+This can be handled via AXFR + DNS UPDATE.
+
+This document RECOMMENDS use of a primary / secondary mechanism instead of the use of DNS UPDATE.
+The primary / secondary mechanism is RECOMMENDED as it scales better and avoids DoS attacks.
+Note that even when UPDATE messages are used, these messages are using a distinct channel as those used to set the configuration.
+
+Note that there is no standard way to distribute a DNS primary between multiple devices.
+As a result, if multiple devices are candidate for hosting the Hidden Primary, some specific mechanisms should be designed so the home network only selects a single HNA for the Hidden Primary.
 Selection mechanisms based on HNCP {{!RFC7788}} are good candidates.
 
-The HNA acts as a Hidden Primary Server, which is a regular
-authoritative DNS Server listening on the WAN interface.
+The HNA acts as a Hidden Primary Server, which is a regular authoritative DNS Server listening on the WAN interface.
 
-The DM is configured as a secondary for the Homenet Domain Name. This
-secondary configuration has been previously agreed between the end user
-and the provider of the Outsourcing Infrastructure as part of either the
-provisioning or due to receipt of UPDATE messages on the DM Control
-Channel.
+The DM is configured as a secondary for the Homenet Domain Name.
+This secondary configuration has been previously agreed between the end user and the provider of the Outsourcing Infrastructure as part of either the provisioning or due to receipt of UPDATE messages on the  DM Control Channel.
 
-The Homenet Reverse Zone MAY also be updated either with DNS UPDATE
-{{!RFC2136}} or using a primary / secondary synchronization.
+The Homenet Reverse Zone MAY also be updated either with DNS UPDATE {{!RFC2136}} or using a primary / secondary synchronization.
 
 ## Securing the Synchronization Channel between HNA and DM {#sec-synch-security}
 
 The Synchronization Channel used standard DNS request.
 
-First the primary notifies the secondary that the zone must be updated
-and eaves the secondary to proceed with the update when possible/
-convenient.
+First the primary notifies the secondary that the zone must be updated and eaves the secondary to proceed with the update when possible/convenient.
 
-Then, a NOTIFY message is sent by the primary, which is a small packet
-that is less likely to load the secondary.
+Then, a NOTIFY message is sent by the primary, which is a small packet that is less likely to load the secondary.
 
-Finally, the AXFR {{!RFC1034}} or IXFR {{!RFC1995}} query performed by
-the secondary is a small packet sent over TCP (section 4.2
-{{!RFC5936}}), which mitigates reflection attacks using a forged NOTIFY.
+Finally, the AXFR {{!RFC1034}} or IXFR {{!RFC1995}} query performed by the secondary is a small packet sent over TCP (section 4.2 {{!RFC5936}}), which mitigates reflection attacks using a forged NOTIFY.
 
-The AXFR request from the DM to the HNA SHOULD be secured.  DNS over TLS
-{{!RFC7858}} is RECOMMENDED.
+The AXFR request from the DM to the HNA SHOULD be secured.
+DNS over TLS {{!RFC7858}} is RECOMMENDED.
 
-When using TLS, the HNA MAY authenticate inbound connections from the DM
-using standard mechanisms, such as a public certificate with baked-in
-root certificates on the HNA, or via DANE {!RFC6698}}
+When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {!RFC6698}}
 
-The HNA MAY apply a simple IP filter on inbound AXFR requests to ensure
-they only arrive from the DM Synchronization Channel. In this case, the
-HNA SHOULD regularly check (via DNS resolution) that the address of the
-DM in the filter is still valid.
+The HNA MAY apply a simple IP filter on inbound AXFR requests to ensure they only arrive from the DM Synchronization Channel.
+In this case, the HNA SHOULD regularly check (via DNS resolution) that the address of the DM in the filter is still valid.
 
 # DM Distribution Channel {#sec-dist}
 
-The DM Distribution Channel is used for communication between the DM and
-the Public Authoritative Servers. The architecture and communication
-used for the DM Distribution Channels is outside the scope of this
-document, and there are many existing solutions available e.g. rsynch,
-DNS AXFR, REST, DB copy.
+The DM Distribution Channel is used for communication between the DM and the Public Authoritative Servers.
+The architecture and communication used for the DM Distribution Channels is outside the scope of this document, and there are many existing solutions available e.g. rsynch, DNS AXFR, REST, DB copy.
 
 # HNA Security Policies {#sec-cpe-sec-policies}
 
