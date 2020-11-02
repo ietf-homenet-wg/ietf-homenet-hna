@@ -553,7 +553,7 @@ Note also that authentication of message exchanges between the HNA and the DM SH
 As detailed in {{sec-renumbering}}, the IP addresses of the DM and the Hidden Primary are subject to change, for example while the network is being renumbered.
 This means that the necessary keys to authenticate transaction SHOULD NOT be indexed  using the IP address, and SHOULD be resilient to IP address changes.
 
-## Implementation Tips {#sec-ctrl-implementation}
+## Implementation Concerns {#sec-ctrl-implementation}
 
 The Hidden Primary Server on the HNA differs from a regular authoritative server for the home network due to:
 
