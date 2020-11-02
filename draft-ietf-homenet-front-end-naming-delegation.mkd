@@ -414,7 +414,7 @@ interface.  Other mechanisms may also be used.
  |       Homenet        |           | |       Internet        |
  |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
  +----------------------+           | +-----------------------+
-~~~
+~~~~
 {: #fig-naming-arch title="Homenet Naming Architecture Name Resolution" }
 
 
@@ -973,7 +973,7 @@ techniques to learn this information as described in {{!RFC7707}}.
 
 In general a home owner is expected only to publish names for which there is some need to be able to reference externally.
 Publication of the name does not imply that the service is necessarily reachable from any or all parts of the Internet.
-{{!RFC7084}} mandates that the outgoing-only policy {{RFC6092}} be available, and in many cases it is configured by default.
+{{!RFC7084}} mandates that the outgoing-only policy {{!RFC6092}} be available, and in many cases it is configured by default.
 A well designed User Interface would combine a policy for making a service public by a name with a policy on who may access it.
 
 In many cases, the home owner wishes to publish names for services that only they will be able to access.
@@ -1237,8 +1237,8 @@ The following is an abbridged example of a set of data that represents the neede
   "ns_list"   : [ "ns1.publicdns.example", "ns2.publicdns.example"],
   "zone"      : "daniel.homenetdns.example",
   "auth_method" : "certificate",
-  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCAjYCFGy....",
-  "hna_key"   : "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQE...."
+  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
+  "hna_key"   : "-----BEGIN RSA PRIVATE KEY-----\nMIIEowICAQE...."
 }
 ~~~~
 
@@ -1464,3 +1464,33 @@ In this case, the use of the JSON-serialized YANG data model described in sectio
 
 For reverse zones, the relationship is always with the upstream ISP (although there may be more than one), and so {{I-D.ietf-homenet-naming-architecture-dhc-options}} is always the appropriate interface.
 
+# Example: A manufacturer provisioned HNA product flow
+
+This scenario is one where a homenet router device manufacturer decides to offer DNS hosting as a value add.
+
+{{?I-D.richardson.homerouter-provisioning}} describes a process for a home router
+credential provisioning system.
+The outline of it is that near the end of the manufacturing process, as part of the firmware loading, the manufacturer provisions a private key and certificate into the device.
+
+In addition to having a assymmetric credential known to the manufacturer, the device also has
+been provisioned with an agreed upon name.  In the example in the above document, the name "n8d234f.r.example.net" has already been allocated and confirmed with the manufacturer.
+
+The HNA can use the above domain for itself.
+It is not very pretty or personal, but if the owner wishes a better name, they can arrange for it.
+
+The configuration would look like:
+
+~~~~
+{
+  "dm_notify" : "2001:db8:1234:111:222::2",
+  "dm_acl"    : "2001:db8:1234:111:222::/64",
+  "dm_ctrl"   : "manufacturer.example.net",
+  "dm_port"   : "4433",
+  "ns_list"   : [ "ns1.publicdns.example", "ns2.publicdns.example"],
+  "zone"      : "n8d234f.r.example.net",
+  "auth_method" : "certificate",
+  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
+}
+~~~~
+
+The dm\_ctrl and dm\_port values would be built into the firmware.
