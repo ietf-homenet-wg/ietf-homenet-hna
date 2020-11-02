@@ -904,69 +904,44 @@ Multiple SOA queries may indicate the secondary is under attack.
 
 ## Reflection Attacks involving the Public Authoritative Servers {#sec-reflection-public-primary}
 
-Reflection attacks involving the Public Authoritative Server(s) are
-similar to attacks on any Outsourcing Infrastructure. This is not
-specific to the architecture described in this document, and thus are
-considered as out of scope.
+Reflection attacks involving the Public Authoritative Server(s) are similar to attacks on any DNS Outsourcing Infrastructure.
+This is not specific to the architecture described in this document, and thus are considered as out of scope.
 
-In fact, one motivation of the architecture described in this document
-is to expose the Public Authoritative Server(s) to attacks instead of
-the HNA, as it is believed that the Public Authoritative Server(s) will
-be better able to defend itself.
+In fact, one motivation of the architecture described in this document is to expose the Public  Authoritative Server(s) to attacks instead of the HNA, as it is believed that the Public Authoritative Server(s) will be better able to defend itself.
 
 ## Flooding Attack {#sec-flooding-attack}
 
-The purpose of flooding attacks is mostly resource exhaustion, where the
-resource can be bandwidth, memory, or CPU for example.
+The purpose of flooding attacks is mostly resource exhaustion, where the resource can be bandwidth, memory, or CPU for example.
 
-One goal of the architecture described in this document is to
-limit the surface of attack on the HNA. This is done by outsourcing the
-DNS service to the Public Authoritative Server(s). By doing so, the HNA
-limits its DNS interactions between the Hidden Primary and the
-DM. This limits the number of entities the HNA
-interacts with as well as the scope of DNS exchanges - NOTIFY, SOA,
-AXFR, IXFR.
+One goal of the architecture described in this document is to limit the surface of attack on the HNA.
+This is done by outsourcing the DNS service to the Public Authoritative Server(s).
+By doing so, the HNA limits its DNS interactions between the Hidden Primary and the DM.
+This limits the number of entities the HNA interacts with as well as the scope of DNS exchanges - NOTIFY, SOA, AXFR, IXFR.
 
-The use of an authenticated channel with SIG(0) or TSIG between the HNA
-and the DM, enables detection of illegitimate DNS
-queries, so appropriate action may be taken - like dropping the queries.
-If signatures are validated, then most likely, the HNA is under a replay
-attack, as detailed in {{sec-replay-attack}}
+The use of an authenticated channel with SIG(0) or TSIG between the HNA and the DM, enables detection of illegitimate DNS queries, so appropriate action may be taken - like dropping the queries.
+If signatures are validated, then most likely, the HNA is under a replay attack, as detailed in {{sec-replay-attack}}
 
-In order to limit the resource required for authentication, it is
-recommended to use TSIG that uses symmetric cryptography over SIG(0)
-that uses asymmetric cryptography.
+In order to limit the resource required for authentication, it is recommended to use TSIG that uses symmetric cryptography over SIG(0) that uses asymmetric cryptography.
 
 
 
 ## Replay Attack {#sec-replay-attack}
 
-Replay attacks consist of an attacker either resending or delaying a
-legitimate message that has been sent by an authorized user or process.
-As the Hidden Primary and the DM use an
-authenticated channel, replay attacks are mostly expected to use forged
-DNS queries in order to provide valid traffic.
+Replay attacks consist of an attacker either resending or delaying a legitimate message that has been sent by an authorized user or process.
+As the Hidden Primary and the DM use an authenticated channel, replay attacks are mostly expected to use forged DNS queries in order to provide valid traffic.
 
-From the perspective of  an attacker, using a correctly authenticated
-DNS query may not be detected as an attack and thus may generate a
-response. Generating and sending a response consumes more resources than
-either dropping the query by the defender, or generating the query by
-the attacker, and thus could be used for resource exhaustion attacks. In
-addition, as the authentication is performed at the DNS layer, the
-source IP address could be impersonated in order to perform a reflection
-attack.
+From the perspective of  an attacker, using a correctly authenticated DNS query may not be detected as an attack and thus may generate a response.
+Generating and sending a response consumes more resources than either dropping the query by the defender, or generating the query by the attacker, and thus could be used for resource exhaustion attacks.
+In addition, as the authentication is performed at the DNS layer, the source IP address could be impersonated in order to perform a reflection attack.
 
-{{sec-reflection-attack}} details how to mitigate reflection attacks and
-{{sec-flooding-attack}} details how to mitigate resource exhaustion.
-Both sections assume a context of DoS with a flood of DNS queries. This
-section suggests a way to limit the attack surface of replay attacks.
+{{sec-reflection-attack}} details how to mitigate reflection attacks and {{sec-flooding-attack}} details how to mitigate resource exhaustion.
+Both sections assume a context of DoS with a flood of DNS queries.
+This section suggests a way to limit the attack surface of replay attacks.
 
-As SIG(0) and TSIG use inception and expiration time, the time frame for
-replay attack is limited. SIG(0) and TSIG recommends a fudge value of 5
-minutes. This value has been set as a compromise between possibly loose
-time synchronization between devices and the valid lifetime of the
-message. As a result, better time synchronization policies could reduce
-the time window of the attack.
+As SIG(0) and TSIG use inception and expiration time, the time frame for replay attack is limited.
+SIG(0) and TSIG recommends a fudge value of 5 minutes.
+This value has been set as a compromise between possibly loose time synchronization between devices and the valid lifetime of the message.
+As a result, better time synchronization policies could reduce the time window of the attack.
 
 # Data Model for Outsourced information {#yang-model}
 
