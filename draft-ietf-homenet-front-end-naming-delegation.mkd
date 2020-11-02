@@ -163,7 +163,22 @@ mDNS {{!RFC6762}} DNS-SD {{!RFC6763}} are two examples of these services.
 Currently mDNS is limited to a single link network.
 However, future protocols and architectures {{?I-D.ietf-homenet-simple-naming}} are expected to leverage this constraint as pointed out in {{!RFC7558}}.
 
+## Selecting Names to Publish
 
+While this document does not create any normative mechanism by which the selection of names to publish, this document anticipates that the home network administrator (a humuan), will be presented with a list of current names and addresses present on the inside of the home network.
+
+The administrator would mark which devices (by name), are to be published.
+The HNA would then collect the IPv6 address(es) associated with that device, and put the name into the Public Homenet Zone.
+The address of the device can be collected from a number of places: mDNS, DHCPv6, UPnP, PCP, or manual configuration.
+
+A device may have a Global Unicast Address (GUA), a Unique Local IPv6 Address (ULA), as as well IPv6-Link-Local addresses, IPv4-Link-Local Addresses, and RFC1918 addresses.
+Of these the link-local are never useful for the Public Zone, and should be ommitted.
+The IPv6 ULA and the RFC1918 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
+
+The IPv6 ULA addressees are significantly safer to publish, as the RFC1918 addressees are likely to be confusing to any other entity.
+
+In general, one expects the GUA to be the default address to be published.
+However, during periods when the home network has connectivity problems, the ULA and RFC1918 addressees can be used inside the home, and the mapping from public name to locally useful location address would permit many services secured with HTTPS to continue to operate.
 
 ## Alternative solutions
 
