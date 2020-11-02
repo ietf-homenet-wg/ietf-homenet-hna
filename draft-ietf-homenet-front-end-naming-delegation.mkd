@@ -485,38 +485,45 @@ If the resolution does not succeed, the outsourcing operation is aborted and the
 ### Providing information for the DNSSEC chain of trust
 
 To provide the DS RRset to initialize the DNSSEC chain of trust the HNA MAY send a DNS UPDATE {{!RFC2136}} message.
-The NAME in the SOA MUST be set to the parent zone of the Registered Homenet Domain - that is where the DS records should be inserted.
-The DS RRset MUST be placed in the Update section of the UPDATE query, and the NAME SHOULD be set to the Registered Homenet Domain.
-The RDATA of the DS RR SHOULD correspond to the DS record to be inserted in the parent zone.
 
-A NOERROR response from the MD is a commitment to update the parent zone with the provided DS.
-An error indicates the MD will not update the DS, and other method should be used by the HNA.
+1. The NAME in the SOA MUST be set to the parent zone of the Registered Homenet Domain - that is where the DS records should be inserted.
+2. The DS RRset MUST be placed in the Update section of the UPDATE query, and the NAME SHOULD be set to the Registered Homenet Domain.
+3. The RDATA of the DS RR SHOULD correspond to the DS record to be inserted in the parent zone.
+
+* A NOERROR response from the MD is a commitment to update the parent zone with the provided DS.
+* An error indicates the MD will not update the DS, and other method should be used by the HNA.
 
 ### Providing information for the Synchronization Channel
 
 To provide the IP address of the primary, the HNA MAY send a DNS UPDATE message.
-The NAME in the SOA MUST be the parent zone of the Registered Homenet Domain.
-The Update section MUST be a RRset of Type NS.
-The RDATA MUST be a RRset of type A or AAAA that designates the IP addresses associated to the primary.
-There may be multiple IP addresses.
-These IP addresses MUST be provided in the additional section.
+
+1. The NAME in the SOA MUST be the parent zone of the Registered Homenet Domain.
+2. The Update section MUST be a RRset of Type NS.
+3. The RDATA MUST be a RRset of type A or AAAA that designates the IP addresses associated to the primary.
+4. There may be multiple IP addresses.
+5. These IP addresses MUST be provided in the additional section.
+
 The reason to provide these IP addresses is that it is NOT RECOMMENDED to publish these IP addresses.
 As a result, it is not expected to resolve them.
 
-A NOERROR response indicates the DM has configured the secondary and is committed to serve as a secondary. An error indicates the DM is not configured as a secondary.
+* A NOERROR response indicates the DM has configured the secondary and is committed to serve as a secondary.
+* An error indicates the DM is not configured as a secondary.
 
 The regular DNS error message SHOULD be returned to the HNA when an error occurs.
 In particular a FORMERR is returned when a format error is found, this includes when unexpected RRSets are added or when RRsets are missing.
-A SERVFAIL error is returned when a internal error is encountered.
-A NOTZONE error is returned when update and Zone sections are not coherent, a NOTAUTH error is returned when the DM is not authoritative for the Zone section.
-A REFUSED error is returned when the DM refuses to proceed to the configuration and the requested action.
+
+* A SERVFAIL error is returned when a internal error is encountered.
+* A NOTZONE error is returned when update and Zone sections are not coherent, a NOTAUTH error is returned when the DM is not authoritative for the Zone section.
+* A REFUSED error is returned when the DM refuses to proceed to the configuration and the requested action.
 
 ### HNA instructing deleting the delegation
 
 To instruct to delete the delegation the HNA MAY  send a DNS UPDATE Delete message.
-The NAME in the SOA MUST be the parent zone of the Registered Homenet Domain.
-The Update section MUST be a RRset of Type NS.
-The NAME associated to the NS RRSet MUST be the Registered Domain Name.
+
+1. The NAME in the SOA MUST be the parent zone of the Registered Homenet Domain.
+2. The Update section MUST be a RRset of Type NS.
+3. The NAME associated to the NS RRSet MUST be the Registered Domain Name.
+
 As indicated by {{!RFC2136}} section 2.5.2 the delete instruction is set by setting the TTL to 0, the Class to ANY, the RDLENGTH to 0 and the RDATA MUST be empty.
 
 ## Securing the Control Channel between Homenet Naming Authority (HNA) and Distribution Master (DM)  {#sec-ctrl-security}
