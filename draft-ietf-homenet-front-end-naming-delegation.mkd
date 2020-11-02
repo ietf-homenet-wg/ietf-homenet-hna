@@ -182,100 +182,85 @@ However, during periods when the home network has connectivity problems, the ULA
 
 ## Alternative solutions
 
-An alternative existing solution in IPv4 is to have a single zone, where
-a host uses a RESTful HTTP service to register a single name into a
-common public zone.  This is often called "Dynamic DNS", and there are a
-number of commercial providers, including Dyn, Gandi etc. These
-solutions were typically used by a host behind the CPE to make it's CPE
-IPv4 address visible, usually in order to enable incoming connections.
+An alternative existing solution in IPv4 is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
+This is often called "Dynamic DNS", and there are a number of commercial providers, including Dyn, Gandi etc.
+These solutions were typically used by a host behind the CPE to make it's CPE IPv4 address visible, usually in order to enable incoming connections.
 
-For a small number (one to three) of hosts, use of such a system
-provides an alternative to the architecture described in this document.
+For a small number (one to three) of hosts, use of such a system provides an alternative to the architecture described in this document.
 
 The alternative does suffer from some severe limitations:
 
-* the CPE/HNA router is unaware of the process, and cannot respond to
-queries for these names when there are disruptions in connectivity. This
-makes the home user or application dependent on having to resolve
-different names in the event of outages or disruptions.
+* the CPE/HNA router is unaware of the process, and cannot respond to queries for these names when there are disruptions in connectivity.
+This makes the home user or application dependent on having to resolve different names in the event of outages or disruptions.
 
-* the CPE/HNA router cannot control the process. Any host can do this
-regardless of whether or not the home network administrator wants the
-name published or not. There is therefore no possible audit trail.
+* the CPE/HNA router cannot control the process.
+Any host can do this regardless of whether or not the home network administrator wants the name published  or not.
+There is therefore no possible audit trail.
 
-* the credentials for the dynamic DNS server need to be securely transferred
-to all hosts that wish to use it. This is not a problem for a technical
-user to do with one or two hosts, but it does not scale to multiple
-hosts and becomes a problem for non-technical users.
+* the credentials for the dynamic DNS server need to be securely transferred to all hosts that wish to use it.
+This is not a problem for a technical user to do with one or two hosts, but it does not scale to multiple hosts and becomes a problem for non-technical users.
 
-* "all the good names are taken" -- current services put everyone's names
-into some small set of zones, and there are often conflicts.
-Distinguishing similar names by delegation of zones was among the
-primary design goals of the DNS system.
+* "all the good names are taken" -- current services put everyone's names into some small set of zones, and there are often conflicts.
+Distinguishing similar names by delegation of zones was among the primary design goals of the DNS system.
 
-* The RESTful services do not always support all RR types. The homenet user
-is dependent on the service provider supporting new types. By providing full
-DNS delegation, this document enables all RR types and also future extensions.
+* The RESTful services do not always support all RR types.
+The homenet user is dependent on the service provider supporting new types.
+By providing full DNS delegation, this document enables all RR types and also future extensions.
 
-There is no technical reason why a RESTful cloud service could not
-provide solutions to many of these problems, but this document describes
-a DNS based solution.
+There is no technical reason why a RESTful cloud service could not provide solutions to many of these  problems, but this document describes a DNS based solution.
 
 #Terminology
 
 {::boilerplate bcp14}
 
-* Customer Premises Equipment: (CPE) is a router providing connectivity
-to the home network.
+Customer Premises Equipment:
+: (CPE) is a router providing connectivity to the home network.
 
-* Homenet Zone: is the DNS zone for use within the boundaries of the
-home network: home.arpa, see {{!RFC8375}}). This zone is not considered
-public and is out of scope for this document.
+Homenet Zone:
+: is the DNS zone for use within the boundaries of the home network: home.arpa, see {{!RFC8375}}).
+This zone is not considered public and is out of scope for this document.
 
-* Registered Homenet Domain: is the Domain Name associated with the home
-network.
+Registered Homenet Domain:
+: is the Domain Name associated with the home network.
 
-* Public Homenet Zone: contains the names in the home network that are
-expected to be publicly resolvable on the Internet.
+Public Homenet Zone:
+: contains the names in the home network that are expected to be publicly resolvable on the Internet.
 
-* Homenet Naming Authority: (HNA) is a function responsible for
-managing the Public Homenet Zone. This includes populating the Public
-Homenet Zone, signing the zone for DNSSEC, as well as managing the
-distribution of that Homenet Zone to the Outsourcing Infrastructure.
+Homenet Naming Authority:
+: (HNA) is a function responsible for managing the Public Homenet Zone.
+This includes populating the Public Homenet Zone, signing the zone for DNSSEC, as well as managing the distribution of that Homenet Zone to the Outsourcing Infrastructure.
 
-* Outsourcing Infrastructure: is the infrastructure responsible for
-receiving the Public Homenet Zone and publishing it on the Internet. It
-is mainly composed of a Distribution Master and Public Authoritative
-Servers.
+DNS Outsourcing Infrastructure (DOI):
+: is the infrastructure responsible for receiving the Public Homenet Zone and publishing it on the Internet.
+It is mainly composed of a Distribution Master and Public Authoritative Servers.
 
-* Public Authoritative Servers: are the authoritative name servers
-for the Public Homenet Zone. Name resolution requests for the Homenet
-Domain are sent to these servers. For resiliency the Public Homenet Zone
-SHOULD be hosted on multiple servers.
+Public Authoritative Servers:
+: are the authoritative name servers for the Public Homenet Zone.
+Name resolution requests for the Homenet Domain are sent to these servers.
+For resiliency the Public Homenet Zone SHOULD be hosted on multiple servers.
 
-* Homenet Authoritative Servers: are authoritative name servers within
-the Homenet network.
+Homenet Authoritative Servers:
+: are authoritative name servers within the Homenet network.
 
-* Distribution Master (DM): is the (set of) server(s) to which the HNA
-synchronizes the Public Homenet Zone, and which then distributes the
-relevant information to the Public Authoritative Servers.
+Distribution Master (DM):
+: is the (set of) server(s) to which the HNA synchronizes the Public Homenet Zone, and which then distributes the relevant information to the Public Authoritative Servers.
 
-* Homenet Reverse Zone: The reverse zone file associated with the Public
-Homenet Zone.
+Homenet Reverse Zone:
+: The reverse zone file associated with the Public Homenet Zone.
 
-* Reverse Public Authoritative Servers: equivalent to Public
-Authoritative Servers specifically for reverse resolution.
+Reverse Public Authoritative Servers:
+: equivalent to Public Authoritative Servers specifically for reverse resolution.
 
-* Reverse Distribution Master: equivalent to Distribution Master
-specifically for reverse resolution.
+Reverse Distribution Master:
+: equivalent to Distribution Master specifically for reverse resolution.
 
-* Homenet DNSSEC Resolver: a resolver that performs a DNSSEC resolution
-on the home network for the Public Homenet Zone. The resolution is
-performed requesting the Homenet Authoritative Servers.
+Homenet DNSSEC Resolver:
+: a resolver that performs a DNSSEC resolution on the home network for the Public Homenet Zone.
+The resolution is performed requesting the Homenet Authoritative Servers.
 
-* DNSSEC Resolver: a resolver that performs a DNSSEC resolution on the
-Internet for the Public Homenet Zone. The resolution is performed
-requesting the Public Authoritative Servers.
+DNSSEC Resolver:
+: a resolver that performs a DNSSEC resolution on the Internet for the Public Homenet Zone.
+The resolution is performed requesting the Public Authoritative Servers.
 
 
 # Architecture Description  {#sec-arc-desc}
