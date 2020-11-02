@@ -94,18 +94,15 @@ In addition, this document deals with publication of a corresponding reverse zon
 
 #Introduction
 
-The Homenet Naming authority is responsible for making devices within
+The Homenet Naming Authority (HNA) is responsible for making devices within
 the home network accessible by name within the home network as well as
-from outside the home network (e.g. the Internet).  IPv6 connectivity
-provides the possibility of global end to end IP connectivity.
-End users will be able to transparently make use of this connectivity if
-they can use names to access the services they want from their home network.
+from outside the home network (e.g. the Internet).
+IPv6 connectivity provides the possibility of global end to end IP connectivity.
+End users will be able to transparently make use of this connectivity if they can use names to access the services they want from their home network.
 
-The use of a DNS zone for each home network is a reasonable and scalable way
-to make the set of public names visible.
+The use of a DNS zone for each home network is a reasonable and scalable way to make the set of public names visible.
 There are a number of ways to populate such a zone.
-This specification proposes a way based on a number of
-assumptions about typical home networks.
+This specification proposes a way based on a number of assumptions about typical home networks.
 
 1. The names of the devices accessible from the Internet are stored in the
    Public Homenet Zone, served by a DNS authoritative server.
@@ -118,23 +115,15 @@ assumptions about typical home networks.
    disruptions with the ISP.
    But, names used within the home MUST be resilient against such disruption.
 
-This specification makes the public names resolvable within
-both the home network and on the Internet, even when there are disruptions.
+This specification makes the public names resolvable within both the home network and on the Internet, even when there are disruptions.
 
-This is achieved by having a device inside the home network that builds,
-publishes, and manages a Public Homenet Zone, thus providing bindings
-between public names, IP addresses, and other RR types.
+This is achieved by having a device inside the home network that builds, signs, publishes, and manages a  Public  Homenet Zone, thus providing bindings between public names, IP addresses, and other RR types.
 
-The management of the names can be a role that the Customer Premises
-Equipment (CPE) does.
-Other devices in the home network could fulfill this role e.g. a NAS server,
-but for simplicity, this document assumes the function is located on one of the CPE devices.
+The management of the names can be a role that the Customer Premises Equipment (CPE) does.
+Other devices in the home network could fulfill this role e.g. a NAS server, but for simplicity, this document assumes the function is located on one of the CPE devices.
 
 The homenet architecture {{!RFC7368}} makes it clear that a home network may have multiple CPEs.
-The management of the Public Homenet Zone involves DNS specific mechanisms
-that cannot be distributed over multiple servers (primary server), when
-multiple nodes can potentially manage the Public Homenet Zone, a single node
-needs to be selected per outsourced zone.
+The management of the Public Homenet Zone involves DNS specific mechanisms that cannot be distributed over multiple servers (primary server), when multiple nodes can potentially manage the Public Homenet Zone, a single node needs to be selected per outsourced zone.
 This selected node is designated as providing the Homenet Naming Authority (HNA) function.
 
 The process by which a single HNA is selected per zone is not in scope for this document.
@@ -142,53 +131,39 @@ It is envisioned that a future document will describe an HNCP mechanism to elect
 
 CPEs, which may host the HNA function, as well as home network devices, are usually low powered devices not designed for terminating heavy traffic.
 As a result, hosting an authoritative DNS service visible to the Internet may expose the home network to resource exhaustion and other attacks.
-On the other hand, if the only copy of the public zone is on the Internet,
-then Internet connectivity disruptions would make the names unavailable
-inside the homenet.
+On the other hand, if the only copy of the public zone is on the Internet, then Internet connectivity disruptions would make the names unavailable inside the homenet.
 
-In order to avoid resource exhaustion and other attacks, this document
-describes an architecture that outsources the authoritative naming
-service of the home network. More specifically, the HNA builds the
-Public Homenet Zone and  outsources it to an DNS Outsourcing Infrastructure (DOI)
-via a Distribution Master (DM). The Outsourcing Infrastructure is in
-charge of publishing the corresponding Public Homenet Zone on the
-Internet. The transfer of DNS zone information is achieved using
-standard DNS mechanisms involving primary and secondary DNS servers,
-with the HNA hosted primary being a stealth primary, and the
-Distribution Master a secondary.
+In order to avoid resource exhaustion and other attacks, this document describes an architecture that outsources the authoritative naming service of the home network.
+More specifically, the HNA builds the Public Homenet Zone and  outsources it to an DNS Outsourcing Infrastructure (DOI) via a Distribution Master (DM).
+The DNS Outsourcing Infrastructure (DOI) is in charge of publishing the corresponding Public Homenet Zone on the Internet.
+The transfer of DNS zone information is achieved using standard DNS mechanisms involving primary and secondary DNS servers, with the HNA hosted primary being a stealth primary, and the Distribution Master a secondary.
 
-{{sec-arch-overview}} provides an architecture description that
-describes the relation between the HNA and the Outsourcing Architecture.
-In order to keep the Public Homenet Zone up-to-date {{sec-synch}}
-describes how the HNA and the Outsourcing Infrastructure synchronizes
-the Pubic Homenet Zone.
+{{sec-arch-overview}} provides an architecture description that describes the relation between the HNA and the Outsourcing Architecture.
+In order to keep the Public Homenet Zone up-to-date {{sec-synch}} describes how the HNA and the DNS Outsourcing Infrastructure synchronizes the Pubic Homenet Zone.
 
-The proposed architecture is explicitly designed to enable fully
-functional DNSSEC, and the Public Homenet Zone is expected to be signed
-with a secure delegation.  DNSSEC key management and zone signing is
-handled by the HNA.
+The proposed architecture is explicitly designed to enable fully functional DNSSEC, and the Public Homenet Zone is expected to be signed with a secure delegation.
+DNSSEC key management and zone signing is handled by the HNA.
 
-{{hna-provisioning}} discusses management and configuration of the Public Homenet Zone. It shows that the HNA configuration of the Outsourcing infrastructure can involve no or little interaction with the end user. More specifically, it shows that the existence of an account in the Outsourcing Infrastructure is sufficient for the Outsourcing Infrastructure to push the necessary configuration.
+{{hna-provisioning}} discusses management and configuration of the Public Homenet Zone.
+It shows that the HNA configuration of the Outsourcing infrastructure can involve no or little interaction with the end user.
+More specifically, it shows that the existence of an account in the DOI is sufficient for the DOI to push the necessary configuration.
 
-{{sec-reverse}} discusses management of one or more reverse zones. It shows that management of the reverse zones can be entirely automated and benefit from a pre-established relation between the ISP and the home network. Note that such scenarios may also be met for the Public Homenet Zone, but not necessarily.
+{{sec-reverse}} discusses management of one or more reverse zones.
+It shows that management of the reverse zones can be entirely automated and benefit from a pre-established relation between the ISP and the home network. Note that such scenarios may also be met for the Public Homenet Zone, but not necessarily.
 
 {{sec-renumbering}} discusses how renumbering should be handled.
-Finally, {{sec-privacy}} and {{sec-security}} respectively discuss
-privacy and security considerations when outsourcing the Public Homenet
-Zone.
+Finally, {{sec-privacy}} and {{sec-security}} respectively discuss privacy and security considerations when outsourcing the Public Homenet Zone.
 
-The Public Homenet Zone is expected to contain public information only
-in a single universal view.  This document does not define how the
-information required to construct this view is derived.
+The Public Homenet Zone is expected to contain public information only in a single universal view.
+This document does not define how the information required to construct this view is derived.
 
-It is also not in the scope of this document to define names for
-exclusive use within the boundaries of the local home network. Instead,
-local scope information is expected to be provided to the home network
-using local scope naming services. mDNS {{!RFC6762}} DNS-SD {{!RFC6763}}
-are two examples of these services. Currently mDNS is limited to a
-single link network. However, future protocols and architectures
-{{?I-D.ietf-homenet-simple-naming}} are expected to leverage this
-constraint as pointed out in {{!RFC7558}}.
+It is also not in the scope of this document to define names for exclusive use within the boundaries of the local home network.
+Instead, local scope information is expected to be provided to the home network using local scope naming services.
+mDNS {{!RFC6762}} DNS-SD {{!RFC6763}} are two examples of these services.
+Currently mDNS is limited to a single link network.
+However, future protocols and architectures {{?I-D.ietf-homenet-simple-naming}} are expected to leverage this constraint as pointed out in {{!RFC7558}}.
+
+
 
 ## Alternative solutions
 
