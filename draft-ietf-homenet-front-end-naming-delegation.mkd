@@ -884,36 +884,23 @@ If a flood lasts more than the expired time defined by the SOA, it is RECOMMENDE
 
 ## Reflection Attacks involving the DM {#sec-reflection-public-auth-name-server-set}
 
-The DM acts as a secondary coupled with  the Hidden
-Primary. The secondary expects to receive NOTIFY query, SOA responses,
-AXFR and IXFR responses from the Hidden Primary.
+The DM acts as a secondary coupled with  the Hidden Primary.
+The secondary expects to receive NOTIFY query, SOA responses, AXFR and IXFR responses from the Hidden Primary.
 
-Sending a NOTIFY query to the secondary generates a NOTIFY response as
-well as initiating an SOA query exchange from the secondary to the
-Hidden Primary. As mentioned in {{!RFC1996}}, this is a known "benign
-denial of service attack".  As a result, the DM
-SHOULD enforce rate limiting on sending SOA queries and NOTIFY responses
-to the Hidden Primary. Most likely, when the secondary is flooded with
-valid and signed NOTIFY queries, it is under a replay attack which is
-discussed in {{sec-replay-attack}}. The key thing here is that the
-secondary is likely to be designed to be able to process much more
-traffic than the Hidden Primary hosted on a HNA.
+Sending a NOTIFY query to the secondary generates a NOTIFY response as well as initiating an SOA query exchange from the secondary to the Hidden Primary. As mentioned in {{!RFC1996}}, this is a known "benign denial of service attack".
+As a result, the DM SHOULD enforce rate limiting on sending SOA queries and NOTIFY responses to the Hidden Primary.
+Most likely, when the secondary is flooded with valid and signed NOTIFY queries, it is under a replay attack which is discussed in {{sec-replay-attack}}.
+The key thing here is that the secondary is likely to be designed to be able to process much more traffic than the Hidden Primary hosted on a HNA.
 
 This paragraph details how the secondary may limit the NOTIFY queries.
-Because the Hidden Primary may be renumbered, the secondary SHOULD NOT
-perform permanent IP filtering based on IP addresses. In addition, a
-given secondary may be shared among multiple Hidden Primaries which make
-filtering rules based on IP harder to set. The time at which a NOTIFY is
-sent by the Hidden Primary is not predictable.  However, a flood of
-NOTIFY messages may be easily detected, as a NOTIFY originated from a
-given Homenet Zone is expected to have a very limited number of unique
-source IP addresses, even when renumbering is occurring. As a result,
-the secondary, MAY rate limit incoming NOTIFY queries.
+Because the Hidden Primary may be renumbered, the secondary SHOULD NOT perform permanent IP filtering based on IP addresses.
+In addition, a given secondary may be shared among multiple Hidden Primaries which make filtering rules based on IP harder to set.
+The time at which a NOTIFY is sent by the Hidden Primary is not predictable.
+However, a flood of NOTIFY messages may be easily detected, as a NOTIFY originated from a given Homenet Zone is expected to have a very limited number of unique source IP addresses, even when renumbering is occurring.
+As a result, the secondary, MAY rate limit incoming NOTIFY queries.
 
-On the Hidden Primary side, it is recommended that the Hidden Primary
-sends a NOTIFY as long as the zone has not been updated by the
-secondary. Multiple SOA queries may indicate the secondary is under
-attack.
+On the Hidden Primary side, it is recommended that the Hidden Primary sends a NOTIFY as long as the zone has not been updated by the secondary.
+Multiple SOA queries may indicate the secondary is under attack.
 
 ## Reflection Attacks involving the Public Authoritative Servers {#sec-reflection-public-primary}
 
