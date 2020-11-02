@@ -755,33 +755,23 @@ If the Hidden Primary were publicly announced in the DNS, then the IP address up
 
 ## Distribution Master {#sec-secondary}
 
-Renumbering of the Distribution Master results in it changing its IP
-address.   As the DM is a secondary, the destination of DNS NOTIFY
-payloads MUST be changed, and any configuration/firewalling that
-restricts DNS AXFR/IXFR operations MUST be updated.
+Renumbering of the Distribution Master results in it changing its IP address.
+As the DM is a secondary, the destination of DNS NOTIFY payloads MUST be changed, and any configuration/firewalling that restricts DNS AXFR/IXFR operations MUST be updated.
 
-If the DM is configured in the Hidden Primary configuration file using a
-FQDN, then the update of the IP address is performed by DNS.  More
-specifically, before sending the NOTIFY, the Hidden Primary performs a
-DNS resolution to retrieve the IP address of the secondary.
+If the DM is configured in the Hidden Primary configuration file using a FQDN, then the update of the IP address is performed by DNS.
+More specifically, before sending the NOTIFY, the Hidden Primary performs a DNS resolution to retrieve the IP address of the secondary.
 
-As described in {{sec-primary}}, the DM DNS information SHOULD be
-coherent with the IP plane.  The TTL of the Distribution Master name
-SHOULD be adjusted appropriately prior to changing the IP address.
+As described in {{sec-primary}}, the DM DNS information SHOULD be coherent with the IP plane.
+The TTL of the Distribution Master name SHOULD be adjusted appropriately prior to changing the IP address.
 
-Some DNS infrastructure uses the IP address to designate the secondary,
-in which case, other mechanisms must be found. The reason for using IP
-addresses instead of names is generally to reach an internal interface
-that is not designated by a FQDN, and to avoid potential bootstrap
-problems. Such scenarios are considered as out of scope in the case of
-home networks.
-
+Some DNS infrastructure uses the IP address to designate the secondary, in which case, other mechanisms must be found.
+A reason for using IP addresses instead of names is generally to reach an internal interface that is not  designated by a FQDN, and to avoid potential bootstrap problems.
+Such scenarios are considered as out of scope in the case of home networks.
 
 
 # Privacy Considerations {#sec-privacy}
 
-Outsourcing the DNS Authoritative service from the HNA to a third party
-raises a few privacy related concerns.
+Outsourcing the DNS Authoritative service from the HNA to a third party raises a few privacy related concerns.
 
 The Public Homenet Zone lists the names of services hosted in the home network.
 Combined with blocking of AXFR queries, the use of NSEC3 {{!RFC5155}} (vs NSEC {{!RFC4034}}) prevents an  attacker from being able to walk the zone, to discover all the names.
@@ -813,9 +803,7 @@ exposing the HNA's DNS service as a DoS attack vector.
 
 ## HNA DMand RDM channels
 
-The HNA DM channels are specified to include their own security mechanisms
-that are designed to provide the minimum attack surface, and to authenticate
-transactions where necessary.
+The HNA DM channels are specified to include their own security mechanisms that are designed to provide the minimum attack surface, and to authenticate transactions where necessary.
 
 Note that in the case of the Reverse Homenet Zone, the data is less subject to attacks than in the Public Homenet Zone.
 In addition, the HNA and the DM MAY belong to the same administrative domain, i.e. the ISP.
@@ -830,116 +818,68 @@ To ensure the multiple TLS session are are continuously authenticating the same 
 
 ## Names are less secure than IP addresses {#sec-name-less-secure}
 
-This document describes how an end user can make their services and
-devices from his home network reachable on the Internet by using names
-rather than IP addresses. This exposes the home network to attackers,
-since names are expected to include less entropy than IP addresses.  In
-fact, with IP addresses, the Interface Identifier is 64 bits long
-leading to up to 2^64 possibilities for a given subnetwork. This is not
-to mention that the subnet prefix is also of 64 bits long, thus
-providing up to 2^64 possibilities. On the other hand, names used either
-for the home network domain or for the devices present less entropy
-(livebox, router, printer, nicolas, jennifer, ...) and thus potentially
-exposes the devices to dictionary attacks.
+This document describes how an end user can make their services and devices from his home network reachable on the Internet by using names rather than IP addresses.
+This exposes the home network to attackers, since names are expected to include less entropy than IP addresses.
+In fact, with IP addresses, the Interface Identifier is 64 bits long leading to up to 2^64 possibilities  for a given subnetwork.
+This is not to mention that the subnet prefix is also of 64 bits long, thus providing up to 2^64 possibilities.
+On the other hand, names used either for the home network domain or for the devices present less entropy (livebox, router, printer, nicolas, jennifer, ...) and thus potentially exposes the devices to dictionary attacks.
 
 
 ## Names are less volatile than IP addresses {#sec-name-less-volatile}
 
 IP addresses may be used to locate a device, a host or a service.
-However, home networks are not expected to be assigned a time invariant
-prefix by ISPs. As a result, observing IP addresses only provides some
-ephemeral information about who is accessing the service. On the other
-hand, names are not expected to be as volatile as IP addresses. As a
-result, logging names over time may be more valuable than logging IP
-addresses, especially to profile an end user's characteristics.
+However, home networks are not expected to be assigned a time invariant prefix by ISPs.
+As a result, observing IP addresses only provides some ephemeral information about who is accessing the service.
+On the other hand, names are not expected to be as volatile as IP addresses.
+As a result, logging names over time may be more valuable than logging IP addresses, especially to profile an end user's characteristics.
 
-PTR provides a way to bind an IP address to a name. In that sense,
-responding to PTR DNS queries may affect the end user's privacy. For
-that reason end users may choose not to respond to PTR DNS queries and
-MAY instead return a NXDOMAIN response.
+PTR provides a way to bind an IP address to a name.
+In that sense, responding to PTR DNS queries may affect the end user's privacy.
+For that reason end users may choose not to respond to PTR DNS queries and MAY instead return a NXDOMAIN response.
 
 
 ## DNS Reflection Attacks {#sec-reflection-attack}
 
-An attacker performs a reflection attack when it sends traffic to one or
-more intermediary nodes (reflectors), that in turn send back response
-traffic to the victim. Motivations for using an intermediary node might
-be anonymity of the attacker, as well as amplification of the traffic.
-Typically, when the intermediary node is a DNSSEC server, the attacker
-sends a DNSSEC query and the victim is likely to receive a DNSSEC
-response. This section analyzes how the different components may be
-involved as a reflector in a reflection attack.
-{{sec-reflection-hidden-primary}} considers the Hidden Primary,
-{{sec-reflection-public-auth-name-server-set}} the Synchronization
-Server, and {{sec-reflection-public-primary}} the Public Authoritative
-Server(s).
+An attacker performs a reflection attack when it sends traffic to one or more intermediary nodes (reflectors), that in turn send back response traffic to the victim.
+Motivations for using an intermediary node might be anonymity of the attacker, as well as amplification of the traffic.
+Typically, when the intermediary node is a DNSSEC server, the attacker sends a DNSSEC query and the victim is likely to receive a DNSSEC response.
+This section analyzes how the different components may be involved as a reflector in a reflection attack.
+{{sec-reflection-hidden-primary}} considers the Hidden Primary, {{sec-reflection-public-auth-name-server-set}} the Synchronization Server, and {{sec-reflection-public-primary}} the Public Authoritative Server(s).
 
 ## Reflection Attack involving the Hidden Primary {#sec-reflection-hidden-primary}
 
-With the specified architecture, the Hidden Primary is only expected to
-receive DNS queries of type SOA, AXFR or IXFR. This section analyzes how
-these DNS queries may be used by an attacker to perform a reflection
-attack.
+With the specified architecture, the Hidden Primary is only expected to receive DNS queries of type SOA, AXFR or IXFR.
+This section analyzes how these DNS queries may be used by an attacker to perform a reflection attack.
 
-DNS queries of type AXFR and IXFR use TCP and as such are less subject
-to reflection attacks. This makes SOA queries the only remaining
-practical vector of attacks for reflection attacks, based on UDP.
+DNS queries of type AXFR and IXFR use TCP and as such are less subject to reflection attacks.
+This makes SOA queries the only remaining practical vector of attacks for reflection attacks, based on UDP.
 
-SOA queries are not associated with a large amplification factor
-compared to queries of type "ANY" or to query of non existing FQDNs.
-This reduces the probability a DNS query of type SOA will be involved in
-a DDoS attack.
+SOA queries are not associated with a large amplification factor compared to queries of type "ANY" or to query of non existing FQDNs.
+This reduces the probability a DNS query of type SOA will be involved in a DDoS attack.
 
-SOA queries are expected to follow a very specific pattern, which makes
-rate limiting techniques an efficient way to limit such attacks, and
-associated impact on the naming service of the home network.
+SOA queries are expected to follow a very specific pattern, which makes rate limiting techniques an efficient way to limit such attacks, and associated impact on the naming service of the home network.
 
-Motivations for such a flood might be a reflection attack, but could
-also be a resource exhaustion attack performed against the Hidden
-Primary.  The Hidden Primary only expects to exchange traffic with the
-DM, that is its associated secondary. Even though
-secondary servers may be renumbered as mentioned in {{sec-renumbering}},
-the Hidden Primary is likely to perform a DNSSEC resolution and find out
-the associated secondary's IP addresses in use. As a result, the Hidden
-Primary is likely to limit the origin of its incoming traffic based on
-the origin IP address.
+Motivations for such a flood might be a reflection attack, but could also be a resource exhaustion attack performed against the Hidden Primary.
+The Hidden Primary only expects to exchange traffic with the DM, that is its associated secondary.
+Even though secondary servers may be renumbered as mentioned in {{sec-renumbering}}, the Hidden Primary is  likely to perform a DNSSEC resolution and find out the associated secondary's IP addresses in use.
+As a result, the Hidden Primary is likely to limit the origin of its incoming traffic based on the origin IP address.
 
-With filtering rules based on IP address, SOA flooding attacks are
-limited to forged packets with the IP address of the secondary server.
-In other words, the only victims are the Hidden Primary itself or the
-secondary. There is a need for the Hidden Primary to limit that flood to
-limit the impact of the reflection attack on the secondary, and to limit
-the resource needed to carry on the traffic by the HNA hosting the
-Hidden Primary. On the other hand, mitigation should be performed
-appropriately, so as to limit the impact on the legitimate SOA sent by
-the secondary.
+With filtering rules based on IP address, SOA flooding attacks are limited to forged packets with the IP address of the secondary server.
+In other words, the only victims are the Hidden Primary itself or the secondary.
+There is a need for the Hidden Primary to limit that flood to limit the impact of the reflection attack on the secondary, and to limit the resource needed to carry on the traffic by the HNA hosting the Hidden Primary.
+On the other hand, mitigation should be performed appropriately, so as to limit the impact on the legitimate SOA sent by the secondary.
 
-The main reason for the DM sending a SOA query is to
-update the SOA RRset after the TTL expires, to check the serial number
-upon the receipt of a NOTIFY query from the Hidden Primary, or to
-re-send the SOA request when the response has not been received.  When a
-flood of SOA queries is received by the Hidden Primary, the Hidden
-Primary may assume it is involved in an attack.
+The main reason for the DM sending a SOA query is to update the SOA RRset after the TTL expires, to check the serial number upon the receipt of a NOTIFY query from the Hidden Primary, or to re-send the SOA request when the response has not been received.
+When a flood of SOA queries is received by the Hidden Primary, the Hidden Primary may assume it is involved in an attack.
 
-There are few legitimate time slots when the secondary is expected to
-send a SOA query. Suppose T_NOTIFY is the time a NOTIFY is sent by the
-Hidden Primary, T_SOA the last time the SOA has been queried, TTL the
-TTL associated to the SOA, and T_REFRESH the refresh time defined in the
-SOA RRset. The specific time SOA queries are expected can be for example
-T_NOTIFY, T_SOA + 2/3 TTL, T_SOA + TTL, T_SOA + T_REFRESH., and. Outside
-a few minutes following these specific time slots, the probability that
-the HNA discards a legitimate SOA query is very low. Within these time
-slots, the probability the secondary may have its legitimate query
-rejected is higher. If a legitimate SOA is discarded, the secondary will
-re-send SOA query every "retry time" second until "expire time" seconds
-occurs, where "retry time" and "expire time" have been defined in the
-SOA.
+There are few legitimate time slots when the secondary is expected to send a SOA query. Suppose T_NOTIFY is the time a NOTIFY is sent by the Hidden Primary, T_SOA the last time the SOA has been queried, TTL the
+TTL associated to the SOA, and T_REFRESH the refresh time defined in the SOA RRset.
+The specific time SOA queries are expected can be for example T_NOTIFY, T_SOA + 2/3 TTL, T_SOA + TTL, T_SOA + T_REFRESH., and. Outside a few minutes following these specific time slots, the probability that the HNA discards a legitimate SOA query is very low.
+Within these time slots, the probability the secondary may have its legitimate query rejected is higher.
+If a legitimate SOA is discarded, the secondary will re-send SOA query every "retry time" second until "expire time" seconds occurs, where "retry time" and "expire time" have been defined in the SOA.
 
-As a result, it is RECOMMENDED to set rate limiting policies to protect
-HNA resources. If a flood lasts more than the expired time defined by
-the SOA, it is RECOMMENDED to re-initiate a synchronization between the
-Hidden Primary and the secondaries.
-
+As a result, it is RECOMMENDED to set rate limiting policies to protect HNA resources.
+If a flood lasts more than the expired time defined by the SOA, it is RECOMMENDED to re-initiate a synchronization between the Hidden Primary and the secondaries.
 
 
 ## Reflection Attacks involving the DM {#sec-reflection-public-auth-name-server-set}
