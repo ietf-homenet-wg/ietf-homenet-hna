@@ -1468,7 +1468,7 @@ For reverse zones, the relationship is always with the upstream ISP (although th
 
 This scenario is one where a homenet router device manufacturer decides to offer DNS hosting as a value add.
 
-{{?I-D.richardson.homerouter-provisioning}} describes a process for a home router
+{{?I-D.richardson-homerouter-provisioning}} describes a process for a home router
 credential provisioning system.
 The outline of it is that near the end of the manufacturing process, as part of the firmware loading, the manufacturer provisions a private key and certificate into the device.
 
