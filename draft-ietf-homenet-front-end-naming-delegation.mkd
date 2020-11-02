@@ -1,6 +1,6 @@
 ---
-title: Outsourcing Home Network Authoritative Naming Service
-abbrev: Outsourcing Authoritative Naming Service
+title: Easy provision of Public Names for Residential Networks
+abbrev: public-names
 docname: draft-ietf-homenet-front-end-naming-delegation-11
 
 ipr: trust200902
