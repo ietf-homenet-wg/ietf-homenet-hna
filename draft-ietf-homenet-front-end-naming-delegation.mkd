@@ -822,7 +822,7 @@ This section also analyses the implication of such exposure.
 The channels between DM and RDM are mutually authenticated and encrypted with TLS {{?RFC8446}} and its associated security considerations apply.
 To ensure the multiple TLS session are are continuously authenticating the same entity, TLS may take advantage of second factor authentication as described in {{?RFC8672}}.
 
-At the time of writing TLS 1.2 or TLS 1.3 CAN be used and TLS 1.3 MUST be supported.
+At the time of writing TLS 1.2 or TLS 1.3 CAN be used and TLS 1.3 (or newer) SHOULD be supported.
 
 The DNS protocol is subject to reflection attacks, however, these attacks are largely applicable when DNS is carried over UDP.
 The interfaces between the HNA and DM and RDM are using TLS over TCP, which prevents such reflection attacks.
