@@ -798,23 +798,26 @@ Although, caching may obfuscate this information inside the home network, it is 
 
 # Security Considerations {#sec-security}
 
-The Homenet Naming Architecture described in this document solves
-exposing the HNA's DNS service as a DoS attack vector.
+This document exposes a mechanism that prevents the HNA from being exposed to the Internet and served DNS request from the Internet.
+These requests are instead served by the DOI.
+While this limits the level of exposure of the HNA, the HNA remains exposed to the Internet with communications with the DOI. 
+This section analyses the attack surface associated to these communications. 
+In addition, the DOI exposes data that are related to the home network. 
+This section also analyses the implication of such exposure.  
 
-## HNA DMand RDM channels
+## HNA DM and RDM channels
 
-The HNA DM channels are specified to include their own security mechanisms that are designed to provide the minimum attack surface, and to authenticate transactions where necessary.
-
-Note that in the case of the Reverse Homenet Zone, the data is less subject to attacks than in the Public Homenet Zone.
-In addition, the HNA and the DM MAY belong to the same administrative domain, i.e. the ISP.
-More specifically, the WAN interface is located in the ISP network.
-As a result, if provisioned using DHCPv6, the security credential may not even transit in the home network.
-On the other hand, if the HNA is not hosted at the border of the home network, the credential may rely on the security associated to DHCPv6.
-Even if HNA and DM are in the same administrative domain it is strongly RECOMMENDED to use a secure channel.
-
-The security of these channels heavily relies on TLS and the DM or RDM is authenticated by its certificate.
+The channels between DM and RDM are mutually authenticated and encrypted with TLS {{?RFC8446}} and its associated security considerations apply. 
 To ensure the multiple TLS session are are continuously authenticating the same entity, TLS may take advantage of second factor authentication as described in {{?RFC8672}}.
 
+At the time of writing TLS 1.2 or TLS 1.3 can be used and TLS 1.3 MUST be supported. 
+
+The DNS protocol is subject to reflection attacks, however, these attacks are largely applicable when DNS is carried over UDP. 
+The interfaces between the HNA and DM and RDM are using TLS over TCP, which prevents such reflection attacks. 
+Note that Public Authoritative servers hosted by the DOI are subject to such attacks, but that is out of scope of our document.   
+
+Note that in the case of the Reverse Homenet Zone, the data is less subject to attacks than in the Public Homenet Zone.
+In addition, the DM and RDM may be provided by the ISP - as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}, in which case DM and RDM might be less exposed to attacks. 
 
 ## Names are less secure than IP addresses {#sec-name-less-secure}
 
@@ -838,6 +841,7 @@ In that sense, responding to PTR DNS queries may affect the end user's privacy.
 For that reason end users may choose not to respond to PTR DNS queries and MAY instead return a NXDOMAIN response.
 
 
+<!--
 ## DNS Reflection Attacks {#sec-reflection-attack}
 
 An attacker performs a reflection attack when it sends traffic to one or more intermediary nodes (reflectors), that in turn send back response traffic to the victim.
@@ -942,6 +946,8 @@ As SIG(0) and TSIG use inception and expiration time, the time frame for replay 
 SIG(0) and TSIG recommends a fudge value of 5 minutes.
 This value has been set as a compromise between possibly loose time synchronization between devices and the valid lifetime of the message.
 As a result, better time synchronization policies could reduce the time window of the attack.
+
+-->
 
 # Data Model for Outsourced information {#yang-model}
 
