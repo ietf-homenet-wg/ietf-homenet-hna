@@ -1053,10 +1053,16 @@ Distribution Master notification address (dm\_notify):
 IP addresses are optional and the FQDN is sufficient and preferred.
 If there are concerns about the security of the name to IP translation, then DNSSEC should be employed.
 
-Authentication Method ("method"):
-: How the HNA authenticates itself to the DM.  This specification defines only "certificate"
+Distribution Master AXFR permission netmask (dm\_acl):
+: The subnet from which the CPE should accept SOA queries and AXFR requests.
+A subnet is used in the case where the DNS Outsourced Infrastructure consists of a number of different systems.
+An array of addresses is permitted.
 
-Authentication data ("hna_certificate", "hna_key"):
+Authentication Method ("method"):
+: How the HNA authenticates itself to the DM within the TLS connection(s).
+This specification defines only "certificate"
+
+Authentication data ("hna\_certificate", "hna\_key"):
 : While a PSK can be used used as part of TSIG authentication, it has poor security properties and is hard to scale.
 Better solutions use public key mechanisms, leveraging private keys built into the HNA.
 
