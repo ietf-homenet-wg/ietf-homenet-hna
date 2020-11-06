@@ -662,7 +662,18 @@ In this case, the HNA may be authenticated by the physical link layer, in which 
 While this may be not so common for the Public Homenet Zone, this situation is expected to be quite common for the Reverse Homenet Zone.
 
 More specifically, a common case is that the upstream ISP provides the IPv6 prefix to the Homenet with a IA_PD {{!RFC8415}} option and manages the DNS Outsourcing Infrastructure of the associated reverse zone.
+
 This leave place for setting up automatically the relation between HNA and the DNS Outsourcing infrastructure as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
+
+In the case of the reverse zone, the DNS Outsourcing Infrastructure authenticates the source
+of the updates by IPv6 Access Control Lists.
+In the case of the reverse zone, the ISP knows exactly what addresses have been delegated.
+
+The HNA should therefore always originate Synchronization Channel updates from an IP address within the zone that is being updated.
+
+For example, if the ISP has assigned 2001:db8:f00d::2/64 to the WAN interface (by DHCPv6, or PPP/RA), then the HNA should originate Synchronization Channel updates from 2001:db8:f00d::2.
+
+An ISP that has delegated 2001:db8:babe::/56 to the HNA via DHCPv6-PD, then HNA should originate Synchronization Channel updates an IP within that subnet, such as 2001:db8:babe:0001::2.
 
 With this relation automatically configured, the synchronization between the Home network and the DNS Outsourcing Infrastructure happens similarly as for the Public Homenet Zone described earlier in this document.
 
