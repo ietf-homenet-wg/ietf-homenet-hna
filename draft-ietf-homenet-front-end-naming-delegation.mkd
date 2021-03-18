@@ -937,45 +937,65 @@ HNA and the various settings to be done.
 The HNA needs to be configured with the following parameters.
 These parameters are necessary to establish a secure channel between the HNA and the DM as well as to specify the DNS zone that is in the scope of the communication:
 
-Distribution Master notification address (dm\_notify):
+~~~~
+{
+  "registered_domain"      : "n8d234f.r.example.net",
+  "dm" : "2001:db8:1234:111:222::2",
+  "dm_transport" : 
+  "dm_port"   : "4433",
+  "dm_acl"    : "2001:db8:1234:111:222::/64",
+  "hna_auth_method" : "certificate",
+  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
+}
+
+
+Registered Homenet Domain (zone)
+: The Domain Name of the zone. Multiple Registered Homenet Domains may be provided. 
+This will generate the
+creation of multiple Public Homenet Zones.
+This parameter is MANDATORY. 
+
+Distribution Master notification address (dm)
 : The associated FQDNs or IP addresses of the DM to which DNS notifies should be sent.
+This parameter is MANDATORY. 
 IP addresses are optional and the FQDN is sufficient and preferred.
-If there are concerns about the security of the name to IP translation, then DNSSEC should be employed.
+If there are concerns about the security of the name to IP translation, then DNSSEC should be employed. 
+The session between the HNA and the DM is authenticated with TLS. 
+As certificates are more commonly emitted for FQDN than for IP addresses, it is preferred to use names and authenticate the name of the DM during the TLS session establishment. 
+
+
+Supported Transport (dm_transport)
+: The transport that carries the DNS exchanges between the HNA and the DM.
+Typical values are Do53, DoT, DoH. 
+This parameter is OPTIONAL and by default the HNA uses DoT.
+
+Distribution Master Port (dm_port)
+: Indicates the port used by the DM. 
+This parameter is OPTIONAL and the default value is provided by the Supported Transport. 
+In the future, additional transport may not have default port, in which case either a default port needs to be defined or this parameter become MANDATORY. 
+
+Note that HNA does not defines ports for the Synchronization Channel. 
+In any case, this is not expected to part of the configuration, but instead negotiated through the Configuration Channel. 
+Currently the Configuration Channel does not provide this, and limits its agility to a dedicated IP address. 
+If such agility is needed in the future, additional exchanges will need to be defined. 
+
+
+Authentication Method ("hna_auth_method"):
+: How the HNA authenticates itself to the DM within the TLS connection(s).
+The authentication meth of can typically be "certificate", "psk" or "none".
+This Parameter is OPTIONAL and by default the Authentication Method is "certificate". 
+
+
+Authentication data ("hna\_certificate", "hna\_key"):
+: 
+The certificate chain used to authenticate the HNA. 
+This parameter is OPTIONAL and when not specified, a self-signed certificate is used. 
 
 Distribution Master AXFR permission netmask (dm\_acl):
 : The subnet from which the CPE should accept SOA queries and AXFR requests.
 A subnet is used in the case where the DNS Outsourced Infrastructure consists of a number of different systems.
 An array of addresses is permitted.
-
-Authentication Method ("method"):
-: How the HNA authenticates itself to the DM within the TLS connection(s).
-This specification defines only "certificate"
-
-mglt: We also need to specify the transport: DoT/ DoH
-
-Authentication data ("hna\_certificate", "hna\_key"):
-: While a PSK can be used used as part of TSIG authentication, it has poor security properties and is hard to scale.
-Better solutions use public key mechanisms, leveraging private keys built into the HNA.
-
-Public Authoritative Server(s) (dm\_ctrl and dm\_port):
-: The FQDN or IP addresses of the Public Authoritative Server(s) to which control messages will be sent.
-IP addresses are optional and the FQDN is sufficient.
-
-(XXX? what? It MAY correspond to the data that will be sent in the NS RRsets and SOA of the Homenet Zone.)
-mglt: This sounds to me more DM parameters
-
-
-Registered Homenet Domain (???):
-: The domain name used to establish the secure channel.
-This name is used by the DM and the HNA for the primary / secondary configuration as well as to index the   NOTIFY queries of the HNA when the HNA has been renumbered.
-
-Registered Homenet Domain (zone):
-: The Domain Name of the zone. Multiple Registered Homenet Domains may be provided. This will generate the
-creation of multiple Public Homenet Zones.
-
-Public Authoritative Server (ns-list):
-: The Public Authoritative Server(s) associated with the Registered Homenet Domain. Multiple Public
-Authoritative Server(s) may be provided.
+This parameter is OPTIONAL and if unspecified, the CPE the IP addresses specified in the dm\_notify parameters or the IP addresses that result from the DNS(SEC) resolution when dm\_notify specifies a FQDN.    
 
 
 For forward zones, the relationship between the HNA and the forward zone provider may be the result of a number of transactions:
