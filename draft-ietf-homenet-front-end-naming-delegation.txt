@@ -5,7 +5,7 @@
 Homenet                                                       D. Migault
 Internet-Draft                                                  Ericsson
 Intended status: Standards Track                                R. Weber
-Expires: 18 September 2021                                       Nominum
+Expires: 20 September 2021                                       Nominum
                                                            M. Richardson
                                                 Sandelman Software Works
                                                                R. Hunter
@@ -14,7 +14,7 @@ Expires: 18 September 2021                                       Nominum
                                                                         
                                                              W. Cloetens
                                                         Deutsche Telekom
-                                                           17 March 2021
+                                                           19 March 2021
 
 
       Simple Provisioning of Public Names for Residential Networks
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Migault, et al.         Expires 18 September 2021               [Page 1]
+Migault, et al.         Expires 20 September 2021               [Page 1]
 
 Internet-Draft                public-names                    March 2021
 
@@ -63,7 +63,7 @@ Internet-Draft                public-names                    March 2021
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 September 2021.
+   This Internet-Draft will expire on 20 September 2021.
 
 Copyright Notice
 
@@ -82,10 +82,10 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.1.  Selecting Names to Publish  . . . . . . . . . . . . . . .   6
+     1.1.  Selecting Names to Publish  . . . . . . . . . . . . . . .   5
      1.2.  Alternative solutions . . . . . . . . . . . . . . . . . .   6
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   3.  Architecture Description  . . . . . . . . . . . . . . . . . .   9
+   3.  Architecture Description  . . . . . . . . . . . . . . . . . .   8
      3.1.  Architecture Overview . . . . . . . . . . . . . . . . . .   9
      3.2.  Distribution Master Communication Channels  . . . . . . .  11
    4.  Control Channel between Homenet Naming Authority (HNA) and
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Migault, et al.         Expires 18 September 2021               [Page 2]
+Migault, et al.         Expires 20 September 2021               [Page 2]
 
 Internet-Draft                public-names                    March 2021
 
@@ -138,8 +138,6 @@ Internet-Draft                public-names                    March 2021
      A.1.  CPE Vendor  . . . . . . . . . . . . . . . . . . . . . . .  34
      A.2.  Agnostic CPE  . . . . . . . . . . . . . . . . . . . . . .  34
    Appendix B.  Example: HNA necessary parameters for outsourcing  .  35
-   Appendix C.  Example: A manufacturer provisioned HNA product
-           flow  . . . . . . . . . . . . . . . . . . . . . . . . . .  36
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  37
 
 1.  Introduction
@@ -160,20 +158,17 @@ Internet-Draft                public-names                    March 2021
    1.  The names of the devices accessible from the Internet are stored
        in the Public Homenet Zone, served by a DNS authoritative server.
 
-
-
-
-
-
-Migault, et al.         Expires 18 September 2021               [Page 3]
-
-Internet-Draft                public-names                    March 2021
-
-
    2.  It is unlikely that home networks will contain sufficiently
        robust platforms designed to host a service such as the DNS on
        the Internet and as such would expose the home network to DDoS
        attacks.
+
+
+
+Migault, et al.         Expires 20 September 2021               [Page 3]
+
+Internet-Draft                public-names                    March 2021
+
 
    3.  [RFC7368] emphasizes that the home network is subject to
        connectivity disruptions with the ISP.  But, names used within
@@ -218,18 +213,18 @@ Internet-Draft                public-names                    March 2021
    builds the Public Homenet Zone and outsources it to an DNS
    Outsourcing Infrastructure (DOI) via a Distribution Master (DM).  The
    DOI is in charge of publishing the corresponding Public Homenet Zone
-
-
-
-Migault, et al.         Expires 18 September 2021               [Page 4]
-
-Internet-Draft                public-names                    March 2021
-
-
    on the Internet.  The transfer of DNS zone information is achieved
    using standard DNS mechanisms involving primary and secondary DNS
    servers, with the HNA hosted primary being a stealth primary, and the
    DM a secondary.
+
+
+
+
+Migault, et al.         Expires 20 September 2021               [Page 4]
+
+Internet-Draft                public-names                    March 2021
+
 
    Section 3.1 provides an architecture description that describes the
    relation between the HNA and the DOI.  In order to keep the Public
@@ -272,16 +267,6 @@ Internet-Draft                public-names                    March 2021
    architectures [I-D.ietf-homenet-simple-naming] are expected to
    leverage this constraint as pointed out in [RFC7558].
 
-
-
-
-
-
-Migault, et al.         Expires 18 September 2021               [Page 5]
-
-Internet-Draft                public-names                    March 2021
-
-
 1.1.  Selecting Names to Publish
 
    While this document does not create any normative mechanism by which
@@ -289,6 +274,13 @@ Internet-Draft                public-names                    March 2021
    home network administrator (a humuan), will be presented with a list
    of current names and addresses present on the inside of the home
    network.
+
+
+
+Migault, et al.         Expires 20 September 2021               [Page 5]
+
+Internet-Draft                public-names                    March 2021
+
 
    The administrator would mark which devices (by name), are to be
    published.  The HNA would then collect the IPv6 address(es)
@@ -331,18 +323,20 @@ Internet-Draft                public-names                    March 2021
 
    The alternative does suffer from some severe limitations:
 
-
-
-Migault, et al.         Expires 18 September 2021               [Page 6]
-
-Internet-Draft                public-names                    March 2021
-
-
    *  the CPE/HNA router is unaware of the process, and cannot respond
       to queries for these names when there are disruptions in
       connectivity.  This makes the home user or application dependent
       on having to resolve different names in the event of outages or
       disruptions.
+
+
+
+
+
+Migault, et al.         Expires 20 September 2021               [Page 6]
+
+Internet-Draft                public-names                    March 2021
+
 
    *  the CPE/HNA router cannot control the process.  Any host can do
       this regardless of whether or not the home network administrator
@@ -387,17 +381,19 @@ Internet-Draft                public-names                    March 2021
    Registered Homenet Domain:  is the Domain Name associated with the
       home network.
 
-
-
-Migault, et al.         Expires 18 September 2021               [Page 7]
-
-Internet-Draft                public-names                    March 2021
-
-
    Public Homenet Zone:  contains the names in the home network that are
       expected to be publicly resolvable on the Internet.
 
    Homenet Naming Authority:  (HNA) is a function responsible for
+
+
+
+
+Migault, et al.         Expires 20 September 2021               [Page 7]
+
+Internet-Draft                public-names                    March 2021
+
+
       managing the Public Homenet Zone.  This includes populating the
       Public Homenet Zone, signing the zone for DNSSEC, as well as
       managing the distribution of that Homenet Zone to the DNS
@@ -438,18 +434,6 @@ Internet-Draft                public-names                    March 2021
       Internet for the Public Homenet Zone.  The resolution is performed
       requesting the Public Authoritative Servers.
 
-
-
-
-
-
-
-
-Migault, et al.         Expires 18 September 2021               [Page 8]
-
-Internet-Draft                public-names                    March 2021
-
-
 3.  Architecture Description
 
    This section provides an overview of the architecture for outsourcing
@@ -457,6 +441,14 @@ Internet-Draft                public-names                    March 2021
    Section 3.1.  Appendix B illustrates this architecture with the
    example of a Public Homenet Zone as well as necessary parameter to
    configure the HNA.
+
+
+
+
+Migault, et al.         Expires 20 September 2021               [Page 8]
+
+Internet-Draft                public-names                    March 2021
+
 
 3.1.  Architecture Overview
 
@@ -496,16 +488,6 @@ Internet-Draft                public-names                    March 2021
    *  a DM Synchronization Channel (see section Section 5 to synchronize
       the Public Homenet Zone on the HNA and on the DM.
 
-
-
-
-
-
-Migault, et al.         Expires 18 September 2021               [Page 9]
-
-Internet-Draft                public-names                    March 2021
-
-
    *  one or more Distribution Channels (see section Section 6 that
       distributes the Public Homenet Zone from the DM to the Public
       Authoritative Server serving the Public Homenet Zone on the
@@ -515,6 +497,14 @@ Internet-Draft                public-names                    March 2021
    assumes a single DM server for simplicity, but there is no reason why
    each channel needs to be implemented on the same server, or indeed
    use the same code base.
+
+
+
+
+Migault, et al.         Expires 20 September 2021               [Page 9]
+
+Internet-Draft                public-names                    March 2021
+
 
    It is important to note that while the HNA is configured as an
    authoritative server, it is not expected to answer to DNS requests
@@ -557,7 +547,17 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 10]
+
+
+
+
+
+
+
+
+
+
+Migault, et al.         Expires 20 September 2021              [Page 10]
 
 Internet-Draft                public-names                    March 2021
 
@@ -613,7 +613,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 11]
+Migault, et al.         Expires 20 September 2021              [Page 11]
 
 Internet-Draft                public-names                    March 2021
 
@@ -669,7 +669,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 12]
+Migault, et al.         Expires 20 September 2021              [Page 12]
 
 Internet-Draft                public-names                    March 2021
 
@@ -725,7 +725,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 13]
+Migault, et al.         Expires 20 September 2021              [Page 13]
 
 Internet-Draft                public-names                    March 2021
 
@@ -781,7 +781,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 14]
+Migault, et al.         Expires 20 September 2021              [Page 14]
 
 Internet-Draft                public-names                    March 2021
 
@@ -837,7 +837,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 15]
+Migault, et al.         Expires 20 September 2021              [Page 15]
 
 Internet-Draft                public-names                    March 2021
 
@@ -893,7 +893,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 16]
+Migault, et al.         Expires 20 September 2021              [Page 16]
 
 Internet-Draft                public-names                    March 2021
 
@@ -949,7 +949,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 17]
+Migault, et al.         Expires 20 September 2021              [Page 17]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1005,7 +1005,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 18]
+Migault, et al.         Expires 20 September 2021              [Page 18]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1061,7 +1061,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 19]
+Migault, et al.         Expires 20 September 2021              [Page 19]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1117,7 +1117,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 20]
+Migault, et al.         Expires 20 September 2021              [Page 20]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1173,7 +1173,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 21]
+Migault, et al.         Expires 20 September 2021              [Page 21]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1229,7 +1229,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 22]
+Migault, et al.         Expires 20 September 2021              [Page 22]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1285,7 +1285,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 23]
+Migault, et al.         Expires 20 September 2021              [Page 23]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1341,7 +1341,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 24]
+Migault, et al.         Expires 20 September 2021              [Page 24]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1397,7 +1397,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 25]
+Migault, et al.         Expires 20 September 2021              [Page 25]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1453,7 +1453,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 26]
+Migault, et al.         Expires 20 September 2021              [Page 26]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1509,7 +1509,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 27]
+Migault, et al.         Expires 20 September 2021              [Page 27]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1565,7 +1565,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 28]
+Migault, et al.         Expires 20 September 2021              [Page 28]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1621,7 +1621,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 29]
+Migault, et al.         Expires 20 September 2021              [Page 29]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1677,7 +1677,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 30]
+Migault, et al.         Expires 20 September 2021              [Page 30]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1733,7 +1733,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 31]
+Migault, et al.         Expires 20 September 2021              [Page 31]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1789,7 +1789,7 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 32]
+Migault, et al.         Expires 20 September 2021              [Page 32]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1845,7 +1845,7 @@ Appendix A.  Envisioned deployment scenarios
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 33]
+Migault, et al.         Expires 20 September 2021              [Page 33]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1901,7 +1901,7 @@ A.2.  Agnostic CPE
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 34]
+Migault, et al.         Expires 20 September 2021              [Page 34]
 
 Internet-Draft                public-names                    March 2021
 
@@ -1918,128 +1918,117 @@ Appendix B.  Example: HNA necessary parameters for outsourcing
    HNA and the DM as well as to specify the DNS zone that is in the
    scope of the communication:
 
-   Distribution Master notification address (dm_notify):  The associated
-      FQDNs or IP addresses of the DM to which DNS notifies should be
-      sent.  IP addresses are optional and the FQDN is sufficient and
-      preferred.  If there are concerns about the security of the name
-      to IP translation, then DNSSEC should be employed.
-
-   Distribution Master AXFR permission netmask (dm_acl):  The subnet
-      from which the CPE should accept SOA queries and AXFR requests.  A
-      subnet is used in the case where the DNS Outsourced Infrastructure
-      consists of a number of different systems.  An array of addresses
-      is permitted.
-
-   Authentication Method ("method"):  How the HNA authenticates itself
-      to the DM within the TLS connection(s).  This specification
-      defines only "certificate"
-
-   mglt: We also need to specify the transport: DoT/ DoH
-
-   Authentication data ("hna_certificate", "hna_key"):  While a PSK can
-      be used used as part of TSIG authentication, it has poor security
-      properties and is hard to scale.  Better solutions use public key
-      mechanisms, leveraging private keys built into the HNA.
-
-   Public Authoritative Server(s) (dm_ctrl and dm_port):  The FQDN or IP
-      addresses of the Public Authoritative Server(s) to which control
-      messages will be sent.  IP addresses are optional and the FQDN is
-      sufficient.
-
-   (XXX? what?  It MAY correspond to the data that will be sent in the
-   NS RRsets and SOA of the Homenet Zone.) mglt: This sounds to me more
-   DM parameters
-
-   Registered Homenet Domain (???):  The domain name used to establish
-      the secure channel.  This name is used by the DM and the HNA for
-      the primary / secondary configuration as well as to index the
-      NOTIFY queries of the HNA when the HNA has been renumbered.
+{
+  "registered_domain"      : "n8d234f.r.example.net",
+  "dm" : "2001:db8:1234:111:222::2",
+  "dm_transport" :
+  "dm_port"   : "4433",
+  "dm_acl"    : "2001:db8:1234:111:222::/64",
+  "hna_auth_method" : "certificate",
+  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
+}
 
 
+Registered Homenet Domain (zone)
+: The Domain Name of the zone. Multiple Registered Homenet Domains may be provided.
+This will generate the
+creation of multiple Public Homenet Zones.
+This parameter is MANDATORY.
 
-Migault, et al.         Expires 18 September 2021              [Page 35]
+Distribution Master notification address (dm)
+: The associated FQDNs or IP addresses of the DM to which DNS notifies should be sent.
+This parameter is MANDATORY.
+IP addresses are optional and the FQDN is sufficient and preferred.
+If there are concerns about the security of the name to IP translation, then DNSSEC should be employed.
+The session between the HNA and the DM is authenticated with TLS.
+As certificates are more commonly emitted for FQDN than for IP addresses, it is preferred to use names and authenticate the name of the DM during the TLS session establishment.
+
+
+Supported Transport (dm_transport)
+: The transport that carries the DNS exchanges between the HNA and the DM.
+Typical values are Do53, DoT, DoH.
+This parameter is OPTIONAL and by default the HNA uses DoT.
+
+Distribution Master Port (dm_port)
+: Indicates the port used by the DM.
+This parameter is OPTIONAL and the default value is provided by the Supported Transport.
+In the future, additional transport may not have default port, in which case either a default port needs to be defined or this parameter become MANDATORY.
+
+
+
+
+Migault, et al.         Expires 20 September 2021              [Page 35]
 
 Internet-Draft                public-names                    March 2021
 
 
-   Registered Homenet Domain (zone):  The Domain Name of the zone.
-      Multiple Registered Homenet Domains may be provided.  This will
-      generate the creation of multiple Public Homenet Zones.
-
-   Public Authoritative Server (ns-list):  The Public Authoritative
-      Server(s) associated with the Registered Homenet Domain.  Multiple
-      Public Authoritative Server(s) may be provided.
-
-   For forward zones, the relationship between the HNA and the forward
-   zone provider may be the result of a number of transactions:
-
-   1.  The forward zone outsourcing may be provided by the maker of the
-       Homenet router.  In this case, the identity and authorization
-       could be built in the device at manufacturer provisioning time.
-       The device would need to be provisioned with a device-unique
-       credential, and it is likely that the Registered Homenet Domain
-       would be derived from a public attribute of the device, such as a
-       serial number.
-
-   2.  The forward zone outsourcing may be provided by the Internet
-       Service Provider.  In this case, the use of
-       [I-D.ietf-homenet-naming-architecture-dhc-options] to provide the
-       credentials is appropriate.
-
-   3.  The forward zone may be outsourced to a third party, such as a
-       domain registrar.  In this case, the use of the JSON-serialized
-       YANG data model described in section Section 14 is appropriate,
-       as it can easily be copy and pasted by the user, or downloaded as
-       part of a web transaction.
-
-   For reverse zones, the relationship is always with the upstream ISP
-   (although there may be more than one), and so
-   [I-D.ietf-homenet-naming-architecture-dhc-options] is always the
-   appropriate interface.
-
-Appendix C.  Example: A manufacturer provisioned HNA product flow
-
-   This scenario is one where a homenet router device manufacturer
-   decides to offer DNS hosting as a value add.
-
-   [I-D.richardson-homerouter-provisioning] describes a process for a
-   home router credential provisioning system.  The outline of it is
-   that near the end of the manufacturing process, as part of the
-   firmware loading, the manufacturer provisions a private key and
-   certificate into the device.
+Note that HNA does not defines ports for the Synchronization Channel.
+In any case, this is not expected to part of the configuration, but instead negotiated through the Configuration Channel.
+Currently the Configuration Channel does not provide this, and limits its agility to a dedicated IP address.
+If such agility is needed in the future, additional exchanges will need to be defined.
 
 
+Authentication Method ("hna_auth_method"):
+: How the HNA authenticates itself to the DM within the TLS connection(s).
+The authentication meth of can typically be "certificate", "psk" or "none".
+This Parameter is OPTIONAL and by default the Authentication Method is "certificate".
+
+
+Authentication data ("hna\_certificate", "hna\_key"):
+:
+The certificate chain used to authenticate the HNA.
+This parameter is OPTIONAL and when not specified, a self-signed certificate is used.
+
+Distribution Master AXFR permission netmask (dm\_acl):
+: The subnet from which the CPE should accept SOA queries and AXFR requests.
+A subnet is used in the case where the DNS Outsourced Infrastructure consists of a number of different systems.
+An array of addresses is permitted.
+This parameter is OPTIONAL and if unspecified, the CPE the IP addresses specified in the dm\_notify parameters or the IP addresses that result from the DNS(SEC) resolution when dm\_notify specifies a FQDN.
+
+
+For forward zones, the relationship between the HNA and the forward zone provider may be the result of a number of transactions:
+
+1. The forward zone outsourcing may be provided by the maker of the Homenet router.
+In this case, the identity and authorization could be built in the device at manufacturer provisioning time.  The device would need to be provisioned with a device-unique credential, and it is likely that the Registered Homenet Domain would be derived from a public attribute of the device, such as a serial number.
+
+2. The forward zone outsourcing may be provided by the Internet Service Provider.
+In this case, the use of {{I-D.ietf-homenet-naming-architecture-dhc-options}} to provide the credentials is appropriate.
+
+3. The forward zone may be outsourced to a third party, such as a domain registrar.
+In this case, the use of the JSON-serialized YANG data model described in section {{yang-model}} is appropriate, as it can easily be copy and pasted by the user, or downloaded as part of a web transaction.
+
+For reverse zones, the relationship is always with the upstream ISP (although there may be more than one), and so {{I-D.ietf-homenet-naming-architecture-dhc-options}} is always the appropriate interface.
+
+# Example: A manufacturer provisioned HNA product flow
+
+This scenario is one where a homenet router device manufacturer decides to offer DNS hosting as a value add.
+
+{{I-D.richardson-homerouter-provisioning}} describes a process for a home router
+credential provisioning system.
+The outline of it is that near the end of the manufacturing process, as part of the firmware loading, the manufacturer provisions a private key and certificate into the device.
+
+In addition to having a assymmetric credential known to the manufacturer, the device also has
+been provisioned with an agreed upon name.  In the example in the above document, the name "n8d234f.r.example.net" has already been allocated and confirmed with the manufacturer.
 
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 36]
+Migault, et al.         Expires 20 September 2021              [Page 36]
 
 Internet-Draft                public-names                    March 2021
 
 
-   In addition to having a assymmetric credential known to the
-   manufacturer, the device also has been provisioned with an agreed
-   upon name.  In the example in the above document, the name
-   "n8d234f.r.example.net" has already been allocated and confirmed with
-   the manufacturer.
+The HNA can use the above domain for itself.
+It is not very pretty or personal, but if the owner wishes a better name, they can arrange for it.
 
-   The HNA can use the above domain for itself.  It is not very pretty
-   or personal, but if the owner wishes a better name, they can arrange
-   for it.
+The configuration would look like:
 
-   The configuration would look like:
-
-   {
-     "dm_notify" : "2001:db8:1234:111:222::2",
-     "dm_acl"    : "2001:db8:1234:111:222::/64",
-     "dm_ctrl"   : "manufacturer.example.net",
-     "dm_port"   : "4433",
-     "ns_list"   : [ "ns1.publicdns.example", "ns2.publicdns.example"],
-     "zone"      : "n8d234f.r.example.net",
-     "auth_method" : "certificate",
-     "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
-   }
+   { "dm_notify" : "2001:db8:1234:111:222::2", "dm_acl" :
+   "2001:db8:1234:111:222::/64", "dm_ctrl" : "manufacturer.example.net",
+   "dm_port" : "4433", "ns_list" : [ "ns1.publicdns.example",
+   "ns2.publicdns.example"], "zone" : "n8d234f.r.example.net",
+   "auth_method" : "certificate", "hna_certificate":"-----BEGIN
+   CERTIFICATE-----\nMIIDTjCCFGy....", } ~~~~
 
    The dm_ctrl and dm_port values would be built into the firmware.
 
@@ -2066,18 +2055,23 @@ Authors' Addresses
    Michael Richardson
    Sandelman Software Works
    470 Dawson Avenue
-
-
-
-Migault, et al.         Expires 18 September 2021              [Page 37]
-
-Internet-Draft                public-names                    March 2021
-
-
    Ottawa, ON  K1Z 5V7
    Canada
 
    Email: mcr+ietf@sandelman.ca
+
+
+
+
+
+
+
+
+
+
+Migault, et al.         Expires 20 September 2021              [Page 37]
+
+Internet-Draft                public-names                    March 2021
 
 
    Ray Hunter
@@ -2125,4 +2119,10 @@ Internet-Draft                public-names                    March 2021
 
 
 
-Migault, et al.         Expires 18 September 2021              [Page 38]
+
+
+
+
+
+
+Migault, et al.         Expires 20 September 2021              [Page 38]
