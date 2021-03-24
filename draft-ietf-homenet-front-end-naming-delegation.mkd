@@ -265,7 +265,7 @@ The resolution is performed requesting the Public Authoritative Servers.
 # Architecture Description  {#sec-arc-desc}
 
 This section provides an overview of the architecture for outsourcing the authoritative naming service from the HNA to the DOI in {{sec-arch-overview}}.
-{{sec-configuration-parameters}} illustrates this architecture with the example of a Public Homenet Zone as well as necessary parameter to configure the HNA.
+{{sec:yang-model}} defines necessary parameter to configure the HNA.
 
 ## Architecture Overview {#sec-arch-overview}
 
@@ -836,25 +836,92 @@ PTR provides a way to bind an IP address to a name.
 In that sense, responding to PTR DNS queries may affect the end user's privacy.
 For that reason end users may choose not to respond to PTR DNS queries and MAY instead return a NXDOMAIN response.
 
-# Data Model for Outsourced information {#yang-model}
+# Data Model for Outsourced information {#sec:yang-model}
+
+This section specifies the various parameters required by the HNA to
+configure the naming architecture of this document.
+This section is informational, and is intended to clarify the information handled by the
+HNA and the various settings to be done.
+
+The HNA needs to be configured with the following parameters.
+These parameters are necessary to establish a secure channel between the HNA and the DM as well as to specify the DNS zone that is in the scope of the communication:
+
+~~~
+{
+  "registered_domain"      : "n8d234f.r.example.net",
+  "dm" : "2001:db8:1234:111:222::2",
+  "dm_transport" : 
+  "dm_port"   : "4433",
+  "dm_acl"    : "2001:db8:1234:111:222::/64",
+  "hna_auth_method" : "certificate",
+  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
+}
+~~~
+
+
+Registered Homenet Domain (zone)
+: The Domain Name of the zone. Multiple Registered Homenet Domains may be provided. 
+This will generate the
+creation of multiple Public Homenet Zones.
+This parameter is MANDATORY. 
+
+Distribution Master notification address (dm)
+: The associated FQDNs or IP addresses of the DM to which DNS notifies should be sent.
+This parameter is MANDATORY. 
+IP addresses are optional and the FQDN is sufficient and preferred.
+If there are concerns about the security of the name to IP translation, then DNSSEC should be employed. 
+The session between the HNA and the DM is authenticated with TLS. 
+As certificates are more commonly emitted for FQDN than for IP addresses, it is preferred to use names and authenticate the name of the DM during the TLS session establishment. 
+
+
+Supported Transport (dm_transport)
+: The transport that carries the DNS exchanges between the HNA and the DM.
+Typical values are Do53, DoT, DoH. 
+This parameter is OPTIONAL and by default the HNA uses DoT.
+
+Distribution Master Port (dm_port)
+: Indicates the port used by the DM. 
+This parameter is OPTIONAL and the default value is provided by the Supported Transport. 
+In the future, additional transport may not have default port, in which case either a default port needs to be defined or this parameter become MANDATORY. 
+
+Note that HNA does not defines ports for the Synchronization Channel. 
+In any case, this is not expected to part of the configuration, but instead negotiated through the Configuration Channel. 
+Currently the Configuration Channel does not provide this, and limits its agility to a dedicated IP address. 
+If such agility is needed in the future, additional exchanges will need to be defined. 
+
+
+Authentication Method ("hna_auth_method"):
+: How the HNA authenticates itself to the DM within the TLS connection(s).
+The authentication meth of can typically be "certificate", "psk" or "none".
+This Parameter is OPTIONAL and by default the Authentication Method is "certificate". 
+
+
+Authentication data ("hna\_certificate", "hna\_key"):
+: 
+The certificate chain used to authenticate the HNA. 
+This parameter is OPTIONAL and when not specified, a self-signed certificate is used. 
+
+Distribution Master AXFR permission netmask (dm\_acl):
+: The subnet from which the CPE should accept SOA queries and AXFR requests.
+A subnet is used in the case where the DNS Outsourced Infrastructure consists of a number of different systems.
+An array of addresses is permitted.
+This parameter is OPTIONAL and if unspecified, the CPE the IP addresses specified in the dm\_notify parameters or the IP addresses that result from the DNS(SEC) resolution when dm\_notify specifies a FQDN.    
+
+
+For forward zones, the relationship between the HNA and the forward zone provider may be the result of a number of transactions:
+
+1. The forward zone outsourcing may be provided by the maker of the Homenet router.
+In this case, the identity and authorization could be built in the device at manufacturer provisioning time.  The device would need to be provisioned with a device-unique credential, and it is likely that the Registered Homenet Domain would be derived from a public attribute of the device, such as a serial number (see {{sec:ex-manu}} or {{?I-D.richardson-homerouter-provisioning}} for more details ).
+
+2. The forward zone outsourcing may be provided by the Internet Service Provider.
+In this case, the use of {{I-D.ietf-homenet-naming-architecture-dhc-options}} to provide the credentials is appropriate.
+
+3. The forward zone may be outsourced to a third party, such as a domain registrar.
+In this case, the use of the JSON-serialized YANG data model described in this section is appropriate, as it can easily be copy and pasted by the user, or downloaded as part of a web transaction.
+
+For reverse zones, the relationship is always with the upstream ISP (although there may be more than one), and so {{I-D.ietf-homenet-naming-architecture-dhc-options}} is always the appropriate interface.
 
 The following is an abbridged example of a set of data that represents the needed configuration parameters for outsourcing.
-
-~~~~
-{
-  "dm_notify" : "2001:db8:1f15:62e:21c::2",
-  "dm_acl"    : "2001:db8:1f15:62e:21c::/64",
-  "dm_ctrl"   : "192.168.1.18",
-  "dm_port"   : "4433",
-  "ns_list"   : [ "ns1.publicdns.example", "ns2.publicdns.example"],
-  "zone"      : "daniel.homenetdns.example",
-  "auth_method" : "certificate",
-  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
-  "hna_key"   : "-----BEGIN RSA PRIVATE KEY-----\nMIIEowICAQE...."
-}
-~~~~
-
-We need to list the different parameters. 
 
 Here goes a YANG MODULE description of the above.
 
@@ -918,7 +985,7 @@ design a proof of ownership of the domain name by the homenet owner. In
 this case, it is expected the DOI provides the necessary
 parameters to the home  network owner to configure the HNA. A good way
 to provide the parameters would be the home network be able to
-copy/paste a JSON object - see {{yang-model}}. What matters at that point is the DOI being able to generate authentication credentials for the
+copy/paste a JSON object - see {{sec:yang-model}}. What matters at that point is the DOI being able to generate authentication credentials for the
 HNA to authenticate itself to the DOI. This
 obviously requires the home network to provide the public key generated
 by the HNA in a CSR.
@@ -927,91 +994,7 @@ by the HNA in a CSR.
 ACME is used here to the purpose of automating the generation of the certificate, the CA may be a specific CA or the DOI. 
 With that being done, the DOI has a roof of ownership and can proceed as above.
 
-# Example: HNA necessary parameters for outsourcing {#sec-configuration-parameters}
-
-This section specifies the various parameters required by the HNA to
-configure the naming architecture of this document.
-This section is informational, and is intended to clarify the information handled by the
-HNA and the various settings to be done.
-
-The HNA needs to be configured with the following parameters.
-These parameters are necessary to establish a secure channel between the HNA and the DM as well as to specify the DNS zone that is in the scope of the communication:
-
-~~~~
-{
-  "registered_domain"      : "n8d234f.r.example.net",
-  "dm" : "2001:db8:1234:111:222::2",
-  "dm_transport" : 
-  "dm_port"   : "4433",
-  "dm_acl"    : "2001:db8:1234:111:222::/64",
-  "hna_auth_method" : "certificate",
-  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
-}
-
-
-Registered Homenet Domain (zone)
-: The Domain Name of the zone. Multiple Registered Homenet Domains may be provided. 
-This will generate the
-creation of multiple Public Homenet Zones.
-This parameter is MANDATORY. 
-
-Distribution Master notification address (dm)
-: The associated FQDNs or IP addresses of the DM to which DNS notifies should be sent.
-This parameter is MANDATORY. 
-IP addresses are optional and the FQDN is sufficient and preferred.
-If there are concerns about the security of the name to IP translation, then DNSSEC should be employed. 
-The session between the HNA and the DM is authenticated with TLS. 
-As certificates are more commonly emitted for FQDN than for IP addresses, it is preferred to use names and authenticate the name of the DM during the TLS session establishment. 
-
-
-Supported Transport (dm_transport)
-: The transport that carries the DNS exchanges between the HNA and the DM.
-Typical values are Do53, DoT, DoH. 
-This parameter is OPTIONAL and by default the HNA uses DoT.
-
-Distribution Master Port (dm_port)
-: Indicates the port used by the DM. 
-This parameter is OPTIONAL and the default value is provided by the Supported Transport. 
-In the future, additional transport may not have default port, in which case either a default port needs to be defined or this parameter become MANDATORY. 
-
-Note that HNA does not defines ports for the Synchronization Channel. 
-In any case, this is not expected to part of the configuration, but instead negotiated through the Configuration Channel. 
-Currently the Configuration Channel does not provide this, and limits its agility to a dedicated IP address. 
-If such agility is needed in the future, additional exchanges will need to be defined. 
-
-
-Authentication Method ("hna_auth_method"):
-: How the HNA authenticates itself to the DM within the TLS connection(s).
-The authentication meth of can typically be "certificate", "psk" or "none".
-This Parameter is OPTIONAL and by default the Authentication Method is "certificate". 
-
-
-Authentication data ("hna\_certificate", "hna\_key"):
-: 
-The certificate chain used to authenticate the HNA. 
-This parameter is OPTIONAL and when not specified, a self-signed certificate is used. 
-
-Distribution Master AXFR permission netmask (dm\_acl):
-: The subnet from which the CPE should accept SOA queries and AXFR requests.
-A subnet is used in the case where the DNS Outsourced Infrastructure consists of a number of different systems.
-An array of addresses is permitted.
-This parameter is OPTIONAL and if unspecified, the CPE the IP addresses specified in the dm\_notify parameters or the IP addresses that result from the DNS(SEC) resolution when dm\_notify specifies a FQDN.    
-
-
-For forward zones, the relationship between the HNA and the forward zone provider may be the result of a number of transactions:
-
-1. The forward zone outsourcing may be provided by the maker of the Homenet router.
-In this case, the identity and authorization could be built in the device at manufacturer provisioning time.  The device would need to be provisioned with a device-unique credential, and it is likely that the Registered Homenet Domain would be derived from a public attribute of the device, such as a serial number.
-
-2. The forward zone outsourcing may be provided by the Internet Service Provider.
-In this case, the use of {{I-D.ietf-homenet-naming-architecture-dhc-options}} to provide the credentials is appropriate.
-
-3. The forward zone may be outsourced to a third party, such as a domain registrar.
-In this case, the use of the JSON-serialized YANG data model described in section {{yang-model}} is appropriate, as it can easily be copy and pasted by the user, or downloaded as part of a web transaction.
-
-For reverse zones, the relationship is always with the upstream ISP (although there may be more than one), and so {{I-D.ietf-homenet-naming-architecture-dhc-options}} is always the appropriate interface.
-
-# Example: A manufacturer provisioned HNA product flow
+# Example: A manufacturer provisioned HNA product flow {#sec:ex-manu}
 
 This scenario is one where a homenet router device manufacturer decides to offer DNS hosting as a value add.
 
@@ -1027,7 +1010,7 @@ It is not very pretty or personal, but if the owner wishes a better name, they c
 
 The configuration would look like:
 
-~~~~
+~~~
 {
   "dm_notify" : "2001:db8:1234:111:222::2",
   "dm_acl"    : "2001:db8:1234:111:222::/64",
@@ -1038,6 +1021,8 @@ The configuration would look like:
   "auth_method" : "certificate",
   "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
 }
-~~~~
+~~~
 
 The dm\_ctrl and dm\_port values would be built into the firmware.
+
+
