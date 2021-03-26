@@ -145,7 +145,7 @@ DNSSEC key management and zone signing is handled by the HNA.
 {{hna-provisioning}} discusses management and configuration of the Public Homenet Zone.
 It shows that the HNA configuration of the DOI can involve no or little interaction with the end user.
 More specifically, it shows that the existence of an account in the DOI is sufficient for the DOI to push the necessary configuration.
-In addition, when the DOI and CPE are both managed by an ISP, the configuration can be entirely automated - see {{sec-reverse}}. 
+In addition, when the DOI and CPE are both managed by an ISP, the configuration can be entirely automated - see {{sec-reverse}}.
 
 {{sec-reverse}} discusses management of one or more reverse zones.
 It shows that management of the reverse zones can be entirely automated and benefit from a pre-established relation between the ISP and the home network. Note that such scenarios may also be met for the Public Homenet Zone, but not necessarily.
@@ -308,8 +308,8 @@ When the resolution is performed outside the home network, the DNSSEC Resolver r
 
 When the resolution is performed from within the home network, the Homenet DNSSEC Resolver may proceed similarly.
 On the other hand, to provide resilience to the Public Homenet Zone in case of disruption, the Homenet DNSSEC Resolver SHOULD be able to perform the resolution on the Homenet Authoritative Servers.
-These servers are not expected to be mentioned in the Public Homenet Zone, nor to be accessible from the Internet. 
-As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP {{!RFC7788}}. 
+These servers are not expected to be mentioned in the Public Homenet Zone, nor to be accessible from the Internet.
+As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP {{!RFC7788}}.
 Such configuration is outside the scope of this document.
 
 How the Homenet Authoritative Servers are provisioned is also out of scope of this specification.
@@ -370,9 +370,9 @@ For more detail to see how this can be achieved, please see section {{hna-provis
 The information exchanged between the HNA and the DM is using DNS messages.
 DNS messages can be protected using various kind of transport layers, among others, DNS over DTLS {{?RFC8094}}, DNS over TLS (DoT) {{!RFC7858}}, or DNS over HTTPs (DoH) {{!RFC8484}}.
 There was consideration to using a standard TSIG {{!RFC2845}} or SIG(0) {{!RFC2931}} to perform a dynamic DNS update to the DM.
-There are a number of issues with this. 
+There are a number of issues with this.
 The first one is that TSIG or SIG(0) make scenarios where the end user needs to interact via its web browser more complex.
-More precisely, authorization and access control granted via OAUTH would be unnecessarily complex with TSIG or SIG(0).  
+More precisely, authorization and access control granted via OAUTH would be unnecessarily complex with TSIG or SIG(0).
 
 The main one is that the Dynamic DNS update would also update the parent zone's (NS, DS and associated A or AAAA records) while the goal is to update the DM configuration files.
 The visible NS records SHOULD remain pointing at the cloud provider's anycast addresses.
@@ -389,7 +389,7 @@ The Distribution Channel is internal to the DOI and as such is not the primary c
 
 # Control Channel between Homenet Naming Authority (HNA) and Distribution Master (DM) {#sec-ctrl}
 
-The DM Control Channel is used by the HNA and the DOI to exchange information related to the configuration of the delegation which includes information to build the Public Homenet Zone (see {{sec-pbl-homenet-zone}}), information to build the DNSSEC chain of trust (see {{sec-chain-of-trust}}) and information to set the Synchronization Channel (see {{sec-sync-info}}). 
+The DM Control Channel is used by the HNA and the DOI to exchange information related to the configuration of the delegation which includes information to build the Public Homenet Zone (see {{sec-pbl-homenet-zone}}), information to build the DNSSEC chain of trust (see {{sec-chain-of-trust}}) and information to set the Synchronization Channel (see {{sec-sync-info}}).
 
 
 ## Information to build the Public Homenet Zone  {#sec-pbl-homenet-zone}
@@ -421,11 +421,11 @@ Upon refusal, the DM clearly indicates it does not have the capacity to proceed 
 
 ## Information to set the Synchronization Channel {#sec-sync-info}
 
-The HNA works as a primary authoritative DNS server, while the DM works like a secondary. 
-As a result, the HNA MUST provide the IP address the DM is using to reach the HNA.  
-The synchronization Channel will be set between that IP address and the IP address of the DM. 
-By default, the IP address used by the HNA in the Control Channel is considered by the DM and teh specification of the IP by the HNA is only OPTIONAL. 
-The transport channel (including port) is the same as the one used between the HNA and the DM for the Control Channel. 
+The HNA works as a primary authoritative DNS server, while the DM works like a secondary.
+As a result, the HNA MUST provide the IP address the DM is using to reach the HNA.
+The synchronization Channel will be set between that IP address and the IP address of the DM.
+By default, the IP address used by the HNA in the Control Channel is considered by the DM and teh specification of the IP by the HNA is only OPTIONAL.
+The transport channel (including port) is the same as the one used between the HNA and the DM for the Control Channel.
 
 ## Deleting the delegation
 
@@ -485,18 +485,18 @@ If the resolution does not succeed, the outsourcing operation is aborted and the
 
 To provide the DS RRset to initialize the DNSSEC chain of trust the HNA MAY send a DNS update {{!RFC2136}} message.
 
-The DNS update message is composed of a Header section, a Zone section, a Pre-requisite section, and Update section and an additional section. 
+The DNS update message is composed of a Header section, a Zone section, a Pre-requisite section, and Update section and an additional section.
 The Zone section MUST set the ZNAME to the parent zone of the Registered Homenet Domain - that is where the DS records should be inserted. As described {{!RFC2136}}, ZTYPE is set to SOA and ZCLASS is set to the zone's class.
-The Pre-requisite section MUST be empty. 
-The Update section is a DS RRset with its NAME set to the Registered Homenet Domain and the associated RDATA corresponds to the value of the DS. 
-The Additional Data section MUST be empty.  
+The Pre-requisite section MUST be empty.
+The Update section is a DS RRset with its NAME set to the Registered Homenet Domain and the associated RDATA corresponds to the value of the DS.
+The Additional Data section MUST be empty.
 
-Though the pre-requisite section MAY be ignored by the DM, this value is fixed to remain coherent with a standard DNS update. 
+Though the pre-requisite section MAY be ignored by the DM, this value is fixed to remain coherent with a standard DNS update.
 
-Upon receiving the DNS update request, the DM reads the DS RRset in the Update section. 
-The DM checks ZNAME corresponds to the parent zone. 
-The DM SHOULD ignore non empty the Pre-requisite and Additional Data section. 
-The DM MAY update the TTL value before updating the DS RRset in the parent zone. 
+Upon receiving the DNS update request, the DM reads the DS RRset in the Update section.
+The DM checks ZNAME corresponds to the parent zone.
+The DM SHOULD ignore non empty the Pre-requisite and Additional Data section.
+The DM MAY update the TTL value before updating the DS RRset in the parent zone.
 Upon a successful update, the DM should return a NOERROR response as a commitment to update the parent zone with the provided DS.
 An error indicates the MD does not update the DS, and other method should be used by the HNA.
 
@@ -509,19 +509,19 @@ A REFUSED error is returned when the DM refuses to proceed to the configuration 
 ### Providing information for the Synchronization Channel {#sec-ip-hna}
 
 To provide a non default IP address used by the HNA for the Synchronization Channel, the HNA MAY send a DNS Update message.
-Such exchange is OPTIONAL. 
+Such exchange is OPTIONAL.
 
-Similarly to the {{sec-ds}}, the HNA MAY optionally specify the IP address using a DNS update message.  
-The Zone section sets its ZNAME to the parent zone of the Registered Homenet Domain, ZTYPE is set to SOA and ZCLASS is set to the zone's type.  
-Pre-requisite is empty. 
-The Update section is a RRset of type NS. 
+Similarly to the {{sec-ds}}, the HNA MAY optionally specify the IP address using a DNS update message.
+The Zone section sets its ZNAME to the parent zone of the Registered Homenet Domain, ZTYPE is set to SOA and ZCLASS is set to the zone's type.
+Pre-requisite is empty.
+The Update section is a RRset of type NS.
 The Additional Data section contains the RRsets of type A or AAAA that designates the IP addresses associated to the primary (or the HNA).
 
 The reason to provide these IP addresses is that it is NOT RECOMMENDED to publish these IP addresses.
 As a result, it is not expected to resolve them.
 
 Upon receiving the DNS update request, the DM reads the IP addresses and checks the ZNAME corresponds to the parent zone.
-The DM SHOULD ignore a non empty Pre-requisite section. 
+The DM SHOULD ignore a non empty Pre-requisite section.
 The DM configures the secondary with the IP addresses and returns a NOERROR response to indicate it is committed to serve as a secondary.
 
 Similarly to {{sec-ds}}, DNS errors are used and an error indicates the DM is not configured as a secondary.
@@ -532,12 +532,12 @@ To instruct to delete the delegation the HNA SHOULD send a DNS UPDATE Delete mes
 
 The Zone section sets its ZNAME to the Registered Homenet Domain, the ZTYPE to SOA and the ZCLASS to zone's type.
 The Pre-requisite section is empty.
-The Update section is a RRset of type NS with the NAME set to the Registered Domain Name. 
+The Update section is a RRset of type NS with the NAME set to the Registered Domain Name.
 As indicated by {{!RFC2136}} section 2.5.2 the delete instruction is set by setting the TTL to 0, the Class to ANY, the RDLENGTH to 0 and the RDATA MUST be empty.
-The Additional Data section is empty. 
+The Additional Data section is empty.
 
-Upon receiving the DNS update request, the DM checks the request and removes the delegation. 
-The DM returns a NOERROR response to indicate the delegation has been deleted.  
+Upon receiving the DNS update request, the DM checks the request and removes the delegation.
+The DM returns a NOERROR response to indicate the delegation has been deleted.
 Similarly to {{sec-ds}}, DNS errors are used and an error indicates the delegation has not been deleted.
 
 ## Securing the Control Channel between Homenet Naming Authority (HNA) and Distribution Master (DM)  {#sec-ctrl-security}
@@ -625,8 +625,8 @@ Finally, the AXFR {{!RFC1034}} or IXFR {{!RFC1995}} query performed by the secon
 
 The AXFR request from the DM to the HNA SHOULD be secured and the use of TLS is RECOMMENDED {{!I-D.ietf-dprive-xfr-over-tls}}
 
-When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {!RFC6698}}. 
-In addition, to guarantee the DM remains the same across multiple TLS session, the HNA and DM MAY implement {{?RFC8672}}. 
+When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {!RFC6698}}.
+In addition, to guarantee the DM remains the same across multiple TLS session, the HNA and DM MAY implement {{?RFC8672}}.
 
 The HNA MAY apply a simple IP filter on inbound AXFR requests to ensure they only arrive from the DM Synchronization Channel.
 In this case, the HNA SHOULD regularly check (via DNS resolution) that the address of the DM in the filter is still valid.
@@ -758,12 +758,12 @@ Let T_NEW be the time the new IP address replaces the old IP address in the Home
 In the case of the make-before-break, seamless reachability is provided as long as T_OLD_UNREACHABLE - T_NEW > 2 * TTL.
 If this is not satisfied, then devices associated with the old IP address in the home network may become unreachable for 2 * TTL - (T_OLD_UNREACHABLE - T_NEW).
 In the case of a break-before-make, T_OLD_UNREACHABLE = T_NEW, and the device may become unreachable up to 2 * TTL.
-Of course if T_NEW >= T_OLD_UNREACHABLE, the disruption is increased. 
+Of course if T_NEW >= T_OLD_UNREACHABLE, the disruption is increased.
 
 Once the Public Homenet Zone file has been updated on the Hidden Primary, the Hidden Primary needs to inform the DOI that the Public Homenet Zone has been updated and that the IP address to use to retrieve the updated zone has also been updated.
 Both notifications are performed using regular DNS exchanges.
 Mechanisms to update an IP address provided by lower layers with protocols like SCTP {{!RFC4960}}, MOBIKE {{!RFC4555}} are not considered in this document.
-Instead the IP address of the HNA is updated using the Synchronization Channel as described in {{sec-sync-info}}. 
+Instead the IP address of the HNA is updated using the Synchronization Channel as described in {{sec-sync-info}}.
 
 # Privacy Considerations {#sec-privacy}
 
@@ -860,23 +860,23 @@ These parameters are necessary to establish a secure channel between the HNA and
 
 
 Registered Homenet Domain (zone)
-: The Domain Name of the zone. Multiple Registered Homenet Domains may be provided. 
+: The Domain Name of the zone. Multiple Registered Homenet Domains may be provided.
 This will generate the
 creation of multiple Public Homenet Zones.
-This parameter is MANDATORY. 
+This parameter is MANDATORY.
 
 Distribution Master notification address (dm)
 : The associated FQDNs or IP addresses of the DM to which DNS notifies should be sent.
-This parameter is MANDATORY. 
+This parameter is MANDATORY.
 IP addresses are optional and the FQDN is sufficient and preferred.
-If there are concerns about the security of the name to IP translation, then DNSSEC should be employed. 
-The session between the HNA and the DM is authenticated with TLS. 
-As certificates are more commonly emitted for FQDN than for IP addresses, it is preferred to use names and authenticate the name of the DM during the TLS session establishment. 
+If there are concerns about the security of the name to IP translation, then DNSSEC should be employed.
+The session between the HNA and the DM is authenticated with TLS.
+As certificates are more commonly emitted for FQDN than for IP addresses, it is preferred to use names and authenticate the name of the DM during the TLS session establishment.
 
 
 Supported Transport (dm\_transport)
 : The transport that carries the DNS exchanges between the HNA and the DM.
-Typical values are Do53, DoT, DoH. 
+Typical values are Do53, DoT, DoH.
 This parameter is OPTIONAL and by default the HNA uses DoT.
 
 Distribution Master Port (dm\_port)
@@ -884,28 +884,28 @@ Distribution Master Port (dm\_port)
 This parameter is OPTIONAL and the default value is provided by the Supported Transport.
 In the future, additional transport may not have default port, in which case either a default port needs to be defined or this parameter become MANDATORY.
 
-Note that HNA does not defines ports for the Synchronization Channel. 
-In any case, this is not expected to part of the configuration, but instead negotiated through the Configuration Channel. 
-Currently the Configuration Channel does not provide this, and limits its agility to a dedicated IP address. 
-If such agility is needed in the future, additional exchanges will need to be defined. 
+Note that HNA does not defines ports for the Synchronization Channel.
+In any case, this is not expected to part of the configuration, but instead negotiated through the Configuration Channel.
+Currently the Configuration Channel does not provide this, and limits its agility to a dedicated IP address.
+If such agility is needed in the future, additional exchanges will need to be defined.
 
 
 Authentication Method ("hna\_auth\_method"):
 : How the HNA authenticates itself to the DM within the TLS connection(s).
 The authentication meth of can typically be "certificate", "psk" or "none".
-This Parameter is OPTIONAL and by default the Authentication Method is "certificate". 
+This Parameter is OPTIONAL and by default the Authentication Method is "certificate".
 
 
 Authentication data ("hna\_certificate", "hna\_key"):
-: 
-The certificate chain used to authenticate the HNA. 
-This parameter is OPTIONAL and when not specified, a self-signed certificate is used. 
+:
+The certificate chain used to authenticate the HNA.
+This parameter is OPTIONAL and when not specified, a self-signed certificate is used.
 
 Distribution Master AXFR permission netmask (dm\_acl):
 : The subnet from which the CPE should accept SOA queries and AXFR requests.
 A subnet is used in the case where the DNS Outsourced Infrastructure consists of a number of different systems.
 An array of addresses is permitted.
-This parameter is OPTIONAL and if unspecified, the CPE the IP addresses specified in the dm\_notify parameters or the IP addresses that result from the DNS(SEC) resolution when dm\_notify specifies a FQDN.    
+This parameter is OPTIONAL and if unspecified, the CPE the IP addresses specified in the dm\_notify parameters or the IP addresses that result from the DNS(SEC) resolution when dm\_notify specifies a FQDN.
 
 
 For forward zones, the relationship between the HNA and the forward zone provider may be the result of a number of transactions:
@@ -959,9 +959,9 @@ A specific vendor with specific relations with a registrar or a registry
 may sell a CPE that is provisioned with provisioned domain name. Such
 domain name does not need to be necessary human readable.
 
-One possible way is that the vendor also provisions the HNA with a private and public keys as well as a certificate. Note that these keys are not expected to be used for DNSSEC signing. 
-Instead these keys are solely used by the HNA to proceed to the authentication. 
-Normally the keys should be necessary and sufficient to proceed to the authentication. 
+One possible way is that the vendor also provisions the HNA with a private and public keys as well as a certificate. Note that these keys are not expected to be used for DNSSEC signing.
+Instead these keys are solely used by the HNA to proceed to the authentication.
+Normally the keys should be necessary and sufficient to proceed to the authentication.
 The reason to combine the domain name and the key is that DOI are likely handle names better than keys and that domain names might be used as a login which enables the key to be regenerated.
 
 When the home network owner plugs the CPE at home, the relation between HNA and DM is expected to work out-of-the-box.
@@ -987,8 +987,8 @@ What matters at that point is the DOI being able to generate authentication cred
 This obviously requires the home network to provide the public key generated
 by the HNA in a CSR.
 
-  * If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{!RFC8555}} for example that will end in the generation of a certificate. 
-ACME is used here to the purpose of automating the generation of the certificate, the CA may be a specific CA or the DOI. 
+  * If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{!RFC8555}} for example that will end in the generation of a certificate.
+ACME is used here to the purpose of automating the generation of the certificate, the CA may be a specific CA or the DOI.
 With that being done, the DOI has a roof of ownership and can proceed as above.
 
 # Example: A manufacturer provisioned HNA product flow {#sec:ex-manu}
