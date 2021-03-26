@@ -836,21 +836,31 @@ PTR provides a way to bind an IP address to a name.
 In that sense, responding to PTR DNS queries may affect the end user's privacy.
 For that reason end users may choose not to respond to PTR DNS queries and MAY instead return a NXDOMAIN response.
 
-# Data Model for Outsourced information {#info-model}
+# Information Model for Outsourced information {#info-model}
 
-This section specifies the various parameters required by the HNA to
-configure the naming architecture of this document.
-This section is informational, and is intended to clarify the information handled by the
-HNA and the various settings to be done.
+This section is non-normative for the front-end protocol.
+It specifies an optional format for the set of parameters required by the HNA to configure the naming architecture of this document.
 
-The HNA needs to be configured with the following parameters.
-These parameters are necessary to establish a secure channel between the HNA and the DM as well as to specify the DNS zone that is in the scope of the communication:
+In cases where a home router has not been provisioned by the manufacturer (when forward zones are provided by the manufacturer), or by the ISP (when the ISP provides this service), then a home user/owner will need to configure these settings via an administrative interface.
+
+By defining a standard format (in JSON) for this configuration information, the user/owner may be able to just copy and paste a configuration blob from the service provider into the administrative interface of the HNA.
+
+This format may also provide the basis for a future OAUTH2 {{?RFC6749}} flow that could do the setup automatically.
+
+The HNA needs to be configured with the following parameters as described by this CDDL {{?RFC8610}}.  These are the parameters are necessary to establish a secure channel  between the HNA and the DM as well as to specify the DNS zone that is in the scope of the communication.
+
+~~~~
+{::include front-end-configuration.cddl}
+~~~~
+
+For example:
 
 ~~~
 {
   "registered_domain" : "n8d234f.r.example.net",
   "dm"                : "2001:db8:1234:111:222::2",
-  "dm_port"           : "4433",
+  "dm_transport"      : "DoT",
+  "dm_port"           : 4433,
   "dm_acl"            : "2001:db8:1f15:62e:21c::/64"
                    or [ "2001:db8:1f15:62e:21c::/64", ... ]
   "hna_auth_method"   : "certificate",
@@ -858,6 +868,7 @@ These parameters are necessary to establish a secure channel between the HNA and
 }
 ~~~
 
+## Outsourced Information Model
 
 Registered Homenet Domain (zone)
 : The Domain Name of the zone. Multiple Registered Homenet Domains may be provided.
@@ -870,13 +881,15 @@ Distribution Master notification address (dm)
 This parameter is MANDATORY.
 IP addresses are optional and the FQDN is sufficient and preferred.
 If there are concerns about the security of the name to IP translation, then DNSSEC should be employed.
-The session between the HNA and the DM is authenticated with TLS.
+
+As the session between the HNA and the DM is authenticated with TLS, the use of names is easier.
+
 As certificates are more commonly emitted for FQDN than for IP addresses, it is preferred to use names and authenticate the name of the DM during the TLS session establishment.
 
 
 Supported Transport (dm\_transport)
 : The transport that carries the DNS exchanges between the HNA and the DM.
-Typical values are Do53, DoT, DoH.
+Typical values are "53", "DoT", "DoH", "DoQ".
 This parameter is OPTIONAL and by default the HNA uses DoT.
 
 Distribution Master Port (dm\_port)
