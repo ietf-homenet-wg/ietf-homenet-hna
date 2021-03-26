@@ -625,7 +625,7 @@ Finally, the AXFR {{!RFC1034}} or IXFR {{!RFC1995}} query performed by the secon
 
 The AXFR request from the DM to the HNA SHOULD be secured and the use of TLS is RECOMMENDED {{!I-D.ietf-dprive-xfr-over-tls}}
 
-When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {!RFC6698}}.
+When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {{!RFC6698}}.
 In addition, to guarantee the DM remains the same across multiple TLS session, the HNA and DM MAY implement {{?RFC8672}}.
 
 The HNA MAY apply a simple IP filter on inbound AXFR requests to ensure they only arrive from the DM Synchronization Channel.
