@@ -424,7 +424,7 @@ Upon refusal, the DM clearly indicates it does not have the capacity to proceed 
 The HNA works as a primary authoritative DNS server, while the DM works like a secondary.
 As a result, the HNA MUST provide the IP address the DM is using to reach the HNA.
 The synchronization Channel will be set between that IP address and the IP address of the DM.
-By default, the IP address used by the HNA in the Control Channel is considered by the DM and teh specification of the IP by the HNA is only OPTIONAL.
+By default, the IP address used by the HNA in the Control Channel is considered by the DM and the specification of the IP by the HNA is only OPTIONAL.
 The transport channel (including port) is the same as the one used between the HNA and the DM for the Control Channel.
 
 ## Deleting the delegation
