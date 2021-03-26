@@ -265,7 +265,7 @@ The resolution is performed requesting the Public Authoritative Servers.
 # Architecture Description  {#sec-arc-desc}
 
 This section provides an overview of the architecture for outsourcing the authoritative naming service from the HNA to the DOI in {{sec-arch-overview}}.
-{{sec:yang-model}} defines necessary parameter to configure the HNA.
+{{info-model}} defines necessary parameter to configure the HNA.
 
 ## Architecture Overview {#sec-arch-overview}
 
@@ -836,7 +836,7 @@ PTR provides a way to bind an IP address to a name.
 In that sense, responding to PTR DNS queries may affect the end user's privacy.
 For that reason end users may choose not to respond to PTR DNS queries and MAY instead return a NXDOMAIN response.
 
-# Data Model for Outsourced information {#sec:yang-model}
+# Data Model for Outsourced information {#info-model}
 
 This section specifies the various parameters required by the HNA to
 configure the naming architecture of this document.
@@ -848,13 +848,13 @@ These parameters are necessary to establish a secure channel between the HNA and
 
 ~~~
 {
-  "registered_domain"      : "n8d234f.r.example.net",
-  "dm" : "2001:db8:1234:111:222::2",
-  "dm_transport" : 
-  "dm_port"   : "4433",
-  "dm_acl"    : "2001:db8:1234:111:222::/64",
-  "hna_auth_method" : "certificate",
-  "hna_certificate":"-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
+  "registered_domain" : "n8d234f.r.example.net",
+  "dm"                : "2001:db8:1234:111:222::2",
+  "dm_port"           : "4433",
+  "dm_acl"            : "2001:db8:1f15:62e:21c::/64"
+                   or [ "2001:db8:1f15:62e:21c::/64", ... ]
+  "hna_auth_method"   : "certificate",
+  "hna_certificate"   : "-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy....",
 }
 ~~~
 
@@ -874,15 +874,15 @@ The session between the HNA and the DM is authenticated with TLS.
 As certificates are more commonly emitted for FQDN than for IP addresses, it is preferred to use names and authenticate the name of the DM during the TLS session establishment. 
 
 
-Supported Transport (dm_transport)
+Supported Transport (dm\_transport)
 : The transport that carries the DNS exchanges between the HNA and the DM.
 Typical values are Do53, DoT, DoH. 
 This parameter is OPTIONAL and by default the HNA uses DoT.
 
-Distribution Master Port (dm_port)
-: Indicates the port used by the DM. 
-This parameter is OPTIONAL and the default value is provided by the Supported Transport. 
-In the future, additional transport may not have default port, in which case either a default port needs to be defined or this parameter become MANDATORY. 
+Distribution Master Port (dm\_port)
+: Indicates the port used by the DM.
+This parameter is OPTIONAL and the default value is provided by the Supported Transport.
+In the future, additional transport may not have default port, in which case either a default port needs to be defined or this parameter become MANDATORY.
 
 Note that HNA does not defines ports for the Synchronization Channel. 
 In any case, this is not expected to part of the configuration, but instead negotiated through the Configuration Channel. 
@@ -890,7 +890,7 @@ Currently the Configuration Channel does not provide this, and limits its agilit
 If such agility is needed in the future, additional exchanges will need to be defined. 
 
 
-Authentication Method ("hna_auth_method"):
+Authentication Method ("hna\_auth\_method"):
 : How the HNA authenticates itself to the DM within the TLS connection(s).
 The authentication meth of can typically be "certificate", "psk" or "none".
 This Parameter is OPTIONAL and by default the Authentication Method is "certificate". 
@@ -922,9 +922,6 @@ In this case, the use of the JSON-serialized YANG data model described in this s
 For reverse zones, the relationship is always with the upstream ISP (although there may be more than one), and so {{I-D.ietf-homenet-naming-architecture-dhc-options}} is always the appropriate interface.
 
 The following is an abbridged example of a set of data that represents the needed configuration parameters for outsourcing.
-
-Here goes a YANG MODULE description of the above.
-
 
 
 #IANA Considerations
@@ -981,13 +978,13 @@ as such creates an account on that registrar
 or the home network needs to create a specific account on the
 outsourcing infrastructure.
   * If the DOI is the registrar, it has by
-design a proof of ownership of the domain name by the homenet owner. In
-this case, it is expected the DOI provides the necessary
+design a proof of ownership of the domain name by the homenet owner.
+In this case, it is expected the DOI provides the necessary
 parameters to the home  network owner to configure the HNA. A good way
 to provide the parameters would be the home network be able to
-copy/paste a JSON object - see {{sec:yang-model}}. What matters at that point is the DOI being able to generate authentication credentials for the
-HNA to authenticate itself to the DOI. This
-obviously requires the home network to provide the public key generated
+copy/paste a JSON object - see {{info-model}}.
+What matters at that point is the DOI being able to generate authentication credentials for the HNA to authenticate itself to the DOI.
+This obviously requires the home network to provide the public key generated
 by the HNA in a CSR.
 
   * If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{!RFC8555}} for example that will end in the generation of a certificate. 
