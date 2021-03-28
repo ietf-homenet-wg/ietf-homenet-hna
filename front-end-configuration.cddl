@@ -1,9 +1,9 @@
 hna-configuration = {
-  "registred_domain" : tstr,
-  "dm"               : tstr,
-  ? "dm_transport" : "53" // "DoT" // "DoH" // "DoQ"
+  "registered_domain" : tstr,
+  "dm"                : tstr,
+  ? "dm_transport" : "53" / "DoT" / "DoH" / "DoQ"
   ? "dm_port"        : uint,
-  ? "dm_acl"         : hna-acl // [ +hna-acl ]
+  ? "dm_acl"         : hna-acl / [ +hna-acl ]
   ? "hna_auth_method": hna-auth-method
   ? "hna_certificate": tstr
 }
