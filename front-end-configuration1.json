@@ -1,0 +1,9 @@
+ {
+   "registered_domain" : "n8d234f.r.example.net",
+   "dm"                : "2001:db8:1234:111:222::2",
+   "dm_transport"      : "DoT",
+   "dm_port"           : 4433,
+   "dm_acl"            : "2001:db8:1f15:62e:21c::/64",
+   "hna_auth_method"   : "certificate",
+   "hna_certificate"   : "-----BEGIN CERTIFICATE-----\nMIIDTjCCFGy...."
+ }

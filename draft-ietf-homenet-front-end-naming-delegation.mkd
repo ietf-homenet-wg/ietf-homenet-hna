@@ -849,11 +849,13 @@ This format may also provide the basis for a future OAUTH2 {{?RFC6749}} flow tha
 
 The HNA needs to be configured with the following parameters as described by this CDDL {{?RFC8610}}.  These are the parameters are necessary to establish a secure channel  between the HNA and the DM as well as to specify the DNS zone that is in the scope of the communication.
 
-~~~~
+~~~~ cddl
 {::include front-end-configuration.cddl}
 ~~~~
 
 For example:
+
+<!-- NOT actually json, as it is two examples merged -->
 
 ~~~
 {
