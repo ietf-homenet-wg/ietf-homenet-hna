@@ -57,22 +57,6 @@ author:
         code: 5632CW
         country: NL
         email: v6ops@globis.net
-      -
-        ins: C. Griffiths
-        name: Chris Griffiths
-        email: cgriffiths@gmail.com
-      -
-        ins: W. Cloetens
-        name: Wouter Cloetens
-        org: Deutsche Telekom
-        street:
-        city:
-        code:
-        country:
-        email: wouter.cloetens@external.telekom.de
-
-
-
 
 
 --- abstract
@@ -271,22 +255,17 @@ This section provides an overview of the architecture for outsourcing the author
 
 {{fig-naming-arch}} illustrates the architecture where the HNA outsources the publication of the Public Homenet Zone to the DOI.
 
-The Public Homenet Zone is identified by the Registered Homenet Domain Name -- myhome.isp.example.
-
-The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones.
+The Public Homenet Zone is identified by the Registered Homenet Domain Name -- myhome.example.
+The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as Homenet Zone in {{fig-naming-arch}}.
 
 The HNA SHOULD build the Public Homenet Zone in a single view populated with all resource records that are expected to be published on the Internet.
-
-As explained in {#selectingnames}, how the Public Homenet Zone is populated is out of the scope of this document.
-
+As explained in {{selectingnames}}, how the Public Homenet Zone is populated is out of the scope of this document.
 The HNA also signs the Public Homenet Zone.
 The HNA handles all operations and keying material required for DNSSEC, so there is no provision made in this architecture for transferring private DNSSEC related keying material between the HNA and the DM.
 
 Once the Public Homenet Zone has been built, the HNA outsources it to the DOI as described in {{fig-naming-arch}}.
-
 The HNA acts as a hidden primary while the DM behaves as a secondary responsible to distribute the Public Homenet Zone to the multiple Public Authoritative Servers that DOI is responsible
 for.
-
 The DM has 3 communication channels:
 
 * a DM Control Channel (see section {{sec-ctrl}}) to configure the HNA and the DOI,
@@ -304,13 +283,14 @@ More specifically, the addresses associated with the HNA SHOULD NOT be mentioned
 The DOI is also responsible for ensuring the DS record has been updated in the parent zone.
 
 Resolution is performed by the DNSSEC resolvers.
-When the resolution is performed outside the home network, the DNSSEC Resolver resolves the DS record on the Global DNS and the name associated to the Public Homenet Zone (example.com) on the Public Authoritative Servers.
+When the resolution is performed outside the home network, the DNSSEC Resolver resolves the DS record on the Global DNS and the name associated to the Public Homenet Zone (myhome.example) on the Public Authoritative Servers.
 
 When the resolution is performed from within the home network, the Homenet DNSSEC Resolver may proceed similarly.
 On the other hand, to provide resilience to the Public Homenet Zone in case of disruption, the Homenet DNSSEC Resolver SHOULD be able to perform the resolution on the Homenet Authoritative Servers.
 These servers are not expected to be mentioned in the Public Homenet Zone, nor to be accessible from the Internet.
 As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP {{!RFC7788}}.
 Such configuration is outside the scope of this document.
+Since the scope of the Homenet Authoritative Servers is limited to the home network, these servers are expected to serve the Homenet Zone as represented in {{fig-naming-arch}}. 
 
 How the Homenet Authoritative Servers are provisioned is also out of scope of this specification.
 It could be implemented using primary secondaries servers, or via rsync.
@@ -328,22 +308,22 @@ Other mechanisms may also be used.
 |         HNA           |<-------------->| Distribution Master   | |
 |+---------------------+|           | |  |+---------------------+| |
 || Public Homenet Zone ||Synchronization || Public Homenet Zone || |
-|| (example.com)       || Channel   | |  ||  (example.com)      || |
+||   (myhome.example)  || Channel   | |  ||  (myhome.example)   || |
 |+---------------------+|<-------------->|+---------------------+| |
-+----------------------+|           | |  +-----------------------+ |
-                                    | |           ^ Distribution   |
-                                    | |           | Channel        |
-+-----------------------+           | |           v                |
++-----------^-----------+           | |  +-----------------------+ |
+            .                       | |           ^ Distribution   |
+            .                       | |           | Channel        |
++-----------v-----------+           | |           v                |
 | Homenet Authoritative |           | |  +-----------------------+ |
 | Server(s)             |           | |  | Public Authoritative  | |
 |+---------------------+|           | |  | Server(s)             | |
 ||Public Homenet Zone  ||           | |  |+---------------------+| |
-|| (example.com)       ||           | |  || Public Homenet Zone || |
-|+---------------------+|           | |  ||  (example.com)      || |
-+-----------------------+           | |  |+---------------------+| |
-           ^   |                    | |  +-----------------------+ |
-           |   |                    | +----------^---|-------------+
-           |   |                    |            |   |
+||  (myhome.example)   ||           | |  || Public Homenet Zone || |
+|+---------------------+|           | |  ||  (myhome.example)   || |
+||     Homenet Zone    ||           | |  |+---------------------+| |
+||     (home.arpa)     ||           | |  +-----------------------+ |
+|+---------------------+|           | +----------^---|-------------+
++----------^---|--------+           |            |   |
            |   |           name resolution       |   |
            |   v                    |            |   v
  +----------------------+           | +-----------------------+
@@ -351,7 +331,7 @@ Other mechanisms may also be used.
  |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
  +----------------------+           | +-----------------------+
 ~~~~
-{: #fig-naming-arch title="Homenet Naming Architecture Name Resolution" }
+{: #fig-naming-arch title="Homenet Naming Architecture" }
 
 
 ## Distribution Master Communication Channels {#sec-comms}
@@ -367,9 +347,9 @@ We assume that the HNA initiates the Control Channel connection with the DM and 
 We also assume the DM has knowledge of the identity of the HNA (X509 certificate) as well as the Registered Homenet Domain.
 For more detail to see how this can be achieved, please see section {{hna-provisioning}}.
 
-The information exchanged between the HNA and the DM is using DNS messages.
-DNS messages can be protected using various kind of transport layers, among others, DNS over DTLS {{?RFC8094}}, DNS over TLS (DoT) {{!RFC7858}}, or DNS over HTTPs (DoH) {{!RFC8484}}.
-There was consideration to using a standard TSIG {{!RFC2845}} or SIG(0) {{!RFC2931}} to perform a dynamic DNS update to the DM.
+The information exchanged between the HNA and the DM is using DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}. 
+Further specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?I-D.ietf-dprive-dnsoquic}}.
+There was consideration to using a standard TSIG {{?RFC2845}} or SIG(0) {{?RFC2931}} to perform a dynamic DNS update to the DM.
 There are a number of issues with this.
 The first one is that TSIG or SIG(0) make scenarios where the end user needs to interact via its web browser more complex.
 More precisely, authorization and access control granted via OAUTH would be unnecessarily complex with TSIG or SIG(0).
@@ -383,7 +363,7 @@ This specification assumes:
 
 * the DM serves both the Control Channel and Synchronization Channel on a single IP address, single port and with a single transport protocol.
 * By default, the HNA uses a single IP address for both the Control and Synchronization channel.
-However,  the HNA MAY use distinct IP addresses for the Control Channel and the Synchronization Channel - see section {{sec-synch}} and section {sec-sync-info}} for more details.
+However,  the HNA MAY use distinct IP addresses for the Control Channel and the Synchronization Channel - see section {{sec-synch}} and section {{sec-sync-info}} for more details.
 
 The Distribution Channel is internal to the DOI and as such is not the primary concern of this specification.
 
@@ -891,7 +871,7 @@ As certificates are more commonly emitted for FQDN than for IP addresses, it is 
 
 Supported Transport (dm\_transport)
 : The transport that carries the DNS exchanges between the HNA and the DM.
-Typical values are "53", "DoT", "DoH", "DoQ".
+Typical value is "DoT" but it may be extended in the future with "DoH", "DoQ" for example.
 This parameter is OPTIONAL and by default the HNA uses DoT.
 
 Distribution Master Port (dm\_port)
@@ -959,6 +939,10 @@ Andrew, Ted Lemon, Mikael Abrahamson, and Ray Bellis
 for their feedback on handling different views as well as clarifying the
 impact of outsourcing the zone signing operation outside the HNA; Mark
 Andrew and Peter Koch for clarifying the renumbering.
+
+# Contributors
+
+The co-authors would like to thank Chris Griffiths and Wouter Cloetens that provided a significant contribution in the early versions of the document.
 
 --- back
 
