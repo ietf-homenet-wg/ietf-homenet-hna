@@ -67,7 +67,7 @@ It has been possible to register and populate a DNS Zone with names since DNS be
 This document automates the process through creation of a Homenet Naming Authority (HNA), whose
 responsibility is to select, sign and publish names to a set of publicly visible servers.
 
-This document describes the mechanism that enables the HNA to outsource the naming service to the DNS Outsourcing Infrastructure (DOI) via a Distribution Master (DM).
+This document describes the mechanism that enables the HNA to outsource the naming service to the DNS Outsourcing Infrastructure (DOI) via a Distribution Manager (DM).
 
 In addition, this document deals with publication of a corresponding reverse zone.
 
@@ -110,7 +110,7 @@ On the other hand, if the only copy of the public zone is on the Internet, then 
 
 
 In order to avoid resource exhaustion and other attacks, this document describes in {{sec-arch-overview}} an architecture that outsources the authoritative naming service of the home network.
-More specifically, the HNA builds the Public Homenet Zone and  outsources it to a DNS Outsourcing Infrastructure (DOI) via a Distribution Master (DM).
+More specifically, the HNA builds the Public Homenet Zone and  outsources it to a DNS Outsourcing Infrastructure (DOI) via a Distribution Manager (DM).
 The DOI is in charge of publishing the corresponding Public Homenet Zone on the Internet.
 The transfer of DNS zone information is achieved using standard DNS mechanisms involving primary and secondary DNS servers, with the HNA being a stealth primary, and the DM a secondary.
 
@@ -208,7 +208,7 @@ This includes populating the Public Homenet Zone, signing the zone for DNSSEC, a
 
 DNS Outsourcing Infrastructure (DOI):
 : is the infrastructure responsible for receiving the Public Homenet Zone and publishing it on the Internet.
-It is mainly composed of a Distribution Master and Public Authoritative Servers.
+It is mainly composed of a Distribution Manager and Public Authoritative Servers.
 
 Public Authoritative Servers:
 : are the authoritative name servers for the Public Homenet Zone.
@@ -218,7 +218,7 @@ For resiliency the Public Homenet Zone SHOULD be hosted on multiple servers.
 Homenet Authoritative Servers:
 : are authoritative name servers within the Homenet network.
 
-Distribution Master (DM):
+Distribution Manager (DM):
 : is the (set of) server(s) to which the HNA synchronizes the Public Homenet Zone, and which then distributes the relevant information to the Public Authoritative Servers.
 
 Homenet Reverse Zone:
@@ -227,8 +227,8 @@ Homenet Reverse Zone:
 Reverse Public Authoritative Servers:
 : equivalent to Public Authoritative Servers specifically for reverse resolution.
 
-Reverse Distribution Master:
-: equivalent to Distribution Master specifically for reverse resolution.
+Reverse Distribution Manager:
+: equivalent to Distribution Manager specifically for reverse resolution.
 
 Homenet DNSSEC Resolver:
 : a resolver that performs a DNSSEC resolution on the home network for the Public Homenet Zone.
@@ -298,7 +298,7 @@ Other mechanisms may also be used.
                                     | |          DOI               |
                           Control   | |                            |
 +-----------------------+ Channel   | |  +-----------------------+ |
-|         HNA           |<-------------->| Distribution Master   | |
+|         HNA           |<-------------->| Distribution Manager  | |
 |+---------------------+|           | |  |+---------------------+| |
 || Public Homenet Zone ||Synchronization || Public Homenet Zone || |
 ||   (myhome.example)  || Channel   | |  ||  (myhome.example)   || |
@@ -327,7 +327,7 @@ Other mechanisms may also be used.
 {: #fig-naming-arch title="Homenet Naming Architecture" }
 
 
-## Distribution Master Communication Channels {#sec-comms}
+## Distribution Manager Communication Channels {#sec-comms}
 
 This section details the DM channels, that is the Control Channel, the Synchronization Channel and the Distribution Channel.
 
@@ -505,7 +505,7 @@ To instruct to delete the delegation the HNA SHOULD send a DNS UPDATE Delete mes
 The Zone section sets its ZNAME to the Registered Homenet Domain, the ZTYPE to SOA and the ZCLASS to zone's type.
 The Pre-requisite section is empty.
 The Update section is a RRset of type NS with the NAME set to the Registered Domain Name.
-As indicated by {{!RFC2136}} section 2.5.2 the delete instruction is set by setting the TTL to 0, the Class to ANY, the RDLENGTH to 0 and the RDATA MUST be empty.
+As indicated by {{!RFC2136}} Section 2.5.2 the delete instruction is set by setting the TTL to 0, the Class to ANY, the RDLENGTH to 0 and the RDATA MUST be empty.
 The Additional Data section is empty.
 
 Upon receiving the DNS update request, the DM checks the request and removes the delegation.
@@ -672,7 +672,7 @@ How the reverse zone is generated is out of scope of this document.
 
 #  Homenet Public Zone Channel Configurations {#hna-provisioning}
 
-This document does not deal with how the HNA is provisioned with a trusted relationship to the Distribution Master for the forward zone.
+This document does not deal with how the HNA is provisioned with a trusted relationship to the Distribution Manager for the forward zone.
 
 This section details what needs to be provisioned into the HNA and serves as a requirements statement for mechanisms.
 
@@ -680,7 +680,7 @@ This section details what needs to be provisioned into the HNA and serves as a r
 The HNA needs to be provisioned with:
 
 * the Registered Domain (e.g., myhome.isp.example )
-* the contact info for the Distribution Master (DM), including the DNS name (FQDN), possibly including the IP literal, and a certificate (or anchor) to be used to authenticate the service
+* the contact info for the Distribution Manager (DM), including the DNS name (FQDN), possibly including the IP literal, and a certificate (or anchor) to be used to authenticate the service
 * the DM transport protocol and port (the default is DNS over TLS, on port 853)
 * the HNA credentials used by the DM for its authentication.
 
@@ -850,7 +850,7 @@ This will generate the
 creation of multiple Public Homenet Zones.
 This parameter is MANDATORY.
 
-Distribution Master notification address (dm)
+Distribution Manager notification address (dm)
 : The associated FQDNs or IP addresses of the DM to which DNS notifies should be sent.
 This parameter is MANDATORY.
 IP addresses are optional and the FQDN is sufficient and preferred.
@@ -866,7 +866,7 @@ Supported Transport (dm\_transport)
 Typical value is "DoT" but it may be extended in the future with "DoH", "DoQ" for example.
 This parameter is OPTIONAL and by default the HNA uses DoT.
 
-Distribution Master Port (dm\_port)
+Distribution Manager Port (dm\_port)
 : Indicates the port used by the DM.
 This parameter is OPTIONAL and the default value is provided by the Supported Transport.
 In the future, additional transport may not have default port, in which case either a default port needs to be defined or this parameter become MANDATORY.
@@ -888,7 +888,7 @@ Authentication data ("hna\_certificate", "hna\_key"):
 The certificate chain used to authenticate the HNA.
 This parameter is OPTIONAL and when not specified, a self-signed certificate is used.
 
-Distribution Master AXFR permission netmask (dm\_acl):
+Distribution Manager AXFR permission netmask (dm\_acl):
 : The subnet from which the CPE should accept SOA queries and AXFR requests.
 A subnet is used in the case where the DNS Outsourced Infrastructure consists of a number of different systems.
 An array of addresses is permitted.
