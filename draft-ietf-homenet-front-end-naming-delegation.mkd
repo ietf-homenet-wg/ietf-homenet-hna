@@ -62,7 +62,7 @@ author:
 
 --- abstract
 
-Home owners often have IPv6 devices that they wish to access over the Internet using names.  
+Home owners often have IPv6 devices that they wish to access over the Internet using names.
 Outsourcing the DNS servers to a DNS infrastructure protects against possible DDoS attacks as well as sudden renumbering of the home network.
 It has been possible to register and populate a DNS Zone with names since DNS became a thing, but it has been an activity typically reserved for experts.
 This document automates the process through creation of a Homenet Naming Authority (HNA), whose
@@ -88,7 +88,7 @@ This specification proposes a way based on a number of assumptions about typical
 
 2. It is unlikely that home networks will contain sufficiently robust platforms designed to host and expose to the Internet a service such as the DNS and as such would expose the home network to DDoS attacks.
 
-3. {{!RFC7368}} emphasizes that the home network is subject to connectivity disruptions with the ISP. 
+3. {{!RFC7368}} emphasizes that the home network is subject to connectivity disruptions with the ISP.
 But, names used within the home MUST be resilient against such disruption.
 
 This specification makes the public names resolvable within both the home network and on the Internet, even when there are disruptions.
@@ -162,7 +162,7 @@ However, during periods when the home network has connectivity problems, the ULA
 An alternative existing solution in IPv4 is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
 This is often called "Dynamic DNS", and there are a number of commercial providers, including Dyn, Gandi etc.
 These solutions were typically used by a host behind the CPE to make its CPE IPv4 address visible, usually in order to enable incoming connections.
-This is the most common scenario considered in this section, while some variant may also consider the client being hosted in the CPE. 
+This is the most common scenario considered in this section, while some variant may also consider the client being hosted in the CPE.
 
 For a very few number (one to three) of hosts, the use of such a system provides an alternative to the architecture described in this document.
 The alternative - even adapted to IPv6 and ignoring those associated to an IPv4 development - does suffer from some severe limitations:
@@ -283,12 +283,12 @@ On the other hand, to provide resilience to the Public Homenet Zone in case of W
 These servers are not expected to be mentioned in the Public Homenet Zone, nor to be accessible from the Internet.
 As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP {{!RFC7788}}.
 Such configuration is outside the scope of this document.
-Since the scope of the Homenet Authoritative Servers is limited to the home network, these servers are expected to serve the Homenet Zone as represented in {{fig-naming-arch}}. 
+Since the scope of the Homenet Authoritative Servers is limited to the home network, these servers are expected to serve the Homenet Zone as represented in {{fig-naming-arch}}.
 
 How the Homenet Authoritative Servers are provisioned is also out of scope of this specification.
 It could be implemented using primary and secondary servers, or via rsync.
 In some cases, the HNA and Homenet Authoritative Servers may be combined together which would result in a common instantiation of an authoritative server on the WAN and inner homenet interface.
-Note that {{?RFC6092}} REC-8 states this must not be the default configuration. 
+Note that {{?RFC6092}} REC-8 states this must not be the default configuration.
 Other mechanisms may also be used.
 
 ~~~~
@@ -341,7 +341,7 @@ We assume that the HNA initiates the Control Channel connection with the DM and 
 We also assume the DM has knowledge of the identity of the HNA (X509 certificate) as well as the Registered Homenet Domain.
 For more detail to see how this can be achieved, please see {{hna-provisioning}}.
 
-The information exchanged between the HNA and the DM uses DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}. 
+The information exchanged between the HNA and the DM uses DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}.
 Other specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?I-D.ietf-dprive-dnsoquic}}.
 There was consideration to using a standard TSIG {{?RFC2845}} or SIG(0) {{?RFC2931}} to perform a dynamic DNS update to the DM.
 There are a number of issues with this.
@@ -491,7 +491,7 @@ Pre-requisite is empty.
 The Update section is a RRset of type NS.
 The Additional Data section contains the RRsets of type A or AAAA that designates the IP addresses associated to the primary (or the HNA).
 
-The reason to provide these IP addresses is to keep them unpublished and prevent them to be resolved. 
+The reason to provide these IP addresses is to keep them unpublished and prevent them to be resolved.
 
 Upon receiving the DNS update request, the DM reads the IP addresses and checks the ZNAME corresponds to the parent zone.
 The DM SHOULD ignore a non empty Pre-requisite section.
