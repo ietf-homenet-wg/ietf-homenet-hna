@@ -106,7 +106,7 @@ This selected node is designated as providing the HNA function.
 The process by which a single HNA is selected per zone is not in scope for this document.
 It is envisioned that a future document will describe an HNCP mechanism to elect the single HNA.
 
-CPEs, which may host the HNA function are usually low powered devices not designed for supporting a heavy traffic.
+CPEs, which may host the HNA function are usually low powered devices not designed for supporting heavy network traffic.
 As a result, hosting an authoritative DNS service visible to the Internet may expose the home network to resource exhaustion and other attacks.
 On the other hand, if the only copy of the public zone is on the Internet, then Internet connectivity disruptions would make the names unavailable inside the homenet.
 
