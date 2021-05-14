@@ -3,6 +3,7 @@ title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
 docname: draft-ietf-homenet-front-end-naming-delegation-14
 
+stand_alone: true
 ipr: trust200902
 area: Internet
 wg: Homenet
