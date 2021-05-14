@@ -96,7 +96,7 @@ This specification makes the public names resolvable within both the home networ
 
 This is achieved by having a function inside the home network that builds, signs, publishes, and manages a  Public  Homenet Zone, thus providing bindings between public names, IP addresses, and other RR types.
 
-The management of the names can be under the responsibility the Customer Premises Equipment (CPE) does.
+The management of the names can be under the responsibility of the Customer Premises Equipment (CPE).
 Other devices within the home network could fulfill this role e.g. a Network Attached Storage server, but for simplicity, this document assumes the function is located on one of the CPE devices.
 
 The homenet architecture {{!RFC7368}} makes it clear that a home network may have multiple CPEs.
