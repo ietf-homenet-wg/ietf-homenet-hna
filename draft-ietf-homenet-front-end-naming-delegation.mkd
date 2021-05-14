@@ -4,6 +4,7 @@ abbrev: public-names
 docname: draft-ietf-homenet-front-end-naming-delegation-14
 
 stand_alone: true
+
 ipr: trust200902
 area: Internet
 wg: Homenet
@@ -899,7 +900,7 @@ This parameter is OPTIONAL and if unspecified, the CPE the IP addresses specifie
 For forward zones, the relationship between the HNA and the forward zone provider may be the result of a number of transactions:
 
 1. The forward zone outsourcing may be provided by the maker of the Homenet router.
-In this case, the identity and authorization could be built in the device at manufacturer provisioning time.  The device would need to be provisioned with a device-unique credential, and it is likely that the Registered Homenet Domain would be derived from a public attribute of the device, such as a serial number (see {{sec:ex-manu}} or {{?I-D.richardson-homerouter-provisioning}} for more details ).
+In this case, the identity and authorization could be built in the device at manufacturer provisioning time.  The device would need to be provisioned with a device-unique credential, and it is likely that the Registered Homenet Domain would be derived from a public attribute of the device, such as a serial number (see {{sec-ex-manu}} or {{?I-D.richardson-homerouter-provisioning}} for more details ).
 
 2. The forward zone outsourcing may be provided by the Internet Service Provider.
 In this case, the use of {{I-D.ietf-homenet-naming-architecture-dhc-options}} to provide the credentials is appropriate.
@@ -983,7 +984,7 @@ by the HNA in a CSR.
 ACME is used here to the purpose of automating the generation of the certificate, the CA may be a specific CA or the DOI.
 With that being done, the DOI has a roof of ownership and can proceed as above.
 
-# Example: A manufacturer provisioned HNA product flow {#sec:ex-manu}
+# Example: A manufacturer provisioned HNA product flow {#sec-ex-manu}
 
 This scenario is one where a homenet router device manufacturer decides to offer DNS hosting as a value add.
 
