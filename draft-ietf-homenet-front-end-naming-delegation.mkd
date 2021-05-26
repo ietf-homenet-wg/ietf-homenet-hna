@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-14
+docname: draft-ietf-homenet-front-end-naming-delegation-15
 
 ipr: trust200902
 area: Internet
@@ -59,15 +59,20 @@ author:
         email: v6ops@globis.net
 
 
+informative:
+  DDNS:
+    author:
+    target: https://ddclient.net/protocols.html
+    title: ddclient
+
 --- abstract
 
-Home owners often have IPv6 devices that they wish to access over the Internet using names.  
+Home owners have IPv6 devices that they wish to access over the Internet using DNS names.  
 Outsourcing the DNS servers to a DNS infrastructure protects against possible DDoS attacks as well as sudden renumbering of the home network.
 It has been possible to register and populate a DNS Zone with names since DNS became a thing, but it has been an activity typically reserved for experts.
-This document automates the process through creation of a Homenet Naming Authority (HNA), whose
-responsibility is to select, sign and publish names to a set of publicly visible servers.
+This document describes how to automate the process through the creation of a Homenet Naming Authority (HNA), whose responsibility is to select, sign and publish DNS names to a set of publicly visible DNS servers.
 
-This document describes the mechanism that enables the HNA to outsource the naming service to the DNS Outsourcing Infrastructure (DOI) via a Distribution Manager (DM).
+This document describes the mechanism that enables the HNA to outsource the home network naming service to the DNS Outsourcing Infrastructure (DOI) via a Distribution Manager (DM).
 
 In addition, this document deals with publication of a corresponding reverse zone.
 
@@ -159,7 +164,7 @@ However, during periods when the home network has connectivity problems, the ULA
 ## Alternative solutions
 
 An alternative existing solution in IPv4 is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
-This is often called "Dynamic DNS", and there are a number of commercial providers, including Dyn, Gandi etc.
+This is often called "Dynamic DNS"{{DDNS}}, and there are a number of commercial providers.
 These solutions were typically used by a host behind the CPE to make its CPE IPv4 address visible, usually in order to enable incoming connections.
 This is the most common scenario considered in this section, while some variant may also consider the client being hosted in the CPE. 
 
@@ -280,7 +285,7 @@ When the resolution is performed outside the home network, the DNSSEC Resolver r
 When the resolution is performed from within the home network, the Homenet DNSSEC Resolver MAY proceed similarly.
 On the other hand, to provide resilience to the Public Homenet Zone in case of WAN connectivity disruption, the Homenet DNSSEC Resolver SHOULD be able to perform the resolution on the Homenet Authoritative Servers.
 These servers are not expected to be mentioned in the Public Homenet Zone, nor to be accessible from the Internet.
-As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP {{!RFC7788}}.
+As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP {{!RFC7788}} or a by configuring a trust anchor {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
 Such configuration is outside the scope of this document.
 Since the scope of the Homenet Authoritative Servers is limited to the home network, these servers are expected to serve the Homenet Zone as represented in {{fig-naming-arch}}. 
 
@@ -561,7 +566,8 @@ The HNA MUST at least allow SOA lookups of the Homenet Zone.
 
 The DM Synchronization Channel is used for communication between the HNA and the DM for synchronizing the Public Homenet Zone.
 Note that the Control Channel and the Synchronization Channel are by construction different channels even though there they may use the same IP address.
-In fact the Control Channel is set between the HNA working as a client using port number YYYY (a high range port) toward a service provided by the DM at port number XX (well known port).
+Suppose the HNA and the DM are using a single IP address and let designate by XX, YYYY and ZZZZ the various ports involved in the communications. 
+In fact the Control Channel is set between the HNA working as a client using port number YYYY (a high range port) toward a service provided by the DM at port number XX (well known port such as 853 for DoT). 
 
 On the other hand, the Synchronization Channel is set between the DM working as a client using port ZZZZ ( a high range port) toward a service a service provided  by the HNA at port XX.
 
@@ -649,7 +655,7 @@ While this may not be so common for the Public Homenet Zone, this situation is e
 
 More specifically, a common case is that the upstream ISP provides the IPv6 prefix to the Homenet with a IA_PD {{!RFC8415}} option and manages the DOI of the associated reverse zone.
 
-This leave place for setting up automatically the relation between HNA and the DNS Outsourcing infrastructure as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
+This leaves place for setting up automatically the relation between HNA and the DNS Outsourcing infrastructure as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
 
 In the case of the reverse zone, the DOI authenticates the source of the updates by IPv6 Access Control Lists.
 In the case of the reverse zone, the ISP knows exactly what addresses have been delegated.
@@ -657,7 +663,7 @@ The HNA SHOULD therefore always originate Synchronization Channel updates from a
 
 For example, if the ISP has assigned 2001:db8:f00d::/64 to the WAN interface (by DHCPv6, or PPP/RA), then the HNA should originate Synchronization Channel updates from, for example, 2001:db8:f00d::2.
 
-An ISP that has delegated 2001:db8:babe::/56 to the HNA via DHCPv6-PD, then HNA should originate Synchronization Channel updates an IP within that subnet, such as 2001:db8:babe:0001::2.
+An ISP that has delegated 2001:db8:aeae::/56 to the HNA via DHCPv6-PD, then HNA should originate Synchronization Channel updates an IP within that subnet, such as 2001:db8:aeae:0001::2.
 
 With this relation automatically configured, the synchronization between the Home network and the DOI happens similarly as for the Public Homenet Zone described earlier in this document.
 
@@ -679,7 +685,7 @@ This section details what needs to be provisioned into the HNA and serves as a r
 
 The HNA needs to be provisioned with:
 
-* the Registered Domain (e.g., myhome.isp.example )
+* the Registered Domain (e.g., myhome.example )
 * the contact info for the Distribution Manager (DM), including the DNS name (FQDN), possibly including the IP literal, and a certificate (or anchor) to be used to authenticate the service
 * the DM transport protocol and port (the default is DNS over TLS, on port 853)
 * the HNA credentials used by the DM for its authentication.
@@ -769,9 +775,7 @@ Although, caching may obfuscate this information inside the home network, it is 
 This document exposes a mechanism that prevents the HNA from being exposed to the Internet and served DNS request from the Internet.
 These requests are instead served by the DOI.
 While this limits the level of exposure of the HNA, the HNA remains exposed to the Internet with communications with the DOI.
-This section analyses the attack surface associated to these communications.
-In addition, the DOI exposes data that are related to the home network.
-This section also analyses the implication of such exposure.
+This section analyses the attack surface associated to these communications, the data published by the DOI, as well as operational considerations. 
 
 ## HNA DM channels
 
@@ -807,6 +811,20 @@ As a result, logging names over time may be more valuable than logging IP addres
 PTR provides a way to bind an IP address to a name.
 In that sense, responding to PTR DNS queries may affect the end user's privacy.
 For that reason end users may choose not to respond to PTR DNS queries and MAY instead return a NXDOMAIN response.
+
+## Operational Considerations
+
+The HNA is expected to sign the DNSSEC zone and as such hold the private KSK/ZSK. 
+To provide resilience against CPE breaks, it is RECOMMENDED to backup these keys to avoid an emergency key roll over when the CPE breaks. 
+
+The HNA enables to handle network disruption as it contains the Public Homenet Zone, which is provisioned to the Homenet Authoritative Servers. 
+However, DNSSEC validation requires to validate the chain of trust with the DS RRset that is stored into the parent zone of the Registered Homenet Domain. 
+As currently defined, the handling of the DS RRset is left to the Homenet DNSSEC resolver which retrieves from the parent zone via a DNS exchange and cache the RRset according to the DNS rules, that is respecting the TTL and RRSIG expiration time. 
+Such constraints do put some limitations to the type of disruption the proposed architecture can handle. 
+In particular, the disruption is expected to start after the DS RRset has been resolved and end before the DS RRset is removed from the cache. 
+One possible way to address such concern is to describe mechanisms to provision the DS RRset to the Homenet DNSSEC resolver for example, via HNCP or by configuring a specific trust anchors {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
+Such work is out of the scope of this document. 
+
 
 # Information Model for Outsourced information {#info-model}
 
