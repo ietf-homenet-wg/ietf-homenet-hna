@@ -22,12 +22,11 @@ Abstract
    Internet using DNS names.  Outsourcing the DNS servers to a DNS
    infrastructure protects against possible DDoS attacks as well as
    sudden renumbering of the home network.  It has been possible to
-   register and populate a DNS Zone with names since DNS became a thing,
-   but it has been an activity typically reserved for experts.  This
-   document describes how to automate the process through the creation
-   of a Homenet Naming Authority (HNA), whose responsibility is to
-   select, sign and publish DNS names to a set of publicly visible DNS
-   servers.
+   register and populate a DNS Zone with names since DNS was
+   standardized, but it has been an activity typically reserved for
+   experts.  This document automates the process through creation of a
+   Homenet Naming Authority (HNA), whose responsibility is to select,
+   sign and publish names to a set of publicly visible servers.
 
    This document describes the mechanism that enables the HNA to
    outsource the home network naming service to the DNS Outsourcing
@@ -50,6 +49,7 @@ Status of This Memo
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
+
 
 
 
@@ -1937,9 +1937,9 @@ Internet-Draft                public-names                      May 2021
               Migault, D., Weber, R., and T. Mrugalski, "DHCPv6 Options
               for Home Network Naming Authority", Work in Progress,
               Internet-Draft, draft-ietf-homenet-naming-architecture-
-              dhc-options-12, 28 April 2021,
+              dhc-options-14, 13 May 2021,
               <https://www.ietf.org/archive/id/draft-ietf-homenet-
-              naming-architecture-dhc-options-12.txt>.
+              naming-architecture-dhc-options-14.txt>.
 
    [I-D.ietf-homenet-simple-naming]
               Lemon, T., Migault, D., and S. Cheshire, "Homenet Naming
@@ -1951,9 +1951,9 @@ Internet-Draft                public-names                      May 2021
    [I-D.richardson-homerouter-provisioning]
               Richardson, M., "Provisioning Initial Device Identifiers
               into Home Routers", Work in Progress, Internet-Draft,
-              draft-richardson-homerouter-provisioning-00, 1 November
-              2020, <https://www.ietf.org/archive/id/draft-richardson-
-              homerouter-provisioning-00.txt>.
+              draft-richardson-homerouter-provisioning-01, 21 May 2021,
+              <https://www.ietf.org/archive/id/draft-richardson-
+              homerouter-provisioning-01.txt>.
 
 
 
