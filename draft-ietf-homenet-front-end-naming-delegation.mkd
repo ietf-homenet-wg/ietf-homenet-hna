@@ -71,8 +71,9 @@ informative:
 
 Home owners have IPv6 devices that they wish to access over the Internet using DNS names.  
 Outsourcing the DNS servers to a DNS infrastructure protects against possible DDoS attacks as well as sudden renumbering of the home network.
-It has been possible to register and populate a DNS Zone with names since DNS became a thing, but it has been an activity typically reserved for experts.
-This document describes how to automate the process through the creation of a Homenet Naming Authority (HNA), whose responsibility is to select, sign and publish DNS names to a set of publicly visible DNS servers.
+It has been possible to register and populate a DNS Zone with names since DNS was standardized, but it has been an activity typically reserved for experts.
+This document automates the process through creation of a Homenet Naming Authority (HNA), whose
+responsibility is to select, sign and publish names to a set of publicly visible servers.
 
 This document describes the mechanism that enables the HNA to outsource the home network naming service to the DNS Outsourcing Infrastructure (DOI) via a Distribution Manager (DM).
 
