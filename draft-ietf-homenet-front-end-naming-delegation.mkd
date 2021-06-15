@@ -66,6 +66,20 @@ informative:
     author:
     target: https://ddclient.net/protocols.html
     title: ddclient
+  GPUNSEC3: 
+    author: 
+      - ins: M. Wander
+      - ins: L. Schwittmann
+      - ins: C. Boelmann
+      - ins: T. Weis
+    target: https://doi.org/10.1109/NCA.2014.27
+    title: GPU-Based NSEC3 Hash Breaking
+  ZONEENUM:
+    author: 
+      - ins: Z. Wang
+      - ins: L. Xiao
+      - ins: R. Wang
+    title: An efficient DNSSEC zone enumeration algorithm
 
 --- abstract
 
@@ -149,7 +163,7 @@ However, future protocols and architectures {{?I-D.ietf-homenet-simple-naming}} 
 
 ## Selecting Names to Publish {#selectingnames}
 
-While this document does not create any normative mechanism by which the selection of names to publish, this document anticipates that the home network administrator (a humuan), will be presented with a list of current names and addresses present on the inside of the home network.
+While this document does not create any normative mechanism by which the selection of names to publish, this document anticipates that the home network administrator (a human), will be presented with a list of current names and addresses present on the inside of the home network.
 
 The administrator would mark which devices (by name), are to be published.
 The HNA would then collect the IPv6 address(es) associated with that device, and put the name into the Public Homenet Zone.
@@ -159,10 +173,10 @@ A device may have a Global Unicast Address (GUA), a Unique Local IPv6 Address (U
 Of these the link-local are never useful for the Public Zone, and should be omitted.
 The IPv6 ULA and the RFC1918 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
 
-The IPv6 ULA addressees are significantly safer to publish, as the RFC1918 addressees are likely to be confusing to any other entity.
+The IPv6 ULA addresses are significantly safer to publish, as the RFC1918 addresses are likely to be confusing to any other entity.
 
 In general, one expects the GUA to be the default address to be published.
-However, during periods when the home network has connectivity problems, the ULA and RFC1918 addressees can be used inside the home, and the mapping from public name to locally useful location address would permit many services secured with HTTPS to continue to operate.
+However, during periods when the home network has connectivity problems, the ULA and RFC1918 addresses can be used inside the home, and the mapping from public name to locally useful location address would permit many services secured with HTTPS to continue to operate.
 
 ## Alternative solutions
 
@@ -254,6 +268,42 @@ Note that {{info-model}} defines necessary parameter to configure the HNA.
 
 ## Architecture Overview {#sec-arch-overview}
 
+~~~~
+
+       Home network                 |         Internet
+                                    |
+                                    | +----------------------------+
+                                    | |          DOI               |
+                          Control   | |                            |
++-----------------------+ Channel   | |  +-----------------------+ |
+|         HNA           |<-------------->| Distribution Manager  | |
+|+---------------------+|           | |  |+---------------------+| |
+|| Public Homenet Zone ||Synchronization || Public Homenet Zone || |
+||   (myhome.example)  || Channel   | |  ||  (myhome.example)   || |
+|+---------------------+|<-------------->|+---------------------+| |
++-----------^-----------+           | |  +-----------------------+ |
+            .                       | |           ^ Distribution   |
+            .                       | |           | Channel        |
++-----------v-----------+           | |           v                |
+| Homenet Authoritative |           | |  +-----------------------+ |
+| Server(s)             |           | |  | Public Authoritative  | |
+|+---------------------+|           | |  | Server(s)             | |
+||Public Homenet Zone  ||           | |  |+---------------------+| |
+||  (myhome.example)   ||           | |  || Public Homenet Zone || |
+|+---------------------+|           | |  ||  (myhome.example)   || |
+||     Homenet Zone    ||           | |  |+---------------------+| |
+||     (home.arpa)     ||           | |  +-----------------------+ |
+|+---------------------+|           | +----------^---|-------------+
++----------^---|--------+           |            |   |
+           |   |           name resolution       |   |
+           |   v                    |            |   v
+ +----------------------+           | +-----------------------+
+ |       Homenet        |           | |       Internet        |
+ |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
+ +----------------------+           | +-----------------------+
+~~~~
+{: #fig-naming-arch title="Homenet Naming Architecture" }
+
 {{fig-naming-arch}} illustrates the architecture where the HNA outsources the publication of the Public Homenet Zone to the DOI.
 
 The Public Homenet Zone is identified by the Registered Homenet Domain Name -- myhome.example.
@@ -298,41 +348,6 @@ In some cases, the HNA and Homenet Authoritative Servers may be combined togethe
 Note that {{?RFC6092}} REC-8 states this must not be the default configuration.
 Other mechanisms may also be used.
 
-~~~~
-
-       Home network                 |         Internet
-                                    |
-                                    | +----------------------------+
-                                    | |          DOI               |
-                          Control   | |                            |
-+-----------------------+ Channel   | |  +-----------------------+ |
-|         HNA           |<-------------->| Distribution Manager  | |
-|+---------------------+|           | |  |+---------------------+| |
-|| Public Homenet Zone ||Synchronization || Public Homenet Zone || |
-||   (myhome.example)  || Channel   | |  ||  (myhome.example)   || |
-|+---------------------+|<-------------->|+---------------------+| |
-+-----------^-----------+           | |  +-----------------------+ |
-            .                       | |           ^ Distribution   |
-            .                       | |           | Channel        |
-+-----------v-----------+           | |           v                |
-| Homenet Authoritative |           | |  +-----------------------+ |
-| Server(s)             |           | |  | Public Authoritative  | |
-|+---------------------+|           | |  | Server(s)             | |
-||Public Homenet Zone  ||           | |  |+---------------------+| |
-||  (myhome.example)   ||           | |  || Public Homenet Zone || |
-|+---------------------+|           | |  ||  (myhome.example)   || |
-||     Homenet Zone    ||           | |  |+---------------------+| |
-||     (home.arpa)     ||           | |  +-----------------------+ |
-|+---------------------+|           | +----------^---|-------------+
-+----------^---|--------+           |            |   |
-           |   |           name resolution       |   |
-           |   v                    |            |   v
- +----------------------+           | +-----------------------+
- |       Homenet        |           | |       Internet        |
- |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
- +----------------------+           | +-----------------------+
-~~~~
-{: #fig-naming-arch title="Homenet Naming Architecture" }
 
 
 ## Distribution Manager Communication Channels {#sec-comms}
@@ -556,14 +571,7 @@ Interface Binding:
 
 Limited exchanges:
 : the purpose of the Hidden Primary Server is to synchronize with the DM, not to serve any zones to end users, or the public Internet.
-
-As a result, exchanges are performed with specific nodes (the DM).
-Further, exchange types are limited.
-The only legitimate exchanges are: NOTIFY initiated by the Hidden Primary and IXFR or AXFR exchanges initiated by the DM.
-
-On the other hand, regular authoritative servers would respond to any hosts, and any DNS query would be  processed.
-The HNA SHOULD filter IXFR/AXFR traffic and drop traffic not initiated by the DM.
-The HNA MUST at least allow SOA lookups of the Homenet Zone.
+This results in a limited exchanges (AXFR/IXFR) with a small number of IP address and such limitations SHOULD be enforced by policies describe din  {{sec-cpe-sec-policies}}. 
 
 # Synchronization Channel {#sec-synch}
 
@@ -621,14 +629,15 @@ The architecture and communication used for the DM Distribution Channels is outs
 
 This section details security policies related to the Hidden Primary / Secondary synchronization.
 
-The HNA, as Hidden Primary SHOULD drop any queries from the home network.
+The HNA, as Hidden Primary SHOULD drop any DNS queries from the home network.
 This could be implemented via port binding and/or firewall rules.
 The precise mechanism deployed is out of scope of this document.
-The Hidden Primary SHOULD drop any DNS queries arriving on the WAN interface that are not issued from the DM.
-The Hidden Primary SHOULD drop any outgoing packets other than DNS NOTIFY query, SOA response, IXFR response or AXFR responses.
-The Hidden Primary SHOULD drop any incoming packets other than DNS NOTIFY response, SOA query, IXFR query or AXFR query.
-The Hidden Primary SHOULD drop any non protected IXFR or AXFR exchange,depending on how the synchronization
-is secured.
+
+The HNA SHOULD drop any packets arriving on the WAN interface that are not issued from the DM. 
+Depending how the communications between the HNA and the DM are secured, only packets associated to that protocol SHOULD be allowed. 
+
+At the DNS level, the HNA SHOULD NOT send DNS messages other than DNS NOTIFY query,   SOA response, IXFR response or AXFR responses.
+The HNA SHOULD reject any incoming messages other than DNS NOTIFY response, SOA   query, IXFR query or AXFR query. 
 
 
 # DNSSEC compliant Homenet Architecture {#sec-dnssec-deployment}
@@ -752,8 +761,8 @@ Outsourcing the DNS Authoritative service from the HNA to a third party raises a
 
 The Public Homenet Zone lists the names of services hosted in the home network.
 Combined with blocking of AXFR queries, the use of NSEC3 {{!RFC5155}} (vs NSEC {{!RFC4034}}) prevents an  attacker from being able to walk the zone, to discover all the names.
-However, the attacker may be able to walk the reverse DNS zone, or use other reconnaissance
-techniques to learn this information as described in {{!RFC7707}}.
+However, recent work {{GPUNSEC3}} or {{ZONEENUM}} have shown that the protection provided by NSEC3 against dictionary attacks should be considered cautiously and {{?I-D.ietf-dnsop-nsec3-guidance}} provides guidelines to configure NSEC3 properly. 
+In addition, the attacker may be able to walk the reverse DNS zone, or use other reconnaissance techniques to learn this information as described in {{!RFC7707}}.
 
 In general a home network owner is expected to publish only names for which there is some need to be able to reference externally.
 Publication of the name does not imply that the service is necessarily reachable from any or all parts of the Internet.
@@ -763,7 +772,9 @@ A well designed User Interface would combine a policy for making a service publi
 In many cases, the home network owner wishes to publish names for services that only they will be able to access.
 The access control may consist of an IP source address range, or access may be restricted via some VPN functionality.
 The purpose of publishing the name is so that the service may be access by the same name both within the home, and outside the home.
-Sending traffic to the relevant IPv6 address causes the relevant VPN policy to be enacted upon.
+Sending traffic to the relevant IPv6 address causes the relevant VPN policy to be enacted upon. Typically, a user may configure its device to reach its homenet devices via a VPN while the remaining of the traffic is accessed directly. 
+In such cases, the routing policy is likely to be defined by the destination IP address. 
+This IP address is potentially results from a DNS resolution over the Internet. 
 
 While the problem of getting access to internal names has been solved in Enterprise configurations with a  split-DNS, and such a thing could be done in the home, many recent improvements to VPN user interfaces make it more likely that an individual might have multiple connections configured.
 For instance, an adult child checking on the state of a home automation system for a parent.
