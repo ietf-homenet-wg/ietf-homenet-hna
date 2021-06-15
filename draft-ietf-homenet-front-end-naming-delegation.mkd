@@ -86,8 +86,7 @@ informative:
 Home owners have IPv6 devices that they wish to access over the Internet using DNS names.  
 Outsourcing the DNS servers to a DNS infrastructure protects against possible DDoS attacks as well as sudden renumbering of the home network.
 It has been possible to register and populate a DNS Zone with names since DNS was standardized, but it has been an activity typically reserved for experts.
-This document automates the process through creation of a Homenet Naming Authority (HNA), whose
-responsibility is to select, sign and publish names to a set of publicly visible servers.
+This document automates the process through creation of a Homenet Naming Authority (HNA), whose responsibility is to select, sign and publish names to a set of publicly visible servers.
 
 This document describes the mechanism that enables the HNA to outsource the home network naming service to the DNS Outsourcing Infrastructure (DOI) via a Distribution Manager (DM).
 
@@ -97,7 +96,12 @@ In addition, this document deals with publication of a corresponding reverse zon
 
 #Introduction
 
-The Homenet Naming Authority (HNA) is responsible for making devices within the home network accessible by a public name within the home network as well as from outside the home network (e.g. the Internet).
+Home owners have IPv6 devices that they wish to access over the Internet using DNS names.  
+Outsourcing the DNS servers to a DNS infrastructure protects against possible DDoS attacks as well as sudden renumbering of the home network.
+It has been possible to register and populate a DNS Zone with names since DNS was standardized, but it has been an activity typically reserved for experts.
+This document automates the process through creation of a Homenet Naming Authority (HNA), whose responsibility is to select, sign and publish names to a set of publicly visible servers.
+
+The HNA is responsible for making devices within the home network accessible by a public name within the home network as well as from outside the home network (e.g. the Internet).
 IPv6 connectivity provides the possibility of global end to end IP connectivity.
 
 The use of a DNS zone for each home network is a reasonable and scalable way to make the set of public names visible.

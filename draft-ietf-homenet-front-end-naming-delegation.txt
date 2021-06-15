@@ -77,10 +77,10 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.1.  Selecting Names to Publish  . . . . . . . . . . . . . . .   5
+     1.1.  Selecting Names to Publish  . . . . . . . . . . . . . . .   6
      1.2.  Alternative solutions . . . . . . . . . . . . . . . . . .   6
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   3.  Architecture Description  . . . . . . . . . . . . . . . . . .   8
+   3.  Architecture Description  . . . . . . . . . . . . . . . . . .   9
      3.1.  Architecture Overview . . . . . . . . . . . . . . . . . .   9
      3.2.  Distribution Manager Communication Channels . . . . . . .  11
    4.  Control Channel . . . . . . . . . . . . . . . . . . . . . . .  12
@@ -138,11 +138,20 @@ Internet-Draft                public-names                     June 2021
 
 1.  Introduction
 
-   The Homenet Naming Authority (HNA) is responsible for making devices
-   within the home network accessible by a public name within the home
-   network as well as from outside the home network (e.g. the Internet).
-   IPv6 connectivity provides the possibility of global end to end IP
-   connectivity.
+   Home owners have IPv6 devices that they wish to access over the
+   Internet using DNS names.  Outsourcing the DNS servers to a DNS
+   infrastructure protects against possible DDoS attacks as well as
+   sudden renumbering of the home network.  It has been possible to
+   register and populate a DNS Zone with names since DNS was
+   standardized, but it has been an activity typically reserved for
+   experts.  This document automates the process through creation of a
+   Homenet Naming Authority (HNA), whose responsibility is to select,
+   sign and publish names to a set of publicly visible servers.
+
+   The HNA is responsible for making devices within the home network
+   accessible by a public name within the home network as well as from
+   outside the home network (e.g. the Internet).  IPv6 connectivity
+   provides the possibility of global end to end IP connectivity.
 
    The use of a DNS zone for each home network is a reasonable and
    scalable way to make the set of public names visible.  There are a
@@ -152,15 +161,6 @@ Internet-Draft                public-names                     June 2021
    1.  The names of the devices accessible from the Internet are stored
        in the Public Homenet Zone, served by a DNS authoritative server.
 
-   2.  It is unlikely that home networks will contain sufficiently
-       robust platforms designed to host and expose to the Internet a
-       service such as the DNS and as such would expose the home network
-       to DDoS attacks.
-
-   3.  [RFC7368] emphasizes that the home network is subject to
-       connectivity disruptions with the ISP.  But, names used within
-       the home MUST be resilient against such disruption.
-
 
 
 
@@ -169,6 +169,15 @@ Migault, et al.         Expires 16 December 2021                [Page 3]
 
 Internet-Draft                public-names                     June 2021
 
+
+   2.  It is unlikely that home networks will contain sufficiently
+       robust platforms designed to host and expose to the Internet a
+       service such as the DNS and as such would expose the home network
+       to DDoS attacks.
+
+   3.  [RFC7368] emphasizes that the home network is subject to
+       connectivity disruptions with the ISP.  But, names used within
+       the home MUST be resilient against such disruption.
 
    This specification makes the public names resolvable within both the
    home network and on the Internet, even when there are disruptions.
@@ -209,6 +218,14 @@ Internet-Draft                public-names                     June 2021
    authoritative naming service of the home network.  More specifically,
    the HNA builds the Public Homenet Zone and outsources it to a DNS
    Outsourcing Infrastructure (DOI) via a Distribution Manager (DM).
+
+
+
+Migault, et al.         Expires 16 December 2021                [Page 4]
+
+Internet-Draft                public-names                     June 2021
+
+
    The DOI is in charge of publishing the corresponding Public Homenet
    Zone on the Internet.  The transfer of DNS zone information is
    achieved using standard DNS mechanisms involving primary and
@@ -217,14 +234,6 @@ Internet-Draft                public-names                     June 2021
 
    In order to keep the Public Homenet Zone up-to-date Section 5
    describes how the HNA and the DOI synchronize the Pubic Homenet Zone.
-
-
-
-
-Migault, et al.         Expires 16 December 2021                [Page 4]
-
-Internet-Draft                public-names                     June 2021
-
 
    The architecture is explicitly designed to enable fully functional
    DNSSEC, and the Public Homenet Zone is expected to be signed with a
@@ -262,15 +271,6 @@ Internet-Draft                public-names                     June 2021
    architectures [I-D.ietf-homenet-simple-naming] are expected to
    leverage this constraint as pointed out in [RFC7558].
 
-1.1.  Selecting Names to Publish
-
-   While this document does not create any normative mechanism by which
-   the selection of names to publish, this document anticipates that the
-   home network administrator (a human), will be presented with a list
-   of current names and addresses present on the inside of the home
-   network.
-
-
 
 
 
@@ -281,6 +281,14 @@ Migault, et al.         Expires 16 December 2021                [Page 5]
 
 Internet-Draft                public-names                     June 2021
 
+
+1.1.  Selecting Names to Publish
+
+   While this document does not create any normative mechanism by which
+   the selection of names to publish, this document anticipates that the
+   home network administrator (a human), will be presented with a list
+   of current names and addresses present on the inside of the home
+   network.
 
    The administrator would mark which devices (by name), are to be
    published.  The HNA would then collect the IPv6 address(es)
@@ -318,6 +326,18 @@ Internet-Draft                public-names                     June 2021
    the most common scenario considered in this section, while some
    variant may also consider the client being hosted in the CPE.
 
+
+
+
+
+
+
+
+Migault, et al.         Expires 16 December 2021                [Page 6]
+
+Internet-Draft                public-names                     June 2021
+
+
    For a very few number (one to three) of hosts, the use of such a
    system provides an alternative to the architecture described in this
    document.  The alternative - even adapted to IPv6 and ignoring those
@@ -329,14 +349,6 @@ Internet-Draft                public-names                     June 2021
       connectivity.  This makes the home user or application dependent
       on having to resolve different names in the event of outages or
       disruptions.
-
-
-
-
-Migault, et al.         Expires 16 December 2021                [Page 6]
-
-Internet-Draft                public-names                     June 2021
-
 
    *  the CPE/HNA router cannot control the process.  Any host can do
       this regardless of whether or not the home network administrator
@@ -374,6 +386,14 @@ Internet-Draft                public-names                     June 2021
    Customer Premises Equipment:  (CPE) is a router providing
       connectivity to the home network.
 
+
+
+
+Migault, et al.         Expires 16 December 2021                [Page 7]
+
+Internet-Draft                public-names                     June 2021
+
+
    Homenet Zone:  is the DNS zone for use within the boundaries of the
       home network: 'home.arpa' (see [RFC8375]).  This zone is not
       considered public and is out of scope for this document.
@@ -383,16 +403,6 @@ Internet-Draft                public-names                     June 2021
 
    Public Homenet Zone:  contains the names in the home network that are
       expected to be publicly resolvable on the Internet.
-
-
-
-
-
-
-Migault, et al.         Expires 16 December 2021                [Page 7]
-
-Internet-Draft                public-names                     June 2021
-
 
    Homenet Naming Authority(HNA): is a function responsible for managing
    the Public Homenet Zone.  This includes populating the Public Homenet
@@ -432,6 +442,14 @@ Internet-Draft                public-names                     June 2021
       resolution is performed requesting the Homenet Authoritative
       Servers.
 
+
+
+
+Migault, et al.         Expires 16 December 2021                [Page 8]
+
+Internet-Draft                public-names                     June 2021
+
+
    DNSSEC Resolver:  a resolver that performs a DNSSEC resolution on the
       Internet for the Public Homenet Zone.  The resolution is performed
       requesting the Public Authoritative Servers.
@@ -441,14 +459,6 @@ Internet-Draft                public-names                     June 2021
    This section provides an overview of the architecture for outsourcing
    the authoritative naming service from the HNA to the DOI.  Note that
    Section 14 defines necessary parameter to configure the HNA.
-
-
-
-
-Migault, et al.         Expires 16 December 2021                [Page 8]
-
-Internet-Draft                public-names                     June 2021
-
 
 3.1.  Architecture Overview
 
@@ -489,22 +499,17 @@ Internet-Draft                public-names                     June 2021
    Figure 1 illustrates the architecture where the HNA outsources the
    publication of the Public Homenet Zone to the DOI.
 
-   The Public Homenet Zone is identified by the Registered Homenet
-   Domain Name - myhome.example.  The ".local" as well as ".home.arpa"
-   are explicitly not considered as Public Homenet zones and represented
-   as Homenet Zone in Figure 1.
-
-
-
-
-
-
 
 
 Migault, et al.         Expires 16 December 2021                [Page 9]
 
 Internet-Draft                public-names                     June 2021
 
+
+   The Public Homenet Zone is identified by the Registered Homenet
+   Domain Name - myhome.example.  The ".local" as well as ".home.arpa"
+   are explicitly not considered as Public Homenet zones and represented
+   as Homenet Zone in Figure 1.
 
    The HNA SHOULD build the Public Homenet Zone in a single view
    populated with all resource records that are expected to be published
@@ -550,11 +555,6 @@ Internet-Draft                public-names                     June 2021
    the DS record on the Global DNS and the name associated to the Public
    Homenet Zone (myhome.example) on the Public Authoritative Servers.
 
-   When the resolution is performed from within the home network, the
-   Homenet DNSSEC Resolver MAY proceed similarly.  On the other hand, to
-   provide resilience to the Public Homenet Zone in case of WAN
-   connectivity disruption, the Homenet DNSSEC Resolver SHOULD be able
-
 
 
 Migault, et al.         Expires 16 December 2021               [Page 10]
@@ -562,6 +562,10 @@ Migault, et al.         Expires 16 December 2021               [Page 10]
 Internet-Draft                public-names                     June 2021
 
 
+   When the resolution is performed from within the home network, the
+   Homenet DNSSEC Resolver MAY proceed similarly.  On the other hand, to
+   provide resilience to the Public Homenet Zone in case of WAN
+   connectivity disruption, the Homenet DNSSEC Resolver SHOULD be able
    to perform the resolution on the Homenet Authoritative Servers.
    These servers are not expected to be mentioned in the Public Homenet
    Zone, nor to be accessible from the Internet.  As such their
@@ -606,10 +610,6 @@ Internet-Draft                public-names                     June 2021
    Homenet Domain.  For more detail to see how this can be achieved,
    please see Section 10.
 
-   The information exchanged between the HNA and the DM uses DNS
-   messages protected by DNS over TLS (DoT) [RFC7858].  Other
-   specifications may consider protecting DNS messages with other
-   transport layers, among others, DNS over DTLS [RFC8094], or DNS over
 
 
 
@@ -618,6 +618,10 @@ Migault, et al.         Expires 16 December 2021               [Page 11]
 Internet-Draft                public-names                     June 2021
 
 
+   The information exchanged between the HNA and the DM uses DNS
+   messages protected by DNS over TLS (DoT) [RFC7858].  Other
+   specifications may consider protecting DNS messages with other
+   transport layers, among others, DNS over DTLS [RFC8094], or DNS over
    HTTPs (DoH) [RFC8484] or DNS over QUIC [I-D.ietf-dprive-dnsoquic].
    There was consideration to using a standard TSIG [RFC2845] or SIG(0)
    [RFC2931] to perform a dynamic DNS update to the DM.  There are a
@@ -662,10 +666,6 @@ Internet-Draft                public-names                     June 2021
    information that it retrieves from the DM relating to how the zone is
    to be published.
 
-   The information includes at least names and IP addresses of the
-   Public Authoritative Name Servers.  In term of RRset information this
-   includes:
-
 
 
 
@@ -673,6 +673,10 @@ Migault, et al.         Expires 16 December 2021               [Page 12]
 
 Internet-Draft                public-names                     June 2021
 
+
+   The information includes at least names and IP addresses of the
+   Public Authoritative Name Servers.  In term of RRset information this
+   includes:
 
    *  the MNAME of the SOA,
 
@@ -717,10 +721,6 @@ Internet-Draft                public-names                     June 2021
    the HNA is only OPTIONAL.  The transport channel (including port
    number) is the same as the one used between the HNA and the DM for
    the Control Channel.
-
-
-
-
 
 
 
