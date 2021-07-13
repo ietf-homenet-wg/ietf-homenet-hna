@@ -5,12 +5,12 @@
 Homenet                                                       D. Migault
 Internet-Draft                                                  Ericsson
 Intended status: Standards Track                                R. Weber
-Expires: 16 December 2021                                        Nominum
+Expires: 14 January 2022                                         Nominum
                                                            M. Richardson
                                                 Sandelman Software Works
                                                                R. Hunter
                                                     Globis Consulting BV
-                                                            14 June 2021
+                                                            13 July 2021
 
 
       Simple Provisioning of Public Names for Residential Networks
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Migault, et al.         Expires 16 December 2021                [Page 1]
+Migault, et al.          Expires 14 January 2022                [Page 1]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
-   This Internet-Draft will expire on 16 December 2021.
+   This Internet-Draft will expire on 14 January 2022.
 
 Copyright Notice
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Migault, et al.         Expires 16 December 2021                [Page 2]
+Migault, et al.          Expires 14 January 2022                [Page 2]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
      11.1.  Hidden Primary . . . . . . . . . . . . . . . . . . . . .  24
@@ -165,9 +165,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021                [Page 3]
+Migault, et al.          Expires 14 January 2022                [Page 3]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    2.  It is unlikely that home networks will contain sufficiently
@@ -221,9 +221,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021                [Page 4]
+Migault, et al.          Expires 14 January 2022                [Page 4]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    The DOI is in charge of publishing the corresponding Public Homenet
@@ -277,9 +277,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021                [Page 5]
+Migault, et al.          Expires 14 January 2022                [Page 5]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
 1.1.  Selecting Names to Publish
@@ -333,9 +333,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021                [Page 6]
+Migault, et al.          Expires 14 January 2022                [Page 6]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    For a very few number (one to three) of hosts, the use of such a
@@ -389,9 +389,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021                [Page 7]
+Migault, et al.          Expires 14 January 2022                [Page 7]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    Homenet Zone:  is the DNS zone for use within the boundaries of the
@@ -445,9 +445,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021                [Page 8]
+Migault, et al.          Expires 14 January 2022                [Page 8]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    DNSSEC Resolver:  a resolver that performs a DNSSEC resolution on the
@@ -501,9 +501,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021                [Page 9]
+Migault, et al.          Expires 14 January 2022                [Page 9]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    The Public Homenet Zone is identified by the Registered Homenet
@@ -557,9 +557,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 10]
+Migault, et al.          Expires 14 January 2022               [Page 10]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    When the resolution is performed from within the home network, the
@@ -613,9 +613,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 11]
+Migault, et al.          Expires 14 January 2022               [Page 11]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    The information exchanged between the HNA and the DM uses DNS
@@ -669,9 +669,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 12]
+Migault, et al.          Expires 14 January 2022               [Page 12]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    The information includes at least names and IP addresses of the
@@ -725,9 +725,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 13]
+Migault, et al.          Expires 14 January 2022               [Page 13]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
 4.4.  Deleting the delegation
@@ -781,9 +781,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 14]
+Migault, et al.          Expires 14 January 2022               [Page 14]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    *  The NAME of the SOA RR MUST be the Registered Homenet Domain.
@@ -837,9 +837,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 15]
+Migault, et al.          Expires 14 January 2022               [Page 15]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    Upon receiving the DNS update request, the DM reads the DS RRset in
@@ -893,9 +893,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 16]
+Migault, et al.          Expires 14 January 2022               [Page 16]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
 4.5.4.  HNA instructing deleting the delegation
@@ -949,9 +949,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 17]
+Migault, et al.          Expires 14 January 2022               [Page 17]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    IPsec [RFC4301] and IKEv2 [RFC7296] were considered.  They would need
@@ -1005,9 +1005,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 18]
+Migault, et al.          Expires 14 January 2022               [Page 18]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
 5.  Synchronization Channel
@@ -1061,9 +1061,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 19]
+Migault, et al.          Expires 14 January 2022               [Page 19]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    The Homenet Reverse Zone MAY also be updated either with DNS UPDATE
@@ -1117,9 +1117,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 20]
+Migault, et al.          Expires 14 January 2022               [Page 20]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    The HNA, as Hidden Primary SHOULD drop any DNS queries from the home
@@ -1173,9 +1173,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 21]
+Migault, et al.          Expires 14 January 2022               [Page 21]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    In this case, the HNA may be authenticated by the physical link
@@ -1229,9 +1229,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 22]
+Migault, et al.          Expires 14 January 2022               [Page 22]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
 10.  Homenet Public Zone Channel Configurations
@@ -1285,9 +1285,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 23]
+Migault, et al.          Expires 14 January 2022               [Page 23]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    HNA to retrieve the DM parameters associated to the Registered
@@ -1341,9 +1341,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 24]
+Migault, et al.          Expires 14 January 2022               [Page 24]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    In the case of the make-before-break, seamless reachability is
@@ -1397,9 +1397,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 25]
+Migault, et al.          Expires 14 January 2022               [Page 25]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    within the home, and outside the home.  Sending traffic to the
@@ -1453,9 +1453,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 26]
+Migault, et al.          Expires 14 January 2022               [Page 26]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    The DNS protocol is subject to reflection attacks, however, these
@@ -1509,9 +1509,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 27]
+Migault, et al.          Expires 14 January 2022               [Page 27]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
 13.4.  Operational Considerations
@@ -1565,9 +1565,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 28]
+Migault, et al.          Expires 14 January 2022               [Page 28]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    The HNA needs to be configured with the following parameters as
@@ -1621,9 +1621,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 29]
+Migault, et al.          Expires 14 January 2022               [Page 29]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    As certificates are more commonly emitted for FQDN than for IP
@@ -1661,12 +1661,12 @@ Internet-Draft                public-names                     June 2021
 
    Distribution Manager AXFR permission netmask (dm_acl):  The subnet
       from which the CPE should accept SOA queries and AXFR requests.  A
-      subnet is used in the case where the DNS Outsourced Infrastructure
-      consists of a number of different systems.  An array of addresses
-      is permitted.  This parameter is OPTIONAL and if unspecified, the
-      CPE the IP addresses specified in the dm_notify parameters or the
-      IP addresses that result from the DNS(SEC) resolution when
-      dm_notify specifies a FQDN.
+      subnet is used in the case where the DOI consists of a number of
+      different systems.  An array of addresses is permitted.  This
+      parameter is OPTIONAL and if unspecified, the CPE uses the IP
+      addresses provided by the dm parameter either directly when dm
+      indicates an IP address or the IP addresses returned by the
+      DNS(SEC) resolution when dm indicates a FQDN.
 
    For forward zones, the relationship between the HNA and the forward
    zone provider may be the result of a number of transactions:
@@ -1677,9 +1677,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 30]
+Migault, et al.          Expires 14 January 2022               [Page 30]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
        The device would need to be provisioned with a device-unique
@@ -1733,9 +1733,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 31]
+Migault, et al.          Expires 14 January 2022               [Page 31]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
 17.  Contributors
@@ -1789,9 +1789,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 32]
+Migault, et al.          Expires 14 January 2022               [Page 32]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    [RFC4555]  Eronen, P., "IKEv2 Mobility and Multihoming Protocol
@@ -1845,9 +1845,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 33]
+Migault, et al.          Expires 14 January 2022               [Page 33]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    [RFC7010]  Liu, B., Jiang, S., Carpenter, B., Venaas, S., and W.
@@ -1901,9 +1901,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 34]
+Migault, et al.          Expires 14 January 2022               [Page 34]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    [RFC8375]  Pfister, P. and T. Lemon, "Special-Use Domain
@@ -1948,18 +1948,18 @@ Internet-Draft                public-names                     June 2021
               guidance-00.txt>.
 
    [I-D.ietf-dprive-dnsoquic]
-              Huitema, C., Mankin, A., and S. Dickinson, "Specification
+              Huitema, C., Dickinson, S., and A. Mankin, "Specification
               of DNS over Dedicated QUIC Connections", Work in Progress,
-              Internet-Draft, draft-ietf-dprive-dnsoquic-02, 22 February
+              Internet-Draft, draft-ietf-dprive-dnsoquic-03, 12 July
               2021, <https://www.ietf.org/archive/id/draft-ietf-dprive-
-              dnsoquic-02.txt>.
+              dnsoquic-03.txt>.
 
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 35]
+Migault, et al.          Expires 14 January 2022               [Page 35]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    [I-D.ietf-homenet-naming-architecture-dhc-options]
@@ -2013,9 +2013,9 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 36]
+Migault, et al.          Expires 14 January 2022               [Page 36]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    [RFC8501]  Howard, L., "Reverse DNS in IPv6 for Internet Service
@@ -2069,9 +2069,9 @@ A.2.  Agnostic CPE
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 37]
+Migault, et al.          Expires 14 January 2022               [Page 37]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    1.  The owner of the home network buys a domain name to a registrar,
@@ -2125,13 +2125,13 @@ Appendix B.  Example: A manufacturer provisioned HNA product flow
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 38]
+Migault, et al.          Expires 14 January 2022               [Page 38]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    {
-     "dm_notify" : "2001:db8:1234:111:222::2",
+     "dm" : "2001:db8:1234:111:222::2",
      "dm_acl"    : "2001:db8:1234:111:222::/64",
      "dm_ctrl"   : "manufacturer.example.net",
      "dm_port"   : "4433",
@@ -2181,9 +2181,9 @@ Authors' Addresses
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 39]
+Migault, et al.          Expires 14 January 2022               [Page 39]
 
-Internet-Draft                public-names                     June 2021
+Internet-Draft                public-names                     July 2021
 
 
    Email: v6ops@globis.net
@@ -2237,4 +2237,4 @@ Internet-Draft                public-names                     June 2021
 
 
 
-Migault, et al.         Expires 16 December 2021               [Page 40]
+Migault, et al.          Expires 14 January 2022               [Page 40]

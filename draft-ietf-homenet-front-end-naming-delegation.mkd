@@ -926,9 +926,9 @@ This parameter is OPTIONAL and when not specified, a self-signed certificate is 
 
 Distribution Manager AXFR permission netmask (dm\_acl):
 : The subnet from which the CPE should accept SOA queries and AXFR requests.
-A subnet is used in the case where the DNS Outsourced Infrastructure consists of a number of different systems.
+A subnet is used in the case where the DOI consists of a number of different systems.
 An array of addresses is permitted.
-This parameter is OPTIONAL and if unspecified, the CPE the IP addresses specified in the dm\_notify parameters or the IP addresses that result from the DNS(SEC) resolution when dm\_notify specifies a FQDN.
+This parameter is OPTIONAL and if unspecified, the CPE uses the IP addresses provided by the dm parameter either directly when dm indicates an IP address or the IP addresses returned by the DNS(SEC) resolution when dm indicates a FQDN. 
 
 
 For forward zones, the relationship between the HNA and the forward zone provider may be the result of a number of transactions:
@@ -1036,7 +1036,7 @@ The configuration would look like:
 
 ~~~
 {
-  "dm_notify" : "2001:db8:1234:111:222::2",
+  "dm" : "2001:db8:1234:111:222::2",
   "dm_acl"    : "2001:db8:1234:111:222::/64",
   "dm_ctrl"   : "manufacturer.example.net",
   "dm_port"   : "4433",
