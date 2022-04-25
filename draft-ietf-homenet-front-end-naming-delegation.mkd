@@ -83,87 +83,66 @@ informative:
 
 --- abstract
 
-Home owners have IPv6 devices that they wish to access over the Internet using DNS names.  
-Outsourcing the DNS servers to a DNS infrastructure protects against possible DDoS attacks as well as sudden renumbering of the home network.
-It has been possible to register and populate a DNS Zone with names since DNS was standardized, but it has been an activity typically reserved for experts.
-This document automates the process through creation of a Homenet Naming Authority (HNA), whose responsibility is to select, sign and publish names to a set of publicly visible servers.
+Home network owners often have IPv6 devices that they wish to access outside their home network - i.e. from the Internet - using names.
+This requires these names to be publicly published on the Internet in the DNS.
+Building the DNS zone and serving it on the Internet are two very different tasks, each requiring very different skills or type of infrastructures.
+The ability to outsource such a publication to DNS Outsourcing Infrastructure (DOI) is expected to ease the management of the home network.
+This requires a close synchronization between the home network and the DOI, that is the need for an automated and scalable mechanism. 
 
-This document describes the mechanism that enables the HNA to outsource the home network naming service to the DNS Outsourcing Infrastructure (DOI) via a Distribution Manager (DM).
+This document defines an architecture and a protocol that enables an Homenet Naming Authority (HNA), which is responsible to select, sign and outsource the publication of the zone to a DOI via Distribution Manager (DM).
 
-In addition, this document deals with publication of a corresponding reverse zone.
-
+In addition, this document deals with publication of a corresponding
+   reverse zone.
 --- middle
 
 #Introduction
 
-Home owners have IPv6 devices that they wish to access over the Internet using DNS names.  
-Outsourcing the DNS servers to a DNS infrastructure protects against possible DDoS attacks as well as sudden renumbering of the home network.
-It has been possible to register and populate a DNS Zone with names since DNS was standardized, but it has been an activity typically reserved for experts.
-This document automates the process through creation of a Homenet Naming Authority (HNA), whose responsibility is to select, sign and publish names to a set of publicly visible servers.
+Home network owners often have IPv6 devices that they wish to access outside their home network - i.e. from the Internet - using names.
+This requires these names to be publicly published and served on the Internet in the DNS.
+Building the DNS zone and serving it on the Internet are two very different tasks, each requiring very different skills or type of infrastructures.
+The ability to outsource such a publication to DNS Outsourcing Infrastructure (DOI) is expected to ease the management of the home network.
+This requires a close synchronization between the home network and the DOI, that is the need for an automated and scalable mechanism. 
+Once outsourced, every DNS(SEC) resolutions coming from the Internet concerning the home network will be handled by the DOI.   
 
-The HNA is responsible for making devices within the home network accessible by a public name within the home network as well as from outside the home network (e.g. the Internet).
-IPv6 connectivity provides the possibility of global end to end IP connectivity.
+This document defines an architecture and a protocol that enables an Homenet Naming Authority (HNA), which is responsible to select, sign and outsource the publication of the zone to a DOI via Distribution Manager (DM).
 
-The use of a DNS zone for each home network is a reasonable and scalable way to make the set of public names visible.
-There are a number of ways to populate such a zone.
-This specification proposes a way based on a number of assumptions about typical home networks.
+The HNA is responsible to building the zone to be published by the DOI, designated as the Public Homenet Zone. 
+Such zone MAY contain a subset of the entire names accessible from within the home network, designated as the Homenet Zone -- (see {{selectingnames}} for more details on name selection).  
 
-1. The names of the devices accessible from the Internet are stored in the
-   Public Homenet Zone, served by a DNS authoritative server.
+As DNS zones contain information related to the DNS authoritative servers -- in our case provided by the DOI --, the HNA needs to retrieve some information related to the DOI to build and sign the Public Homenet Zone. 
+These pieces of information are retrieved via some exchanges with the DM (see Control Channel {{sec-ctrl}}). 
+Once, the Public Homenet Zone has been built, it is outsourced to the DOI via a primary/secondary configuration between the HNA and the DM via the Synchronization Channel (see {{sec-synch}}. 
 
-2. It is unlikely that home networks will contain sufficiently robust platforms designed to host and expose to the Internet a service such as the DNS and as such would expose the home network to DDoS attacks.
+Synchronizing a DNS zone does not involve interactions with the devices of the home network and as such can be entirely automated. 
+Secondly, relying on a standard DNS synchronization mechanism used at the scale of the Internet makes such synchronization between the HNA and the DM highly standard, and highly scalable. 
+At last, the HNA being a primary withing the network enables to serve the Public Homenet Zone also from within the home network and as such by design fulfill {{!RFC7368}} requirement that names used within the home MUST be resilient against connectivity disruptions with the ISP. 
+The reasoning is that internal home network connectivity is not affected by the (external) ISP disruption and as such communications should be established even if the used name is public and published on the Internet. 
 
-3. {{!RFC7368}} emphasizes that the home network is subject to connectivity disruptions with the ISP.
-But, names used within the home MUST be resilient against such disruption.
-
-This specification makes the public names resolvable within both the home network and on the Internet, even when there are disruptions.
-
-This is achieved by having a function inside the home network that builds, signs, publishes, and manages a  Public  Homenet Zone, thus providing bindings between public names, IP addresses, and other RR types.
-
-The management of the names can be under the responsibility the Customer Premises Equipment (CPE) does.
-Other devices within the home network could fulfill this role e.g. a Network Attached Storage server, but for simplicity, this document assumes the function is located on one of the CPE devices.
-
-The homenet architecture {{!RFC7368}} makes it clear that a home network may have multiple CPEs.
-The management of the Public Homenet Zone involves DNS specific mechanisms that cannot be distributed over multiple servers (primary server), when multiple nodes can potentially manage the Public Homenet Zone, a single node needs to be selected per outsourced zone.
-This selected node is designated as providing the HNA function.
-
-The process by which a single HNA is selected per zone is not in scope for this document.
-It is envisioned that a future document will describe an HNCP mechanism to elect the single HNA.
-
-CPEs, which may host the HNA function are usually low powered devices not designed for supporting a heavy traffic.
-As a result, hosting an authoritative DNS service visible to the Internet may expose the home network to resource exhaustion and other attacks.
-On the other hand, if the only copy of the public zone is on the Internet, then Internet connectivity disruptions would make the names unavailable inside the homenet.
+In current home network with a single Customer Premises Equipment (CPE), that CPE is a natural candidate to host the HNA. 
+A clear benefit in this case is that it prevents that CPE from hosting an authoritative DNS service visible to the Internet and expose the home network to resource exhaustion and other attacks.
+However, the HNA may be hosted by any node, especially when multiple CPEs are available. 
+The only limitation is that any Public Homenet Zone is handled by a single HNA which is a DNS limitation. 
+This means that some selection mechanism using HNCP for example may be envisioned in the future. 
 
 
-In order to avoid resource exhaustion and other attacks, this document describes in {{sec-arch-overview}} an architecture that outsources the authoritative naming service of the home network.
-More specifically, the HNA builds the Public Homenet Zone and  outsources it to a DNS Outsourcing Infrastructure (DOI) via a Distribution Manager (DM).
-The DOI is in charge of publishing the corresponding Public Homenet Zone on the Internet.
-The transfer of DNS zone information is achieved using standard DNS mechanisms involving primary and secondary DNS servers, with the HNA being a stealth primary, and the DM a secondary.
+{{sec:alt}} describes an compares in details the drawbacks of an existing non standard -- though deployed -- solutions where each device is configured is responsible to update the name it has been assigned to the DOI.
+Such solutions are usually designated as "Dynamic DNS".
 
-In order to keep the Public Homenet Zone up-to-date {{sec-synch}} describes how the HNA and the DOI synchronize the Pubic Homenet Zone.
+The remaining of the paper is as follows. 
+{{sec-arc-desc}} provides an architectural view of the  HNA, DM and DOI as well as its different communication channels (Control Channel, Synchronization Channel, DM Distribution Channel) respectively described in {{sec-ctrl}}, {{sec-synch}} and {{sec-dist}}. 
 
-The architecture is explicitly designed to enable fully functional DNSSEC, and the Public Homenet Zone is expected to be signed with a secure delegation.
-DNSSEC key management and zone signing are handled by the HNA.
+{{sec-cpe-sec-policies}} and {{sec-dnssec-deployment}} respectively details HNA security policies as well as DNSSEC compliance within the home network.
+
+{{sec-reverse}} discusses management of one or more reverse zones.
+It shows that management of the reverse zones can be entirely automated and benefit from a pre-established relation between the ISP and the home network. Note that such scenarios may also be met for the Public Homenet Zone.
 
 {{hna-provisioning}} discusses management and configuration of the Public Homenet Zone.
 It shows that the HNA configuration of the DOI can involve no or little interaction with the end user.
 More specifically, it shows that the existence of an account in the DOI is sufficient for the DOI to push the necessary configuration.
 In addition, when the DOI and CPE are both managed by an ISP, the configuration can be entirely automated - see {{sec-reverse}}.
 
-{{sec-reverse}} discusses management of one or more reverse zones.
-It shows that management of the reverse zones can be entirely automated and benefit from a pre-established relation between the ISP and the home network. Note that such scenarios may also be met for the Public Homenet Zone.
-
 {{sec-renumbering}} discusses how renumbering should be handled.
 Finally, {{sec-privacy}} and {{sec-security}} respectively discuss privacy and security considerations when outsourcing the Public Homenet Zone.
-
-The Public Homenet Zone is expected to contain public information only in a single universal view.
-This document does not define how the information required to construct this view is derived.
-
-It is also not in the scope of this document to define names for exclusive use within the boundaries of the local home network.
-Instead, local scope information is expected to be provided to the home network using local scope naming services.
-mDNS {{!RFC6762}} and DNS-SD {{!RFC6763}} are two examples of these services.
-Currently mDNS is limited to a single link network.
-However, future protocols and architectures {{?I-D.ietf-homenet-simple-naming}} are expected to leverage this constraint as pointed out in {{!RFC7558}}.
 
 ## Selecting Names to Publish {#selectingnames}
 
@@ -177,23 +156,27 @@ A device may have a Global Unicast Address (GUA), a Unique Local IPv6 Address (U
 Of these the link-local are never useful for the Public Zone, and should be omitted.
 The IPv6 ULA and the RFC1918 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
 
-The IPv6 ULA addresses are significantly safer to publish, as the RFC1918 addresses are likely to be confusing to any other entity.
+The IPv6 ULA addresses are significantly safer to publish with a significantly lower probability of collision than RFC1918 addresses. 
 
-In general, one expects the GUA to be the default address to be published.
-However, during periods when the home network has connectivity problems, the ULA and RFC1918 addresses can be used inside the home, and the mapping from public name to locally useful location address would permit many services secured with HTTPS to continue to operate.
+In general, one expects the GUA to be the default address to be published.  
+However, publishing the ULA and RFC1918 may enable local communications within the home network. 
+Since the communication has been initiated with a name which remains a global identifier, the communication can be protected by TLS the same way it is protected on the global Internet. 
+A direct advantage of enabling local communication is to prevent communications even in case of Internet disruption.  
 
-## Alternative solutions
+## Dynamic DNS Alternative solutions {#sec:alt}
 
 An alternative existing solution in IPv4 is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
-This is often called "Dynamic DNS"{{DDNS}}, and there are a number of commercial providers.
-These solutions were typically used by a host behind the CPE to make its CPE IPv4 address visible, usually in order to enable incoming connections.
+This is often called "Dynamic DNS" {{DDNS}}, and there are a number of commercial providers. 
+While the IETF has defined Dynamic Update {{?RFC3007}}, in many -- as far as the co-authors know in all cases -- case commercial "Dynamic Update" solutions are implement via a HTTPS RESTfull API.
+
+These solutions were typically used by a host behind the CPE and since the CPE implements some NAT, the host can only be reach from the global Internet via its CPE IPv4 address. 
 This is the most common scenario considered in this section, while some variant may also consider the client being hosted in the CPE.
 
 For a very few number (one to three) of hosts, the use of such a system provides an alternative to the architecture described in this document.
-The alternative - even adapted to IPv6 and ignoring those associated to an IPv4 development - does suffer from some severe limitations:
+Dynamic DNS - even adapted to IPv6 and ignoring those associated to an IPv4 development - does suffer from some severe limitations:
 
-* the CPE/HNA router is unaware of the process, and cannot respond to queries for these names when there are disruptions in connectivity.
-This makes the home user or application dependent on having to resolve different names in the event of outages or disruptions.
+* the CPE/HNA router is unaware of the process, and cannot respond to queries for these names and communications to these names require an Internet connectivity is order to perform the DNS resolution. 
+Such dependence does not meet the requirement for internal communications to be resilient to ISP connectivity disruptions. 
 
 * the CPE/HNA router cannot control the process.
 Any host can do this regardless of whether or not the home network administrator wants the name published  or not.
@@ -202,12 +185,16 @@ There is therefore no possible audit trail.
 * the credentials for the dynamic DNS server need to be securely transferred to all hosts that wish to use it.
 This is not a problem for a technical user to do with one or two hosts, but it does not scale to multiple hosts and becomes a problem for non-technical users.
 
-* "all the good names are taken" -- current services put everyone's names into some small set of zones, and there are often conflicts.
+* "all the good names are taken" -- current services provide a small set of zones shared by all hosts across all home networks. More especially, there is no notion of a domain specific home network. 
+As there are some commonalities provides by individual home networks, there are often conflicts.
+This makes the home user or application dependent on having to resolve different names in the event of outages or disruptions.
 Distinguishing similar names by delegation of zones was among the primary design goals of the DNS system.
 
 * The RESTful services do not always support all RR types.
 The homenet user is dependent on the service provider supporting new types.
 By providing full DNS delegation, this document enables all RR types and also future extensions.
+
+* Dynamic Updates solution are not interoperable and each provider has its own way to implement it. {{?RFC3007}} is the standard solution to update a DNS RRset, but most Dynamic Update providers use HTTPS RESTfull API.    
 
 There is no technical reason why a RESTful service could not provide solutions to many of these  problems, but this document describes a DNS-based solution.
 
@@ -226,7 +213,7 @@ Registered Homenet Domain:
 : is the domain name that is associated with the home network.
 
 Public Homenet Zone:
-: contains the names in the home network that are expected to be publicly resolvable on the Internet.
+: contains the names in the home network that are expected to be publicly resolvable on the Internet. A home network can have multiple Public Homenet Zones. 
 
 Homenet Naming Authority(HNA):
 is a function responsible for managing the Public Homenet Zone.
@@ -309,6 +296,8 @@ Note that {{info-model}} defines necessary parameter to configure the HNA.
 {: #fig-naming-arch title="Homenet Naming Architecture" }
 
 {{fig-naming-arch}} illustrates the architecture where the HNA outsources the publication of the Public Homenet Zone to the DOI.
+The DOI will serve every DNSSEC request of the Public Homenet Zone coming from outside the home network. 
+When the request is coming within the network, the resolution is expected to be handled by the Homenet Resolver as detaille din further details below.  
 
 The Public Homenet Zone is identified by the Registered Homenet Domain Name -- myhome.example.
 The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as Homenet Zone in {{fig-naming-arch}}.
@@ -317,14 +306,14 @@ The HNA SHOULD build the Public Homenet Zone in a single view populated with all
 The HNA also signs the Public Homenet Zone.
 The HNA handles all operations and keying material required for DNSSEC, so there is no provision made in this architecture for transferring private DNSSEC related keying material between the HNA and the DM.
 
-Once the Public Homenet Zone has been built, the HNA outsources it to the DOI as described in {{fig-naming-arch}}.
+Once the Public Homenet Zone has been built, the HNA communicates and synchronizes it with the DOI using a primary/secondary setting as described in {{fig-naming-arch}}.
 The HNA acts as a hidden primary {{?RFC8499}} while the DM behaves as a secondary responsible to distribute the Public Homenet Zone to the multiple Public Authoritative Servers that DOI is responsible
 for.
 The DM has three communication channels:
 
-* a DM Control Channel ({{sec-ctrl}}) to configure the HNA and the DOI,
+* a DM Control Channel ({{sec-ctrl}}) to configure the HNA and the DOI. This includes necessary parameters to configure the primary/secondary relation as well as some information provided by the DOI that needs to be included by the HNA in the Public Homenet Zone. 
 
-* a DM Synchronization Channel ({{sec-synch}}) to synchronize the Public Homenet Zone on the HNA and on the DM,
+* a DM Synchronization Channel ({{sec-synch}}) to synchronize the Public Homenet Zone on the HNA and on the DM with the appropriately configured primary/secondary.  
 
 * one or more Distribution Channels ({{sec-dist}} that distribute the Public Homenet Zone from the DM to the Public Authoritative Server serving the Public Homenet Zone on the Internet.
 
@@ -390,7 +379,7 @@ The Distribution Channel is internal to the DOI and as such is not the primary c
 # Control Channel {#sec-ctrl}
 
 The DM Control Channel is used by the HNA and the DOI to exchange information related to the configuration of the delegation which includes information to build the Public Homenet Zone ({{sec-pbl-homenet-zone}}), information to build the DNSSEC chain of trust ({{sec-chain-of-trust}}) and information to set the Synchronization Channel ({{sec-sync-info}}).
-
+While information is carried from the DOI to the HNA and from the HNA to the DOI, the HNA is always initiating the exchange in both directions.  
 
 ## Information to Build the Public Homenet Zone  {#sec-pbl-homenet-zone}
 
@@ -436,10 +425,8 @@ Upon an instruction of deleting the delegation, the DM MUST stop serving the Pub
 ## Messages Exchange Description {#sec-ctrl-messages}
 
 There are multiple ways this information could be exchanged between the HNA and the DM.
-This specification defines a mechanism that re-use the DNS exchanges format.
-The intention is to reuse standard libraries especially to check the format of the exchanged fields as well as to minimize the additional libraries needed for the HNA.
-The re-use of DNS exchanges achieves these goals.
-Note that while information is provided using DNS exchanges, the exchanged information is not expected to  be set in any zone file, instead this information is uses as commands between the HNA and the DM.
+This specification defines a mechanism that re-use the DNS exchanges format, while the exchange in itself is not a DNS exchange involved in any any DNS operations such as DNS resolution for example.
+Note that while information is provided using DNS exchanges, the exchanged information is not expected to  be set in any zone file, instead this information is uses as commands between the HNA and the DM. 
 
 The Control Channel is not expected to be a long term session.
 After a predefined timer - similar to those used for TCP - the Control Channel is expected to be terminated - by closing the transport channel.
@@ -616,7 +603,8 @@ Then, a NOTIFY message is sent by the primary, which is a small packet that is l
 
 Finally, the AXFR {{!RFC1034}} or IXFR {{!RFC1995}} query performed by the secondary is a small packet sent over TCP (Section 4.2 {{!RFC5936}}), which mitigates reflection attacks using a forged NOTIFY.
 
-The AXFR request from the DM to the HNA SHOULD be secured and the use of TLS is RECOMMENDED {{!I-D.ietf-dprive-xfr-over-tls}}
+The AXFR request from the DM to the HNA SHOULD be secured and the use of TLS is RECOMMENDED {{!RFC9103}}. 
+While {{!RFC9103}} does not consider the protection by TLS of NOTIFY and SOA requests, these MAY still be protected by TLS to provide additional privacy. 
 
 When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {{!RFC6698}}.
 In addition, to guarantee the DM remains the same across multiple TLS session, the HNA and DM MAY implement {{?RFC8672}}.
@@ -768,6 +756,8 @@ Combined with blocking of AXFR queries, the use of NSEC3 {{!RFC5155}} (vs NSEC {
 However, recent work {{GPUNSEC3}} or {{ZONEENUM}} have shown that the protection provided by NSEC3 against dictionary attacks should be considered cautiously and {{?I-D.ietf-dnsop-nsec3-guidance}} provides guidelines to configure NSEC3 properly. 
 In addition, the attacker may be able to walk the reverse DNS zone, or use other reconnaissance techniques to learn this information as described in {{!RFC7707}}.
 
+The zone is also exposed during the synchronization between the primary and the secondary. {{!RFC9103}} only specifies the use of TLS for XFR transfers, which leak the existence of the zone and has been clearly specified as out of scope of the threat model of {{!RFC9103}}. Additional privacy MAY be provide by protecting all exchanges of the Synchronization Channel as well as the Control Channel.  
+
 In general a home network owner is expected to publish only names for which there is some need to be able to reference externally.
 Publication of the name does not imply that the service is necessarily reachable from any or all parts of the Internet.
 {{!RFC7084}} mandates that the outgoing-only policy {{!RFC6092}} be available, and in many cases it is configured by default.
@@ -800,7 +790,10 @@ This section analyses the attack surface associated to these communications, the
 The channels between HNA and DM are mutually authenticated and encrypted with TLS {{?RFC8446}} and its associated security considerations apply.
 To ensure the multiple TLS session are are continuously authenticating the same entity, TLS may take advantage of second factor authentication as described in {{?RFC8672}}.
 
-At the time of writing TLS 1.2 or TLS 1.3 can be used and TLS 1.3 (or newer) SHOULD be supported.
+At the time of writing TLS 1.2 or TLS 1.3 can be used and TLS 1.3 (or newer) SHOULD be supported. 
+It is RECOMMENDED that all DNS exchanges between the HNA and the DM be protected by TLS to provide integrity protection as well as confidentiality. As noted in {{!RFC9103}}, some level of privacy may be relaxed, by not protecting the existence of the zone. 
+This MAY involved a mix of exchanges protected by TLS and exchanges not protected by TLS. 
+This MAY Be handle by a off-line agreement between the DM and HNA as well as with the use of RCODES defined in Section 7.8 of {{!RFC9103}}.
 
 The DNS protocol is subject to reflection attacks, however, these attacks are largely applicable when DNS is carried over UDP.
 The interfaces between the HNA and DM are using TLS over TCP, which prevents such reflection attacks.
