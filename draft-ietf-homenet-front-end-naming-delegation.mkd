@@ -83,36 +83,26 @@ informative:
 
 --- abstract
 
-Home network owners often have IPv6 devices that they wish to access outside their home network - i.e. from the Internet - using names.
-This requires these names to be publicly published on the Internet in the DNS.
-Building the DNS zone and serving it on the Internet are two very different tasks, each requiring very different skills or type of infrastructures.
-The ability to outsource such a publication to DNS Outsourcing Infrastructure (DOI) is expected to ease the management of the home network.
-This requires a close synchronization between the home network and the DOI, that is the need for an automated and scalable mechanism. 
+Home network owners often have IPv6 devices that they wish to access outside their home network - i.e., from the Internet using their names. 
+To do so, these names needs to be made publicly available in the DNS. 
 
-This document defines an architecture and a protocol that enables an Homenet Naming Authority (HNA), which is responsible to select, sign and outsource the publication of the zone to a DOI via Distribution Manager (DM).
+This document proposes a mechanisms that enables a Homenet Naming Authority (HNA) to outsource the publication of a Public Homenet Zone to a third party designated as the DNS Outsourcing Infrastructure (DOI). 
 
-In addition, this document deals with publication of a corresponding
-   reverse zone.
 --- middle
 
 #Introduction
 
-Home network owners often have IPv6 devices that they wish to access outside their home network - i.e. from the Internet - using names.
-This requires these names to be publicly published and served on the Internet in the DNS.
-Building the DNS zone and serving it on the Internet are two very different tasks, each requiring very different skills or type of infrastructures.
-The ability to outsource such a publication to DNS Outsourcing Infrastructure (DOI) is expected to ease the management of the home network.
-This requires a close synchronization between the home network and the DOI, that is the need for an automated and scalable mechanism. 
-Once outsourced, every DNS(SEC) resolutions coming from the Internet concerning the home network will be handled by the DOI.   
+Home network owners often have IPv6 devices that they wish to access outside their home network - i.e., from the Internet using their names. 
+To do so, these names needs to be made publicly available in the DNS. 
 
-This document defines an architecture and a protocol that enables an Homenet Naming Authority (HNA), which is responsible to select, sign and outsource the publication of the zone to a DOI via Distribution Manager (DM).
+This document proposes a mechanisms that enables a Homenet Naming Authority (HNA) to outsource the publication of a Public Homenet Zone to a third party designated as the DNS Outsourcing Infrastructure (DOI). 
+The overall principle is that the HNA acts a primary server while the DOI acts as a secondary. Such DNS zone synchronization is performed via a Synchronization Channel between the HNA and a Distribution Manager (DM) within the DOI (see {{sec-synch}}).
 
-The HNA is responsible to building the zone to be published by the DOI, designated as the Public Homenet Zone. 
-Such zone MAY contain a subset of the entire names accessible from within the home network, designated as the Homenet Zone -- (see {{selectingnames}} for more details on name selection).  
+However, setting the Synchronization Channel requires the HNA and the DOI to exchange some informations. For example, the HNA needs to set the Public Homenet Zone with the authoritative servers and their associated IP addresses of the DOI. 
+Similarly, the DOI needs to know the IP address of the primary (HNA) as well as potentially  the hash of the KSK (DS RRset), so the that DOI provides this value to the parent zone.
+These pieces of information are agreed between the HNA and the DOI via the establishment of a Control Channel (see {{sec-ctrl}} ). 
 
-As DNS zones contain information related to the DNS authoritative servers -- in our case provided by the DOI --, the HNA needs to retrieve some information related to the DOI to build and sign the Public Homenet Zone. 
-These pieces of information are retrieved via some exchanges with the DM (see Control Channel {{sec-ctrl}}). 
-Once, the Public Homenet Zone has been built, it is outsourced to the DOI via a primary/secondary configuration between the HNA and the DM via the Synchronization Channel (see {{sec-synch}}. 
-
+<!--
 Synchronizing a DNS zone does not involve interactions with the devices of the home network and as such can be entirely automated. 
 Secondly, relying on a standard DNS synchronization mechanism used at the scale of the Internet makes such synchronization between the HNA and the DM highly standard, and highly scalable. 
 At last, the HNA being a primary withing the network enables to serve the Public Homenet Zone also from within the home network and as such by design fulfill {{!RFC7368}} requirement that names used within the home MUST be resilient against connectivity disruptions with the ISP. 
@@ -127,6 +117,7 @@ This means that some selection mechanism using HNCP for example may be envisione
 
 {{sec:alt}} describes an compares in details the drawbacks of an existing non standard -- though deployed -- solutions where each device is configured is responsible to update the name it has been assigned to the DOI.
 Such solutions are usually designated as "Dynamic DNS".
+-->
 
 The remaining of the paper is as follows. 
 {{sec-arc-desc}} provides an architectural view of the  HNA, DM and DOI as well as its different communication channels (Control Channel, Synchronization Channel, DM Distribution Channel) respectively described in {{sec-ctrl}}, {{sec-synch}} and {{sec-dist}}. 
