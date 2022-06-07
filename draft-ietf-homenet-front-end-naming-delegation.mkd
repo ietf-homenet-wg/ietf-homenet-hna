@@ -83,7 +83,7 @@ informative:
 
 --- abstract
 
-Home network owners often have IPv6 devices that they wish to access outside their home network - i.e., from the Internet using their names. 
+Home network owners often have devices that they wish to access outside their home network - i.e., from the Internet using their names. 
 To do so, these names needs to be made publicly available in the DNS. 
 
 This document describes how a Homenet Naming Authority (HNA) can instruct a DNS Outsourcing Infrastructure (DOI) to publish a Public Homenet Zone on its behalf.  
@@ -92,7 +92,7 @@ This document describes how a Homenet Naming Authority (HNA) can instruct a DNS 
 
 #Introduction
 
-Home network owners often have IPv6 devices that they wish to access outside their home network - i.e., from the Internet using their names. 
+Home network owners often have devices that they wish to access outside their home network - i.e., from the Internet using their names. 
 To do so, these names needs to be made publicly available in the DNS. 
 
 This document describes how a Homenet Naming Authority (HNA) can instruct a DNS Outsourcing Infrastructure (DOI) to publish a Public Homenet Zone on its behalf.  
@@ -396,6 +396,9 @@ The transport channel (including port number) is the same as the one used betwee
 The purpose of the previous sections were to exchange information in order to set a delegation.
 The HNA MUST also be able to delete a delegation with a specific DM.
 Upon an instruction of deleting the delegation, the DM MUST stop serving the Public Homenet Zone.
+
+
+The decision to delete an inactive HNA by the DM is part of the commercial agreement between DOI and HNA.
 
 ## Messages Exchange Description {#sec-ctrl-messages}
 

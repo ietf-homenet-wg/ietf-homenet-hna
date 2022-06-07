@@ -5,12 +5,12 @@
 Homenet                                                       D. Migault
 Internet-Draft                                                  Ericsson
 Intended status: Standards Track                                R. Weber
-Expires: 4 December 2022                                         Nominum
+Expires: 8 December 2022                                         Nominum
                                                            M. Richardson
                                                 Sandelman Software Works
                                                                R. Hunter
                                                     Globis Consulting BV
-                                                             2 June 2022
+                                                             6 June 2022
 
 
       Simple Provisioning of Public Names for Residential Networks
@@ -18,7 +18,7 @@ Expires: 4 December 2022                                         Nominum
 
 Abstract
 
-   Home network owners often have IPv6 devices that they wish to access
+   Home network owners often have devices that they wish to access
    outside their home network - i.e., from the Internet using their
    names.  To do so, these names needs to be made publicly available in
    the DNS.
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 December 2022.
+   This Internet-Draft will expire on 8 December 2022.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Migault, et al.          Expires 4 December 2022                [Page 1]
+Migault, et al.          Expires 8 December 2022                [Page 1]
 
 Internet-Draft                public-names                     June 2022
 
@@ -88,50 +88,50 @@ Table of Contents
                trust . . . . . . . . . . . . . . . . . . . . . . . .  14
        4.5.3.  Providing information for the Synchronization
                Channel . . . . . . . . . . . . . . . . . . . . . . .  15
-       4.5.4.  HNA instructing deleting the delegation . . . . . . .  15
+       4.5.4.  HNA instructing deleting the delegation . . . . . . .  16
      4.6.  Securing the Control Channel  . . . . . . . . . . . . . .  16
      4.7.  Implementation Concerns . . . . . . . . . . . . . . . . .  17
-   5.  Synchronization Channel . . . . . . . . . . . . . . . . . . .  17
-     5.1.  Securing the Synchronization Channel  . . . . . . . . . .  18
+   5.  Synchronization Channel . . . . . . . . . . . . . . . . . . .  18
+     5.1.  Securing the Synchronization Channel  . . . . . . . . . .  19
    6.  DM Distribution Channel . . . . . . . . . . . . . . . . . . .  19
    7.  HNA Security Policies . . . . . . . . . . . . . . . . . . . .  19
-   8.  DNSSEC compliant Homenet Architecture . . . . . . . . . . . .  19
+   8.  DNSSEC compliant Homenet Architecture . . . . . . . . . . . .  20
    9.  Homenet Reverse Zone Channels Configuration . . . . . . . . .  20
-   10. Homenet Public Zone Channel Configurations  . . . . . . . . .  21
-   11. Renumbering . . . . . . . . . . . . . . . . . . . . . . . . .  22
+   10. Homenet Public Zone Channel Configurations  . . . . . . . . .  22
+   11. Renumbering . . . . . . . . . . . . . . . . . . . . . . . . .  23
      11.1.  Hidden Primary . . . . . . . . . . . . . . . . . . . . .  23
-   12. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  23
-   13. Security Considerations . . . . . . . . . . . . . . . . . . .  25
-     13.1.  HNA DM channels  . . . . . . . . . . . . . . . . . . . .  25
-     13.2.  Names are less secure than IP addresses  . . . . . . . .  26
-     13.3.  Names are less volatile than IP addresses  . . . . . . .  26
-     13.4.  Operational Considerations . . . . . . . . . . . . . . .  26
+   12. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  24
+   13. Security Considerations . . . . . . . . . . . . . . . . . . .  26
+     13.1.  HNA DM channels  . . . . . . . . . . . . . . . . . . . .  26
+     13.2.  Names are less secure than IP addresses  . . . . . . . .  27
+     13.3.  Names are less volatile than IP addresses  . . . . . . .  27
+     13.4.  Operational Considerations . . . . . . . . . . . . . . .  27
 
 
 
-Migault, et al.          Expires 4 December 2022                [Page 2]
+Migault, et al.          Expires 8 December 2022                [Page 2]
 
 Internet-Draft                public-names                     June 2022
 
 
-   14. Information Model for Outsourced information  . . . . . . . .  27
-     14.1.  Outsourced Information Model . . . . . . . . . . . . . .  28
-   15. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  30
-   16. Acknowledgment  . . . . . . . . . . . . . . . . . . . . . . .  30
-   17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  30
-   18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  30
-     18.1.  Normative References . . . . . . . . . . . . . . . . . .  30
-     18.2.  Informative References . . . . . . . . . . . . . . . . .  33
-   Appendix A.  Envisioned deployment scenarios  . . . . . . . . . .  35
-     A.1.  CPE Vendor  . . . . . . . . . . . . . . . . . . . . . . .  35
-     A.2.  Agnostic CPE  . . . . . . . . . . . . . . . . . . . . . .  36
+   14. Information Model for Outsourced information  . . . . . . . .  28
+     14.1.  Outsourced Information Model . . . . . . . . . . . . . .  29
+   15. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  31
+   16. Acknowledgment  . . . . . . . . . . . . . . . . . . . . . . .  31
+   17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  31
+   18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  31
+     18.1.  Normative References . . . . . . . . . . . . . . . . . .  31
+     18.2.  Informative References . . . . . . . . . . . . . . . . .  34
+   Appendix A.  Envisioned deployment scenarios  . . . . . . . . . .  36
+     A.1.  CPE Vendor  . . . . . . . . . . . . . . . . . . . . . . .  36
+     A.2.  Agnostic CPE  . . . . . . . . . . . . . . . . . . . . . .  37
    Appendix B.  Example: A manufacturer provisioned HNA product
-           flow  . . . . . . . . . . . . . . . . . . . . . . . . . .  36
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  37
+           flow  . . . . . . . . . . . . . . . . . . . . . . . . . .  37
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  38
 
 1.  Introduction
 
-   Home network owners often have IPv6 devices that they wish to access
+   Home network owners often have devices that they wish to access
    outside their home network - i.e., from the Internet using their
    names.  To do so, these names needs to be made publicly available in
    the DNS.
@@ -165,7 +165,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022                [Page 3]
+Migault, et al.          Expires 8 December 2022                [Page 3]
 
 Internet-Draft                public-names                     June 2022
 
@@ -221,7 +221,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022                [Page 4]
+Migault, et al.          Expires 8 December 2022                [Page 4]
 
 Internet-Draft                public-names                     June 2022
 
@@ -277,7 +277,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022                [Page 5]
+Migault, et al.          Expires 8 December 2022                [Page 5]
 
 Internet-Draft                public-names                     June 2022
 
@@ -333,7 +333,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022                [Page 6]
+Migault, et al.          Expires 8 December 2022                [Page 6]
 
 Internet-Draft                public-names                     June 2022
 
@@ -389,7 +389,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022                [Page 7]
+Migault, et al.          Expires 8 December 2022                [Page 7]
 
 Internet-Draft                public-names                     June 2022
 
@@ -445,7 +445,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022                [Page 8]
+Migault, et al.          Expires 8 December 2022                [Page 8]
 
 Internet-Draft                public-names                     June 2022
 
@@ -501,7 +501,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022                [Page 9]
+Migault, et al.          Expires 8 December 2022                [Page 9]
 
 Internet-Draft                public-names                     June 2022
 
@@ -557,7 +557,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 10]
+Migault, et al.          Expires 8 December 2022               [Page 10]
 
 Internet-Draft                public-names                     June 2022
 
@@ -613,7 +613,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 11]
+Migault, et al.          Expires 8 December 2022               [Page 11]
 
 Internet-Draft                public-names                     June 2022
 
@@ -669,10 +669,13 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 12]
+Migault, et al.          Expires 8 December 2022               [Page 12]
 
 Internet-Draft                public-names                     June 2022
 
+
+   The decision to delete an inactive HNA by the DM is part of the
+   commercial agreement between DOI and HNA.
 
 4.5.  Messages Exchange Description
 
@@ -720,15 +723,15 @@ Internet-Draft                public-names                     June 2022
    *  The MNAME value of the SOA RDATA is the value provided by the DOI
       to the HNA.
 
-   *  Other RDATA values (RNAME, REFRESH, RETRY, EXPIRE and MINIMUM) are
-      provided by the DOI as suggestions.
 
 
-
-Migault, et al.          Expires 4 December 2022               [Page 13]
+Migault, et al.          Expires 8 December 2022               [Page 13]
 
 Internet-Draft                public-names                     June 2022
 
+
+   *  Other RDATA values (RNAME, REFRESH, RETRY, EXPIRE and MINIMUM) are
+      provided by the DOI as suggestions.
 
    The NS RRsets carry the Public Authoritative Servers of the DOI.
    Their associated NAME MUST be the Registered Homenet Domain.
@@ -769,6 +772,20 @@ Internet-Draft                public-names                     June 2022
    Though the pre-requisite section MAY be ignored by the DM, this value
    is fixed to remain coherent with a standard DNS update.
 
+
+
+
+
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 14]
+
+Internet-Draft                public-names                     June 2022
+
+
    Upon receiving the DNS update request, the DM reads the DS RRset in
    the Update section.  The DM checks ZNAME corresponds to the parent
    zone.  The DM SHOULD ignore non empty the Pre-requisite and
@@ -777,14 +794,6 @@ Internet-Draft                public-names                     June 2022
    the DM should return a NOERROR response as a commitment to update the
    parent zone with the provided DS.  An error indicates the MD does not
    update the DS, and other method should be used by the HNA.
-
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 14]
-
-Internet-Draft                public-names                     June 2022
-
 
    The regular DNS error message SHOULD be returned to the HNA when an
    error occurs.  In particular a FORMERR is returned when a format
@@ -822,6 +831,17 @@ Internet-Draft                public-names                     June 2022
    Similarly to Section 4.5.2, DNS errors are used and an error
    indicates the DM is not configured as a secondary.
 
+
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 15]
+
+Internet-Draft                public-names                     June 2022
+
+
 4.5.4.  HNA instructing deleting the delegation
 
    To instruct to delete the delegation the HNA SHOULD send a DNS UPDATE
@@ -834,13 +854,6 @@ Internet-Draft                public-names                     June 2022
    Section 2.5.2 the delete instruction is set by setting the TTL to 0,
    the Class to ANY, the RDLENGTH to 0 and the RDATA MUST be empty.  The
    Additional Data section is empty.
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 15]
-
-Internet-Draft                public-names                     June 2022
-
 
    Upon receiving the DNS update request, the DM checks the request and
    removes the delegation.  The DM returns a NOERROR response to
@@ -875,6 +888,16 @@ Internet-Draft                public-names                     June 2022
    certificate mechanism per HNA, or public certificates for this
    purpose.
 
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 16]
+
+Internet-Draft                public-names                     June 2022
+
+
    IPsec [RFC4301] and IKEv2 [RFC7296] were considered.  They would need
    to operate in transport mode, and the authenticated end points would
    need to be visible to the applications, and this is not commonly
@@ -887,16 +910,6 @@ Internet-Draft                public-names                     June 2022
    way to translate this OAUTH2 token from HTTPS web space to DNS SIG(0)
    space seems overly problematic, and so the enrollment protocol using
    web APIs was determined to be easier to implement at scale.
-
-
-
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 16]
-
-Internet-Draft                public-names                     June 2022
-
 
    Note also that authentication of message exchanges between the HNA
    and the DM SHOULD NOT use the external IP address of the HNA to index
@@ -921,6 +934,25 @@ Internet-Draft                public-names                     June 2022
       the public Internet.  This results in a limited exchanges (AXFR/
       IXFR) with a small number of IP address and such limitations
       SHOULD be enforced by policies describe din Section 7.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 17]
+
+Internet-Draft                public-names                     June 2022
+
 
 5.  Synchronization Channel
 
@@ -947,13 +979,6 @@ Internet-Draft                public-names                     June 2022
    seen as zone provisioning between the HNA (Hidden Primary) and the DM
    (Secondary Server).  This can be handled via AXFR + DNS Update.
 
-
-
-Migault, et al.          Expires 4 December 2022               [Page 17]
-
-Internet-Draft                public-names                     June 2022
-
-
    The use of a primary / secondary mechanism is RECOMMENDED instead of
    the use of DNS Update.  The primary / secondary mechanism is
    RECOMMENDED as it scales better and avoids DoS attacks.  Note that
@@ -975,6 +1000,15 @@ Internet-Draft                public-names                     June 2022
    between the end user and the provider of the DOI as part of either
    the provisioning or due to receipt of DNS Update messages on the DM
    Control Channel.
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 18]
+
+Internet-Draft                public-names                     June 2022
+
 
    The Homenet Reverse Zone MAY also be updated either with DNS UPDATE
    [RFC2136] or using a primary / secondary synchronization.
@@ -998,17 +1032,6 @@ Internet-Draft                public-names                     June 2022
    of TLS is RECOMMENDED [RFC9103].  While [RFC9103] does not consider
    the protection by TLS of NOTIFY and SOA requests, these MAY still be
    protected by TLS to provide additional privacy.
-
-
-
-
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 18]
-
-Internet-Draft                public-names                     June 2022
-
 
    When using TLS, the HNA MAY authenticate inbound connections from the
    DM using standard mechanisms, such as a public certificate with
@@ -1034,6 +1057,15 @@ Internet-Draft                public-names                     June 2022
    This section details security policies related to the Hidden Primary
    / Secondary synchronization.
 
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 19]
+
+Internet-Draft                public-names                     June 2022
+
+
    The HNA, as Hidden Primary SHOULD drop any DNS queries from the home
    network.  This could be implemented via port binding and/or firewall
    rules.  The precise mechanism deployed is out of scope of this
@@ -1058,14 +1090,6 @@ Internet-Draft                public-names                     June 2022
 
    It is RECOMMENDED the HNA signs the Public Homenet Zone.
 
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 19]
-
-Internet-Draft                public-names                     June 2022
-
-
    Secure delegation is achieved only if the DS RRset is properly set in
    the parent zone.  Secure delegation is performed by the HNA or the
    DOIs.
@@ -1084,6 +1108,19 @@ Internet-Draft                public-names                     June 2022
    main difference is that ISP that provides the IP connectivity is
    likely also owning the corresponding reverse zone and as such
    Synchronization Channel and Control Channel can largely be automated.
+
+
+
+
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 20]
+
+Internet-Draft                public-names                     June 2022
+
 
    The Public Homenet Zone is associated to a Registered Homenet Domain
    and the ownership of that domain requires a specific registration
@@ -1114,14 +1151,6 @@ Internet-Draft                public-names                     June 2022
    HNA SHOULD therefore always originate Synchronization Channel updates
    from an IP address within the zone that is being updated.
 
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 20]
-
-Internet-Draft                public-names                     June 2022
-
-
    For example, if the ISP has assigned 2001:db8:f00d::/64 to the WAN
    interface (by DHCPv6, or PPP/RA), then the HNA should originate
    Synchronization Channel updates from, for example, 2001:db8:f00d::2.
@@ -1133,6 +1162,21 @@ Internet-Draft                public-names                     June 2022
    With this relation automatically configured, the synchronization
    between the Home network and the DOI happens similarly as for the
    Public Homenet Zone described earlier in this document.
+
+
+
+
+
+
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 21]
+
+Internet-Draft                public-names                     June 2022
+
 
    Note that for home networks connected to by multiple ISPs, each ISP
    provides only the DOI of the reverse zones associated to the
@@ -1170,14 +1214,6 @@ Internet-Draft                public-names                     June 2022
 
    *  the HNA credentials used by the DM for its authentication.
 
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 21]
-
-Internet-Draft                public-names                     June 2022
-
-
    The HNA will need to select an IP address for communication for the
    Synchronization Channel.  This is typically the WAN address of the RG
    router, but could be an IPv6 LAN address in the case of a home with
@@ -1190,6 +1226,13 @@ Internet-Draft                public-names                     June 2022
    [I-D.ietf-homenet-naming-architecture-dhc-options], but zones which
    are not related to a specific ISP zone (such as with a DNS provider)
    must be provisioned through other means.
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 22]
+
+Internet-Draft                public-names                     June 2022
+
 
    Similarly, if the HNA is provided by a registrar, the HNA may be
    handed pre-configured to end user.
@@ -1225,15 +1268,6 @@ Internet-Draft                public-names                     June 2022
    In the break-before-make renumbering scenario, the new prefix is
    advertised making the old prefix obsolete.
 
-
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 22]
-
-Internet-Draft                public-names                     June 2022
-
-
    Renumbering has been extensively described in [RFC4192] and analyzed
    in [RFC7010] and the reader is expected to be familiar with them
    before reading this section.
@@ -1246,6 +1280,15 @@ Internet-Draft                public-names                     June 2022
    Zone will also be updated.  Although the new and old IP addresses may
    be stored in the Public Homenet Zone, we recommend that only the
    newly reachable IP addresses be published.
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 23]
+
+Internet-Draft                public-names                     June 2022
+
 
    To avoid reachability disruption, IP connectivity information
    provided by the DNS SHOULD be coherent with the IP in use.  In our
@@ -1282,14 +1325,6 @@ Internet-Draft                public-names                     June 2022
    The Public Homenet Zone lists the names of services hosted in the
    home network.  Combined with blocking of AXFR queries, the use of
    NSEC3 [RFC5155] (vs NSEC [RFC4034]) prevents an attacker from being
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 23]
-
-Internet-Draft                public-names                     June 2022
-
-
    able to walk the zone, to discover all the names.  However, recent
    work [GPUNSEC3] or [ZONEENUM] have shown that the protection provided
    by NSEC3 against dictionary attacks should be considered cautiously
@@ -1297,6 +1332,19 @@ Internet-Draft                public-names                     June 2022
    NSEC3 properly.  In addition, the attacker may be able to walk the
    reverse DNS zone, or use other reconnaissance techniques to learn
    this information as described in [RFC7707].
+
+
+
+
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 24]
+
+Internet-Draft                public-names                     June 2022
+
 
    The zone is also exposed during the synchronization between the
    primary and the secondary.  [RFC9103] only specifies the use of TLS
@@ -1338,17 +1386,21 @@ Internet-Draft                public-names                     June 2022
    also monitor the traffic associated with the Public Homenet Zone.
    This traffic may provide an indication of the services an end user
    accesses, plus how and when they use these services.  Although,
-
-
-
-Migault, et al.          Expires 4 December 2022               [Page 24]
-
-Internet-Draft                public-names                     June 2022
-
-
    caching may obfuscate this information inside the home network, it is
    likely that outside your home network this information will not be
    cached.
+
+
+
+
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 25]
+
+Internet-Draft                public-names                     June 2022
+
 
 13.  Security Considerations
 
@@ -1397,7 +1449,11 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 25]
+
+
+
+
+Migault, et al.          Expires 8 December 2022               [Page 26]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1453,7 +1509,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 26]
+Migault, et al.          Expires 8 December 2022               [Page 27]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1509,7 +1565,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 27]
+Migault, et al.          Expires 8 December 2022               [Page 28]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1565,7 +1621,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 28]
+Migault, et al.          Expires 8 December 2022               [Page 29]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1621,7 +1677,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 29]
+Migault, et al.          Expires 8 December 2022               [Page 30]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1677,7 +1733,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 30]
+Migault, et al.          Expires 8 December 2022               [Page 31]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1733,7 +1789,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 31]
+Migault, et al.          Expires 8 December 2022               [Page 32]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1789,7 +1845,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 32]
+Migault, et al.          Expires 8 December 2022               [Page 33]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1845,7 +1901,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 33]
+Migault, et al.          Expires 8 December 2022               [Page 34]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1901,7 +1957,7 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 34]
+Migault, et al.          Expires 8 December 2022               [Page 35]
 
 Internet-Draft                public-names                     June 2022
 
@@ -1957,7 +2013,7 @@ A.1.  CPE Vendor
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 35]
+Migault, et al.          Expires 8 December 2022               [Page 36]
 
 Internet-Draft                public-names                     June 2022
 
@@ -2013,7 +2069,7 @@ Appendix B.  Example: A manufacturer provisioned HNA product flow
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 36]
+Migault, et al.          Expires 8 December 2022               [Page 37]
 
 Internet-Draft                public-names                     June 2022
 
@@ -2069,7 +2125,7 @@ Authors' Addresses
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 37]
+Migault, et al.          Expires 8 December 2022               [Page 38]
 
 Internet-Draft                public-names                     June 2022
 
@@ -2125,4 +2181,4 @@ Internet-Draft                public-names                     June 2022
 
 
 
-Migault, et al.          Expires 4 December 2022               [Page 38]
+Migault, et al.          Expires 8 December 2022               [Page 39]
