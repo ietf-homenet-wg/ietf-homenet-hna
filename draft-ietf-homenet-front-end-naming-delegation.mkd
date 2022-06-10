@@ -99,28 +99,21 @@ This document describes how a Homenet Naming Authority (HNA) can instruct a DNS 
 
 The document introduces the Synchronization Channel and  the Control Channel  between the HNA and the  Distribution Manager (DM) that belongs to the DOI.
 
-The Synchronization Channel (see {{sec-synch}}) i sused to synchronize the Public Homenet Zone.
+The Synchronization Channel (see {{sec-synch}}) is used to synchronize the Public Homenet Zone.
 The HNA is configured as a primary, while the DM is configured as a secondary.  
 
 The Control Channel (see {{sec-ctrl}}) is used to set the Synchronization Channel. 
 For example, to build the Public Homenet Zone, the HNA needs the authoritative servers (and associated IP addresses) of the servers of the DOI actually serving the zone.
 Similarly, the DOI needs to know the IP address of the primary (HNA) as well as potentially the hash of the KSK (DS RRset) to secure the DNSSEC delegation with the parent zone. 
 
-The remaining of the paper is as follows. 
+The remaining of the document is as follows. 
 {{sec-arc-desc}} provides an architectural view of the  HNA, DM and DOI as well as its different communication channels (Control Channel, Synchronization Channel, DM Distribution Channel) respectively described in {{sec-ctrl}}, {{sec-synch}} and {{sec-dist}}. 
-
 {{sec-cpe-sec-policies}} and {{sec-dnssec-deployment}} respectively details HNA security policies as well as DNSSEC compliance within the home network.
-
-{{sec-reverse}} discusses management of one or more reverse zones.
-It shows that management of the reverse zones can be entirely automated and benefit from a pre-established relation between the ISP and the home network. Note that such scenarios may also be met for the Public Homenet Zone.
-
-{{hna-provisioning}} discusses management and configuration of the Public Homenet Zone.
-It shows that the HNA configuration of the DOI can involve no or little interaction with the end user.
-More specifically, it shows that the existence of an account in the DOI is sufficient for the DOI to push the necessary configuration.
-In addition, when the DOI and CPE are both managed by an ISP, the configuration can be entirely automated - see {{sec-reverse}}.
-
 {{sec-renumbering}} discusses how renumbering should be handled.
 Finally, {{sec-privacy}} and {{sec-security}} respectively discuss privacy and security considerations when outsourcing the Public Homenet Zone.
+
+The appendices discuss several management (see {{sec-reverse}}) provisioning (see {{sec-reverse}}), configurations (see {{info-model}}) and deployment (see {{sec-deployment}} and {{sec-ex-manu}}) aspects. 
+
 
 ## Selecting Names to Publish {#selectingnames}
 
@@ -134,7 +127,7 @@ A device may have a Global Unicast Address (GUA), a Unique Local IPv6 Address (U
 Of these the link-local are never useful for the Public Zone, and should be omitted.
 The IPv6 ULA and the RFC1918 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
 
-The IPv6 ULA addresses are significantly safer to publish with a significantly lower probability of collision than RFC1918 addresses. 
+The IPv6 ULA addresses are safer to publish with a significantly lower probability of collision than RFC1918 addresses. 
 
 In general, one expects the GUA to be the default address to be published.  
 However, publishing the ULA and RFC1918 may enable local communications within the home network. 
@@ -143,11 +136,11 @@ A direct advantage of enabling local communication is to prevent communications 
 
 ## Dynamic DNS Alternative solutions {#sec:alt}
 
-An alternative existing solution in IPv4 is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
+An alternative existing solution is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
 This is often called "Dynamic DNS" {{DDNS}}, and there are a number of commercial providers. 
-While the IETF has defined Dynamic Update {{?RFC3007}}, in many -- as far as the co-authors know in all cases -- case commercial "Dynamic Update" solutions are implement via a HTTPS RESTfull API.
+While the IETF has defined Dynamic Update {{?RFC3007}}, in many -- as far as the co-authors know in all cases -- case commercial "Dynamic Update" solutions are implemented via a HTTPS RESTful API.
 
-These solutions were typically used by a host behind the CPE and since the CPE implements some NAT, the host can only be reach from the global Internet via its CPE IPv4 address. 
+These solutions were typically used by a host behind the CPE and since the CPE implements some NAT, the host can only be reached from the global Internet via its CPE IPv4 address. 
 This is the most common scenario considered in this section, while some variant may also consider the client being hosted in the CPE.
 
 For a very few number (one to three) of hosts, the use of such a system provides an alternative to the architecture described in this document.
@@ -163,7 +156,7 @@ There is therefore no possible audit trail.
 * the credentials for the dynamic DNS server need to be securely transferred to all hosts that wish to use it.
 This is not a problem for a technical user to do with one or two hosts, but it does not scale to multiple hosts and becomes a problem for non-technical users.
 
-* "all the good names are taken" -- cuarrent services provide a small set of zones shared by all hosts across all home networks. More especially, there is no notion of a domain specific home network. 
+* "all the good names are taken" -- current services provide a small set of zones shared by all hosts across all home networks. More especially, there is no notion of a domain specific home network. 
 As there are some commonalities provides by individual home networks, there are often conflicts.
 This makes the home user or application dependent on having to resolve different names in the event of outages or disruptions.
 Distinguishing similar names by delegation of zones was among the primary design goals of the DNS system.
@@ -172,7 +165,7 @@ Distinguishing similar names by delegation of zones was among the primary design
 The homenet user is dependent on the service provider supporting new types.
 By providing full DNS delegation, this document enables all RR types and also future extensions.
 
-* Dynamic Updates solution are not interoperable and each provider has its own way to implement it. {{?RFC3007}} is the standard solution to update a DNS RRset, but most Dynamic Update providers use HTTPS RESTfull API.    
+* Dynamic Updates solution are not interoperable and each provider has its own way to implement it. {{?RFC3007}} is the standard solution to update a DNS RRset, but most Dynamic Update providers use HTTPS RESTful API.    
 
 There is no technical reason why a RESTful service could not provide solutions to many of these  problems, but this document describes a DNS-based solution.
 
@@ -542,6 +535,7 @@ Limited exchanges:
 : the purpose of the Hidden Primary Server is to synchronize with the DM, not to serve any zones to end users, or the public Internet.
 This results in a limited exchanges (AXFR/IXFR) with a small number of IP address and such limitations SHOULD be enforced by policies describe din  {{sec-cpe-sec-policies}}. 
 
+
 # Synchronization Channel {#sec-synch}
 
 The DM Synchronization Channel is used for communication between the HNA and the DM for synchronizing the Public Homenet Zone.
@@ -597,7 +591,7 @@ The architecture and communication used for the DM Distribution Channels is outs
 
 # HNA Security Policies {#sec-cpe-sec-policies}
 
-This section details security policies related to the Hidden Primary / Secondary synchronization.
+The HNA as hidden primary processes only a limited message exchanges. This should be enforced using security policies - to allow only a subset of dns requests to be received by HNA.
 
 The HNA, as Hidden Primary SHOULD drop any DNS queries from the home network.
 This could be implemented via port binding and/or firewall rules.
@@ -618,99 +612,30 @@ The resolver side is out of scope of this document, and only the authoritative p
 It is RECOMMENDED the HNA signs the Public Homenet Zone.
 
 Secure delegation is achieved only if the DS RRset is properly set in the parent zone.
-Secure delegation is performed by the HNA or the DOIs.
-
-The DS RRset can be updated manually in the parent zone with nsupdate for example.
+Secure delegation can be performed by the HNA or the DOIs and the choice highly depends on which entity is authorized to perform such updates. 
+Typically, the DS RRset can be updated manually in the parent zone with nsupdate for example.
 This requires the HNA or the DOI to be authenticated by the DNS server hosting the parent of the Public Homenet Zone.
 Such a trust channel between the HNA and the parent DNS server may be hard to maintain with HNAs, and thus may be easier to establish with the DOI.
 In fact, the Public Authoritative Server(s) may use Automating DNSSEC Delegation Trust Maintenance  {{!RFC7344}}.
 
 
-# Homenet Reverse Zone Channels Configuration {#sec-reverse}
-
-Homenet Reverse Zone works similarly to the Public Homenet Zone. The main difference is that ISP that provides the IP connectivity is likely also owning the corresponding reverse zone and as such Synchronization Channel and Control Channel can largely be automated. 
-
-The Public Homenet Zone is associated to a Registered Homenet Domain and the ownership of that domain requires a specific registration from the end user as well as the HNA being provisioned with some authentication credentials.
-Such steps are mandatory unless the DOI has some other means to authenticate the HNA.
-Such situation may occur, for example, when the ISP provides the Homenet Domain as well as the DOI.
-
-In this case, the HNA may be authenticated by the physical link layer, in which case the authentication of the HNA may be performed without additional provisioning of the HNA.
-While this may not be so common for the Public Homenet Zone, this situation is expected to be quite common for the Reverse Homenet Zone as the ISP owns the IP address or IP prefix.
-
-More specifically, a common case is that the upstream ISP provides the IPv6 prefix to the Homenet with a IA_PD {{!RFC8415}} option and manages the DOI of the associated reverse zone.
-
-This leaves place for setting up automatically the relation between HNA and the DNS Outsourcing infrastructure as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
-
-In the case of the reverse zone, the DOI authenticates the source of the updates by IPv6 Access Control Lists.
-In the case of the reverse zone, the ISP knows exactly what addresses have been delegated.
-The HNA SHOULD therefore always originate Synchronization Channel updates from an IP address within the zone that is being updated.
-
-For example, if the ISP has assigned 2001:db8:f00d::/64 to the WAN interface (by DHCPv6, or PPP/RA), then the HNA should originate Synchronization Channel updates from, for example, 2001:db8:f00d::2.
-
-An ISP that has delegated 2001:db8:aeae::/56 to the HNA via DHCPv6-PD, then HNA should originate Synchronization Channel updates an IP within that subnet, such as 2001:db8:aeae:0001::2.
-
-With this relation automatically configured, the synchronization between the Home network and the DOI happens similarly as for the Public Homenet Zone described earlier in this document.
-
-Note that for home networks connected to by multiple ISPs, each ISP provides only the DOI of the reverse zones associated to the delegated prefix.
-It is also likely that the DNS exchanges will need to be performed on dedicated interfaces as to be accepted by the ISP.
-More specifically, the reverse zone associated to prefix 1 will not be possible to be performs by the HNA using an IP address that belongs to prefix 2.
-Such constraints does not raise major concerns either for hot standby or load sharing configuration.
-
-With IPv6, the domain space for IP addresses is so large that reverse zone may be confronted with scalability issues.
-How the reverse zone is generated is out of scope of this document.
-{{?RFC8501}} provides guidance on how to address scalability issues.
-
-#  Homenet Public Zone Channel Configurations {#hna-provisioning}
-
-This document does not deal with how the HNA is provisioned with a trusted relationship to the Distribution Manager for the forward zone.
-
-This section details what needs to be provisioned into the HNA and serves as a requirements statement for mechanisms.
-
-
-The HNA needs to be provisioned with:
-
-* the Registered Domain (e.g., myhome.example )
-* the contact info for the Distribution Manager (DM), including the DNS name (FQDN), possibly including the IP literal, and a certificate (or anchor) to be used to authenticate the service
-* the DM transport protocol and port (the default is DNS over TLS, on port 853)
-* the HNA credentials used by the DM for its authentication.
-
-The HNA will need to select an IP address for communication for the Synchronization Channel.
-This is typically the WAN address of the RG router, but could be an IPv6 LAN address in the case of a home with multiple ISPs (and multiple border routers).
-This is detailed in {{sec-ip-hna}} when the NS and A or AAAA RRsets are communicated.
-
-The above parameters MUST be be provisioned for ISP-specific reverse zones, as per  {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
-ISP-specific forward zones MAY also be provisioned using {{?I-D.ietf-homenet-naming-architecture-dhc-options}}, but zones which are not related to a specific ISP zone (such as with a DNS provider) must be provisioned through other means.
-
-Similarly, if the HNA is provided by a registrar, the HNA may be handed pre-configured to end user.
-
-In the absence of specific pre-established relation, these pieces of information may be entered manually by the end user.
-In order to ease the configuration from the end user the following scheme may be implemented.
-
-The HNA may present the end user a web interface where it provides the end user the ability to indicate the Registered Homenet Domain or the registrar for example a preselected list.
-Once the registrar has been selected, the HNA redirects the end user to that registrar in order to receive a access token.
-The access token will enable the HNA to retrieve the DM parameters associated to the Registered Domain.
-These parameters will include the credentials used by the HNA to establish the Control and Synchronization Channels.
-
-Such architecture limits the necessary steps to configure the HNA from the end user.
-
 # Renumbering {#sec-renumbering}
 
-This section details how renumbering is handled by the Hidden Primary server or the DM.
-Both types of renumbering are discussed i.e. "make-before-break" and "break-before-make" (aka flash renumbering).
+During a renumbering of the network, the HNA IP address is changed and the Public Homenet Zone is updated potentially by by the HNA.
+Then, the HNA advertises the DM via a NOTIFY, that the Public Homenet Zone has been updated and that the IP address of the primary has been updated. 
+This corresponds to the standard DNS procedure performed on the Synchronization Channel and no specific actions are expected for the HNA (See {{sec-sync-info}}). 
 
+The remaining of the section provides recommendations regarding the provisioning of the Public Homenet Zone - especially the IP addresses.
+Renumbering has been extensively described in {{!RFC4192}} and analyzed in {{!RFC7010}} and the reader is expected to be familiar with them before reading this section.
 In the make-before-break renumbering scenario, the new prefix is advertised, the network is configured to prepare the transition to the new prefix.
 During a period of time, the two prefixes old and new coexist, before the old prefix is completely removed.
-
 In the break-before-make renumbering scenario, the new prefix is advertised making the old prefix obsolete.
 
-Renumbering has been extensively described in {{!RFC4192}} and analyzed in {{!RFC7010}} and the reader is expected to be familiar with them before reading this section.
-
-## Hidden Primary {#sec-primary}
 
 In a renumbering scenario, the HNA or Hidden Primary is informed it is being renumbered.
 In most cases, this occurs because the whole home network is being renumbered.
 As a result, the Public Homenet Zone will also be updated.
-Although the new and old IP addresses may be stored in the Public Homenet Zone, we recommend that only the  newly reachable IP addresses be published.
+Although the new and old IP addresses may be stored in the Public Homenet Zone, it is RECOMMENDED that only the newly reachable IP addresses be published.
 
 To avoid reachability disruption, IP connectivity information provided by the DNS SHOULD be coherent with the IP in use.
 In our case, this means the old IP address SHOULD NOT be provided via the DNS when it is not reachable anymore.
@@ -721,11 +646,6 @@ In the case of the make-before-break, seamless reachability is provided as long 
 If this is not satisfied, then devices associated with the old IP address in the home network may become unreachable for 2 * TTL - (T_OLD_UNREACHABLE - T_NEW).
 In the case of a break-before-make, T_OLD_UNREACHABLE = T_NEW, and the device may become unreachable up to 2 * TTL.
 Of course if T_NEW >= T_OLD_UNREACHABLE, the disruption is increased.
-
-Once the Public Homenet Zone file has been updated on the Hidden Primary, the Hidden Primary needs to inform the DOI that the Public Homenet Zone has been updated and that the IP address to use to retrieve the updated zone has also been updated.
-Both notifications are performed using regular DNS exchanges.
-Mechanisms to update an IP address provided by lower layers with protocols like SCTP {{!RFC4960}}, MOBIKE {{!RFC4555}} are not considered in this document.
-Instead the IP address of the HNA is updated using the Synchronization Channel as described in {{sec-sync-info}}.
 
 # Privacy Considerations {#sec-privacy}
 
@@ -816,6 +736,108 @@ In particular, the disruption is expected to start after the DS RRset has been r
 One possible way to address such concern is to describe mechanisms to provision the DS RRset to the Homenet DNSSEC resolver for example, via HNCP or by configuring a specific trust anchors {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
 Such work is out of the scope of this document. 
 
+
+
+
+#IANA Considerations
+
+This document has no actions for IANA.
+
+
+#Acknowledgment
+
+The authors wish to thank Philippe Lemordant for its contributions on
+the early versions of the draft; Ole Troan for pointing out issues with
+the IPv6 routed home concept and placing the scope of this document in a
+wider picture; Mark Townsley for encouragement and injecting a healthy
+debate on the merits of the idea; Ulrik de Bie for providing alternative
+solutions; Paul Mockapetris, Christian Jacquenet, Francis Dupont and
+Ludovic Eschard for their remarks on HNA and low power devices; Olafur
+Gudmundsson for clarifying DNSSEC capabilities of small devices; Simon
+Kelley for its feedback as dnsmasq implementer; Andrew Sullivan, Mark
+Andrew, Ted Lemon, Mikael Abrahamson, and Ray Bellis
+for their feedback on handling different views as well as clarifying the
+impact of outsourcing the zone signing operation outside the HNA; Mark
+Andrew and Peter Koch for clarifying the renumbering.
+
+At last the authors would like to thank Kiran Makhijani for her in-depth review that contributed in shaping the final version. 
+
+# Contributors
+
+The co-authors would like to thank Chris Griffiths and Wouter Cloetens that provided a significant contribution in the early versions of the document.
+
+--- back
+
+# HNA Channel Configurations
+
+## Homenet Reverse Zone {#sec-reverse}
+
+Homenet Reverse Zone works similarly to the Public Homenet Zone. 
+The main difference is that ISP that provides the IP connectivity is likely also owning the corresponding reverse zone and act as a default DOI for it. 
+If so, the configuration and the setting of the Synchronization Channel and Control Channel can largely be automated. 
+
+The Public Homenet Zone is associated to a Registered Homenet Domain and the ownership of that domain requires a specific registration from the end user as well as the HNA being provisioned with some authentication credentials.
+Such steps are mandatory unless the DOI has some other means to authenticate the HNA.
+Such situation may occur, for example, when the ISP provides the Homenet Domain as well as the DOI.
+
+In this case, the HNA may be authenticated by the physical link layer, in which case the authentication of the HNA may be performed without additional provisioning of the HNA.
+While this may not be so common for the Public Homenet Zone, this situation is expected to be quite common for the Reverse Homenet Zone as the ISP owns the IP address or IP prefix.
+
+More specifically, a common case is that the upstream ISP provides the IPv6 prefix to the Homenet with a IA_PD {{!RFC8415}} option and manages the DOI of the associated reverse zone.
+
+This leaves place for setting up automatically the relation between HNA and the DOI as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
+
+In the case of the reverse zone, the DOI authenticates the source of the updates by IPv6 Access Control Lists.
+In the case of the reverse zone, the ISP knows exactly what addresses have been delegated.
+The HNA SHOULD therefore always originate Synchronization Channel updates from an IP address within the zone that is being updated.
+
+For example, if the ISP has assigned 2001:db8:f00d::/64 to the WAN interface (by DHCPv6, or PPP/RA), then the HNA should originate Synchronization Channel updates from, for example, 2001:db8:f00d::2.
+
+An ISP that has delegated 2001:db8:aeae::/56 to the HNA via DHCPv6-PD, then HNA should originate Synchronization Channel updates an IP within that subnet, such as 2001:db8:aeae:0001::2.
+
+With this relation automatically configured, the synchronization between the Home network and the DOI happens similarly as for the Public Homenet Zone described earlier in this document.
+
+Note that for home networks connected to by multiple ISPs, each ISP provides only the DOI of the reverse zones associated to the delegated prefix.
+It is also likely that the DNS exchanges will need to be performed on dedicated interfaces as to be accepted by the ISP.
+More specifically, the reverse zone associated to prefix 1 will not be possible to be performs by the HNA using an IP address that belongs to prefix 2.
+Such constraints does not raise major concerns either for hot standby or load sharing configuration.
+
+With IPv6, the domain space for IP addresses is so large that reverse zone may be confronted with scalability issues.
+How the reverse zone is generated is out of scope of this document.
+{{?RFC8501}} provides guidance on how to address scalability issues.
+
+##  Homenet Public Zone {#hna-provisioning}
+
+This document does not deal with how the HNA is provisioned with a trusted relationship to the Distribution Manager for the forward zone.
+
+This section details what needs to be provisioned into the HNA and serves as a requirements statement for mechanisms.
+
+
+The HNA needs to be provisioned with:
+
+* the Registered Domain (e.g., myhome.example )
+* the contact info for the Distribution Manager (DM), including the DNS name (FQDN), possibly including the IP literal, and a certificate (or anchor) to be used to authenticate the service
+* the DM transport protocol and port (the default is DNS over TLS, on port 853)
+* the HNA credentials used by the DM for its authentication.
+
+The HNA will need to select an IP address for communication for the Synchronization Channel.
+This is typically the WAN address of the RG router, but could be an IPv6 LAN address in the case of a home with multiple ISPs (and multiple border routers).
+This is detailed in {{sec-ip-hna}} when the NS and A or AAAA RRsets are communicated.
+
+The above parameters MUST be be provisioned for ISP-specific reverse zones, as per  {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
+ISP-specific forward zones MAY also be provisioned using {{?I-D.ietf-homenet-naming-architecture-dhc-options}}, but zones which are not related to a specific ISP zone (such as with a DNS provider) must be provisioned through other means.
+
+Similarly, if the HNA is provided by a registrar, the HNA may be handed pre-configured to end user.
+
+In the absence of specific pre-established relation, these pieces of information may be entered manually by the end user.
+In order to ease the configuration from the end user the following scheme may be implemented.
+
+The HNA may present the end user a web interface where it provides the end user the ability to indicate the Registered Homenet Domain or the registrar for example a preselected list.
+Once the registrar has been selected, the HNA redirects the end user to that registrar in order to receive a access token.
+The access token will enable the HNA to retrieve the DM parameters associated to the Registered Domain.
+These parameters will include the credentials used by the HNA to establish the Control and Synchronization Channels.
+
+Such architecture limits the necessary steps to configure the HNA from the end user.
 
 # Information Model for Outsourced information {#info-model}
 
@@ -920,34 +942,7 @@ For reverse zones, the relationship is always with the upstream ISP (although th
 The following is an abbridged example of a set of data that represents the needed configuration parameters for outsourcing.
 
 
-#IANA Considerations
-
-This document has no actions for IANA.
-
-
-#Acknowledgment
-
-The authors wish to thank Philippe Lemordant for its contributions on
-the early versions of the draft; Ole Troan for pointing out issues with
-the IPv6 routed home concept and placing the scope of this document in a
-wider picture; Mark Townsley for encouragement and injecting a healthy
-debate on the merits of the idea; Ulrik de Bie for providing alternative
-solutions; Paul Mockapetris, Christian Jacquenet, Francis Dupont and
-Ludovic Eschard for their remarks on HNA and low power devices; Olafur
-Gudmundsson for clarifying DNSSEC capabilities of small devices; Simon
-Kelley for its feedback as dnsmasq implementer; Andrew Sullivan, Mark
-Andrew, Ted Lemon, Mikael Abrahamson, and Ray Bellis
-for their feedback on handling different views as well as clarifying the
-impact of outsourcing the zone signing operation outside the HNA; Mark
-Andrew and Peter Koch for clarifying the renumbering.
-
-# Contributors
-
-The co-authors would like to thank Chris Griffiths and Wouter Cloetens that provided a significant contribution in the early versions of the document.
-
---- back
-
-# Envisioned deployment scenarios
+# Envisioned deployment scenarios {#sec-deployment}
 
 A number of deployment have been envisioned, this section aims at
 providing a brief description. The use cases are not limitations and
