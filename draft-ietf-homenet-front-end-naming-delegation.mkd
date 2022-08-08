@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-15
+docname: draft-ietf-homenet-front-end-naming-delegation-16
 
 stand_alone: true
 
@@ -324,7 +324,7 @@ While {{sec-ctrl-security}} discusses in more depth the different security proto
 
 
 The information exchanged between the HNA and the DM uses DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}.
-Other specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?I-D.ietf-dprive-dnsoquic}}.
+Other specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?RFC9250}}.
 
 The main issue is that the Dynamic DNS update would also update the parent zone's (NS, DS and associated A or AAAA records) while the goal is to update the DM configuration files.
 The visible NS records SHOULD remain pointing at the cloud provider's anycast addresses.
@@ -606,7 +606,7 @@ The HNA SHOULD reject any incoming messages other than DNS NOTIFY response, SOA
 
 # DNSSEC compliant Homenet Architecture {#sec-dnssec-deployment}
 
-{{!RFC7368}} in Section 3.7.3 recommends DNSSEC to be deployed on both the authoritative server and the resolver.
+{{?RFC7368}} in Section 3.7.3 recommends DNSSEC to be deployed on both the authoritative server and the resolver.
 The resolver side is out of scope of this document, and only the authoritative part of the server is considered.
 
 It is RECOMMENDED the HNA signs the Public Homenet Zone.
@@ -626,7 +626,7 @@ Then, the HNA advertises the DM via a NOTIFY, that the Public Homenet Zone has b
 This corresponds to the standard DNS procedure performed on the Synchronization Channel and no specific actions are expected for the HNA (See {{sec-sync-info}}). 
 
 The remaining of the section provides recommendations regarding the provisioning of the Public Homenet Zone - especially the IP addresses.
-Renumbering has been extensively described in {{!RFC4192}} and analyzed in {{!RFC7010}} and the reader is expected to be familiar with them before reading this section.
+Renumbering has been extensively described in {{?RFC4192}} and analyzed in {{?RFC7010}} and the reader is expected to be familiar with them before reading this section.
 In the make-before-break renumbering scenario, the new prefix is advertised, the network is configured to prepare the transition to the new prefix.
 During a period of time, the two prefixes old and new coexist, before the old prefix is completely removed.
 In the break-before-make renumbering scenario, the new prefix is advertised making the old prefix obsolete.
@@ -654,13 +654,13 @@ Outsourcing the DNS Authoritative service from the HNA to a third party raises a
 The Public Homenet Zone lists the names of services hosted in the home network.
 Combined with blocking of AXFR queries, the use of NSEC3 {{!RFC5155}} (vs NSEC {{!RFC4034}}) prevents an  attacker from being able to walk the zone, to discover all the names.
 However, recent work {{GPUNSEC3}} or {{ZONEENUM}} have shown that the protection provided by NSEC3 against dictionary attacks should be considered cautiously and {{?I-D.ietf-dnsop-nsec3-guidance}} provides guidelines to configure NSEC3 properly. 
-In addition, the attacker may be able to walk the reverse DNS zone, or use other reconnaissance techniques to learn this information as described in {{!RFC7707}}.
+In addition, the attacker may be able to walk the reverse DNS zone, or use other reconnaissance techniques to learn this information as described in {{?RFC7707}}.
 
 The zone is also exposed during the synchronization between the primary and the secondary. {{!RFC9103}} only specifies the use of TLS for XFR transfers, which leak the existence of the zone and has been clearly specified as out of scope of the threat model of {{!RFC9103}}. Additional privacy MAY be provide by protecting all exchanges of the Synchronization Channel as well as the Control Channel.  
 
 In general a home network owner is expected to publish only names for which there is some need to be able to reference externally.
 Publication of the name does not imply that the service is necessarily reachable from any or all parts of the Internet.
-{{!RFC7084}} mandates that the outgoing-only policy {{!RFC6092}} be available, and in many cases it is configured by default.
+{{?RFC7084}} mandates that the outgoing-only policy {{?RFC6092}} be available, and in many cases it is configured by default.
 A well designed User Interface would combine a policy for making a service public by a name with a policy on who may access it.
 
 In many cases, the home network owner wishes to publish names for services that only they will be able to access.
