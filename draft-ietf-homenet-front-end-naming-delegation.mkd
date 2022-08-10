@@ -123,14 +123,14 @@ The administrator would mark which devices and services (by name), are to be pub
 The HNA would then collect the IPv6 address(es) associated with that device or service, and put the name into the Public Homenet Zone.
 The address of the device or service can be collected from a number of places: mDNS {{!RFC6762}}, DHCP {{!RFC8415}}, UPnP, PCP {{!RFC6887}}, or manual configuration.
 
-A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), a Unique Local IPv6 Address (ULA) {{?RFC4193}}, as as well IPv6-Link-Local addresses, IPv4-Link-Local Addresses (LLA) {{?RFC7404}}, and private IPv4 addresses {{!RFC1918}}.
+A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), a Unique Local IPv6 Address (ULA) {{?RFC4193}}, as well as IPv6-Link-Local addresses{{!RFC4291}}{{!RFC7404}}, IPv4-Link-Local Addresses {{!RFC3927}} (LLA), and private IPv4 addresses {{!RFC1918}}.
 Of these the link-local are never useful for the Public Zone, and should be omitted.
-The IPv6 ULA and the RFC1918 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
+The IPv6 ULA and the private IPv4 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
 
 The IPv6 ULA addresses are safer to publish with a significantly lower probability of collision than RFC1918 addresses. 
 
 In general, one expects the GUA to be the default address to be published.
-However, publishing the ULA and RFC1918 may enable local communications within the home network. 
+However, publishing the ULA and private IPv4 addresses may enable local communications within the home network. 
 A direct advantage of enabling local communication is to enable communications even in case of Internet disruption.
 However, since communications are established with names which remains a global identifier, the communication can be protected by TLS the same way it is protected on the global Internet.  
 
@@ -145,7 +145,7 @@ While the IETF has defined Dynamic Update {{?RFC3007}}, in many -- as far as the
 These solutions were typically used by a host behind the CPE and since the CPE implements some NAT, the host can only be reached from the global Internet via its CPE IPv4 address. 
 This is the most common scenario considered in this section, while some variant may also consider the client being hosted in the CPE.
 
-For a very few numbers (one to three) of hosts (media servers, VPN gateways, ... ), the use of such a system provides an alternative to the architecture described in this document.
+For a very few numbers of hosts, the use of such a system provides an alternative to the architecture described in this document.
 Dynamic DNS - even adapted to IPv6 and ignoring those associated to an IPv4 development - does suffer from some severe limitations:
 
 * the CPE/HNA router is unaware of the process, and cannot respond to queries for these names and communications to these names require an Internet connectivity is order to perform the DNS resolution. 
