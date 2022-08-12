@@ -121,9 +121,9 @@ While this document does not create any normative mechanism to select the names 
 
 The administrator would mark which devices and services (by name), are to be published.
 The HNA would then collect the IPv6 address(es) associated with that device or service, and put the name into the Public Homenet Zone.
-The address of the device or service can be collected from a number of places: mDNS {{!RFC6762}}, DHCP {{!RFC8415}}, UPnP, PCP {{!RFC6887}}, or manual configuration.
+The address of the device or service can be collected from a number of places: mDNS {{?RFC6762}}, DHCP {{?RFC8415}}, UPnP, PCP {{?RFC6887}}, or manual configuration.
 
-A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), a Unique Local IPv6 Address (ULA) {{?RFC4193}}, as well as IPv6-Link-Local addresses{{!RFC4291}}{{!RFC7404}}, IPv4-Link-Local Addresses {{!RFC3927}} (LLA), and private IPv4 addresses {{!RFC1918}}.
+A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), a Unique Local IPv6 Address (ULA) {{?RFC4193}}, as well as IPv6-Link-Local addresses{{?RFC4291}}{{?RFC7404}}, IPv4-Link-Local Addresses {{?RFC3927}} (LLA), and private IPv4 addresses {{!RFC1918}}.
 Of these the link-local are never useful for the Public Zone, and should be omitted.
 The IPv6 ULA and the private IPv4 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
 
@@ -211,7 +211,7 @@ What matters at that point is the DOI being able to generate authentication cred
 This obviously requires the home network to provide the public key generated
 by the HNA in a CSR.
 
-  * If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{!RFC8555}} for example that will end in the generation of a certificate.
+  * If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{?RFC8555}} for example that will end in the generation of a certificate.
 ACME is used here to the purpose of automating the generation of the certificate, the CA may be a specific CA or the DOI.
 With that being done, the DOI has a roof of ownership and can proceed as above.
 
@@ -349,7 +349,7 @@ When the resolution is performed outside the home network, the DNSSEC Resolver r
 When the resolution is performed from within the home network, the Homenet DNSSEC Resolver MAY proceed similarly.
 On the other hand, to provide resilience to the Public Homenet Zone in case of WAN connectivity disruption, the Homenet DNSSEC Resolver SHOULD be able to perform the resolution on the Homenet Authoritative Servers.
 These servers are not expected to be mentioned in the Public Homenet Zone, nor to be accessible from the Internet.
-As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP {{!RFC7788}} or a by configuring a trust anchor {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
+As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP {{?RFC7788}} or a by configuring a trust anchor {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
 Such configuration is outside the scope of this document.
 Since the scope of the Homenet Authoritative Servers is limited to the home network, these servers are expected to serve the Homenet Zone as represented in {{fig-naming-arch}}.
 
@@ -459,7 +459,7 @@ The DM may also create the initial configuration for the delegation zone in the 
 The information provided by the DM to the HNA is retrieved by the HNA with an AXFR exchange {{!RFC1034}}.
 AXFR enables the response to contain any type of RRsets.
 The response might be extended in the future if additional information will be needed.
-Alternatively, the information provided by the HNA to the DM is pushed by the HNA via a DNS update exchange {{!RFC2136}}.
+Alternatively, the information provided by the HNA to the DM is pushed by the HNA via a DNS update exchange {{?RFC2136}}.
 
 To retrieve the necessary information to build the Public Homenet Zone, the HNA MUST send a DNS request of type AXFR associated to the Registered Homenet Domain.
 The DM MUST respond with a zone template.
@@ -488,10 +488,10 @@ If the resolution does not succeed, the outsourcing operation is aborted and the
 
 ### Providing information for the DNSSEC chain of trust {#sec-ds}
 
-To provide the DS RRset to initialize the DNSSEC chain of trust the HNA MAY send a DNS update {{!RFC2136}} message.
+To provide the DS RRset to initialize the DNSSEC chain of trust the HNA MAY send a DNS update {{?RFC2136}} message.
 
 The DNS update message is composed of a Header section, a Zone section, a Pre-requisite section, and Update section and an additional section.
-The Zone section MUST set the ZNAME to the parent zone of the Registered Homenet Domain - that is where the DS records should be inserted. As described {{!RFC2136}}, ZTYPE is set to SOA and ZCLASS is set to the zone's class.
+The Zone section MUST set the ZNAME to the parent zone of the Registered Homenet Domain - that is where the DS records should be inserted. As described {{?RFC2136}}, ZTYPE is set to SOA and ZCLASS is set to the zone's class.
 The Pre-requisite section MUST be empty.
 The Update section is a DS RRset with its NAME set to the Registered Homenet Domain and the associated RDATA corresponds to the value of the DS.
 The Additional Data section MUST be empty.
@@ -537,7 +537,7 @@ To instruct to delete the delegation the HNA sends a DNS UPDATE Delete message.
 The Zone section sets its ZNAME to the Registered Homenet Domain, the ZTYPE to SOA and the ZCLASS to zone's type.
 The Pre-requisite section is empty.
 The Update section is a RRset of type NS with the NAME set to the Registered Domain Name.
-As indicated by {{!RFC2136}} Section 2.5.2 the delete instruction is set by setting the TTL to 0, the Class to ANY, the RDLENGTH to 0 and the RDATA MUST be empty.
+As indicated by {{?RFC2136}} Section 2.5.2 the delete instruction is set by setting the TTL to 0, the Class to ANY, the RDLENGTH to 0 and the RDATA MUST be empty.
 The Additional Data section is empty.
 
 Upon receiving the DNS update request, the DM checks the request and removes the delegation.
@@ -554,13 +554,13 @@ The advantage of TLS is that this technology is widely deployed, and most of the
 Further, TLS provides authentication facilities and can use certificates to  mutually authenticate the DM and HNA at the application layer, including available API.
 On the other hand, using TLS requires implementing DNS exchanges over TLS, as  well as a new service port.
 
-The HNA SHOULD authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {{!RFC6698}}.
+The HNA SHOULD authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {{?RFC6698}}.
 The HNA is expected to be provisioned with a connection to the DM by the manufacturer, or during some user-initiated onboarding process, see {{hna-provisioning}}.
 
 The DM SHOULD authenticate the HNA and check that inbound messages are from the appropriate client.
 The HNA certificate needs to provide sufficient trust to the DM that the HNA is legitimate. When certificates are used, it is left to the DM to define what information carried by the certificate is acceptable as well as which CA can issue the certificate. For example, some deployments may use domain validation certificates with the Registered Homenet Domain as a SAN of type FQDN. Other deployments may use specifically formed certificates with additional information such as a user account as a SAN of type URN, signed by a specific CA may be used. 
 
-IPsec {{!RFC4301}} and IKEv2 {{!RFC7296}} were considered.
+IPsec {{?RFC4301}} and IKEv2 {{?RFC7296}} were considered.
 They would need to operate in transport mode, and the authenticated end points would need to be visible to the applications, and this is not commonly available at the time of this writing.
 
 A pure DNS solution using TSIG and/or SIG(0) to authenticate message was also considered.
@@ -603,14 +603,14 @@ Note that even when UPDATE messages are used, these messages are using a distinc
 
 Note that there is no standard way to distribute a DNS primary between multiple devices.
 As a result, if multiple devices are candidate for hosting the Hidden Primary, some specific mechanisms should be designed so the home network only selects a single HNA for the Hidden Primary.
-Selection mechanisms based on HNCP {{!RFC7788}} are good candidates.
+Selection mechanisms based on HNCP {{?RFC7788}} are good candidates.
 
 The HNA acts as a Hidden Primary Server, which is a regular authoritative DNS Server listening on the WAN interface.
 
 The DM is configured as a secondary for the Registered Homenet Domain Name.
 This secondary configuration has been previously agreed between the end user and the provider of the DOI as part of either the provisioning or due to receipt of DNS UPDATE messages on the DM Control Channel.
 
-The Homenet Reverse Zone MAY also be updated either with DNS UPDATE {{!RFC2136}} or using a primary / secondary synchronization.
+The Homenet Reverse Zone MAY also be updated either with DNS UPDATE {{?RFC2136}} or using a primary / secondary synchronization.
 
 ## Securing the Synchronization Channel {#sec-synch-security}
 
@@ -624,7 +624,7 @@ Then, the DM sends  AXFR {{!RFC1034}} or IXFR {{!RFC1995}} request. This request
 The AXFR request from the DM to the HNA SHOULD be secured and the use of TLS is RECOMMENDED {{!RFC9103}}. 
 While {{!RFC9103}} does not consider the protection by TLS of NOTIFY and SOA requests, these MAY still be protected by TLS to provide additional privacy. 
 
-When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {{!RFC6698}}.
+When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {{?RFC6698}}.
 In addition, to guarantee the DM remains the same across multiple TLS session, the HNA and DM MAY implement {{?RFC8672}}.
 
 The HNA SHOULD apply an ACL on inbound AXFR requests to ensure they only arrive from the DM Synchronization Channel.
@@ -663,7 +663,7 @@ Such situation may occur, for example, when the ISP provides the Homenet Domain 
 In this case, the HNA may be authenticated by the physical link layer, in which case the authentication of the HNA may be performed without additional provisioning of the HNA.
 While this may not be so common for the Public Homenet Zone, this situation is expected to be quite common for the Reverse Homenet Zone as the ISP owns the IP address or IP prefix.
 
-More specifically, a common case is that the upstream ISP provides the IPv6 prefix to the Homenet with a IA_PD {{!RFC8415}} option and manages the DOI of the associated reverse zone.
+More specifically, a common case is that the upstream ISP provides the IPv6 prefix to the Homenet with a IA_PD {{?RFC8415}} option and manages the DOI of the associated reverse zone.
 
 This leaves place for setting up automatically the relation between HNA and the DOI as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
 
@@ -797,7 +797,7 @@ On the other hand, names used either for the home network domain or for the devi
 ## Names are less volatile than IP addresses {#sec-name-less-volatile}
 
 IP addresses may be used to locate a device, a host or a service.
-However, home networks are not expected to be assigned a time invariant prefix by ISPs. In addition IPv6 enables temporary addresses that makes them even more volatile {{!RFC8981}}.
+However, home networks are not expected to be assigned a time invariant prefix by ISPs. In addition IPv6 enables temporary addresses that makes them even more volatile {{?RFC8981}}.
 As a result, observing IP addresses only provides some ephemeral information about who is accessing the service.
 On the other hand, names are not expected to be as volatile as IP addresses.
 As a result, logging names over time may be more valuable than logging IP addresses, especially to profile an end user's characteristics.
