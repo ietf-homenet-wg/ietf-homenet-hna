@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-17
+docname: draft-ietf-homenet-front-end-naming-delegation-18
 
 stand_alone: true
 
@@ -123,7 +123,7 @@ The administrator would mark which devices and services (by name), are to be pub
 The HNA would then collect the IPv6 address(es) associated with that device or service, and put the name into the Public Homenet Zone.
 The address of the device or service can be collected from a number of places: mDNS {{?RFC6762}}, DHCP {{?RFC8415}}, UPnP, PCP {{?RFC6887}}, or manual configuration.
 
-A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), a Unique Local IPv6 Address (ULA) {{?RFC4193}}, as well as IPv6-Link-Local addresses{{?RFC4291}}{{?RFC7404}}, IPv4-Link-Local Addresses {{?RFC3927}} (LLA), and private IPv4 addresses {{!RFC1918}}.
+A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), Unique Local IPv6 Addresses (ULA) {{?RFC4193}}, as well IPv6-Link-Local addresses{{?RFC4291}}{{?RFC7404}}, IPv4-Link-Local Addresses {{?RFC3927}} (LLA), and private IPv4 addresses {{!RFC1918}}.
 Of these the link-local are never useful for the Public Zone, and should be omitted.
 The IPv6 ULA and the private IPv4 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
 
@@ -177,7 +177,7 @@ A number of deployment have been envisioned, this section aims at
 providing a brief description. The use cases are not limitations and
 this section is not normative.
 
-# CPE Vendor
+### CPE Vendor
 
 A specific vendor with specific relations with a registrar or a registry
 may sell a CPE that is provisioned with provisioned domain name. Such
@@ -190,7 +190,7 @@ The reason to combine the domain name and the key is that DOI are likely handle 
 
 When the home network owner plugs the CPE at home, the relation between HNA and DM is expected to work out-of-the-box.
 
-# Agnostic CPE
+### Agnostic CPE
 
 An CPE that is not preconfigured may also take advantage to the protocol
 defined in this document but some configuration steps will be needed.
@@ -201,6 +201,7 @@ as such creates an account on that registrar
 2. Either the registrar is also providing the outsourcing infrastructure
 or the home network needs to create a specific account on the
 outsourcing infrastructure.
+
   * If the DOI is the registrar, it has by
 design a proof of ownership of the domain name by the homenet owner.
 In this case, it is expected the DOI provides the necessary
@@ -736,7 +737,7 @@ Outsourcing the DNS Authoritative service from the HNA to a third party raises a
 
 The Public Homenet Zone lists the names of services hosted in the home network.
 Combined with blocking of AXFR queries, the use of NSEC3 {{!RFC5155}} (vs NSEC {{!RFC4034}}) prevents an  attacker from being able to walk the zone, to discover all the names.
-However, recent work {{GPUNSEC3}} or {{ZONEENUM}} have shown that the protection provided by NSEC3 against dictionary attacks should be considered cautiously and {{?I-D.ietf-dnsop-nsec3-guidance}} provides guidelines to configure NSEC3 properly. 
+However, recent work {{GPUNSEC3}} or {{ZONEENUM}} have shown that the protection provided by NSEC3 against dictionary attacks should be considered cautiously and {{?RFC9276}} provides guidelines to configure NSEC3 properly. 
 In addition, the attacker may be able to walk the reverse DNS zone, or use other reconnaissance techniques to learn this information as described in {{?RFC7707}}.
 
 The zone is also exposed during the synchronization between the primary and the secondary. {{!RFC9103}} only specifies the use of TLS for XFR transfers, which leak the existence of the zone and has been clearly specified as out of scope of the threat model of {{!RFC9103}}. Additional privacy MAY be provided by protecting all exchanges of the Synchronization Channel as well as the Control Channel.  
