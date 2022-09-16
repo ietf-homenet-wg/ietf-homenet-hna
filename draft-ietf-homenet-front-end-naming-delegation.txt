@@ -120,7 +120,7 @@ Internet-Draft                public-names                September 2022
    17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  28
    18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  28
      18.1.  Normative References . . . . . . . . . . . . . . . . . .  28
-     18.2.  Informative References . . . . . . . . . . . . . . . . .  31
+     18.2.  Informative References . . . . . . . . . . . . . . . . .  30
    Appendix A.  HNA Channel Configurations . . . . . . . . . . . . .  34
      A.1.  Homenet Public Zone . . . . . . . . . . . . . . . . . . .  34
    Appendix B.  Information Model for Outsourced information . . . .  35
@@ -1588,80 +1588,24 @@ Internet-Draft                public-names                September 2022
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC2136]  Vixie, P., Ed., Thomson, S., Rekhter, Y., and J. Bound,
-              "Dynamic Updates in the Domain Name System (DNS UPDATE)",
-              RFC 2136, DOI 10.17487/RFC2136, April 1997,
-              <https://www.rfc-editor.org/info/rfc2136>.
-
-   [RFC3927]  Cheshire, S., Aboba, B., and E. Guttman, "Dynamic
-              Configuration of IPv4 Link-Local Addresses", RFC 3927,
-              DOI 10.17487/RFC3927, May 2005,
-              <https://www.rfc-editor.org/info/rfc3927>.
-
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
               RFC 4034, DOI 10.17487/RFC4034, March 2005,
               <https://www.rfc-editor.org/info/rfc4034>.
-
-   [RFC4291]  Hinden, R. and S. Deering, "IP Version 6 Addressing
-              Architecture", RFC 4291, DOI 10.17487/RFC4291, February
-              2006, <https://www.rfc-editor.org/info/rfc4291>.
-
-   [RFC4301]  Kent, S. and K. Seo, "Security Architecture for the
-              Internet Protocol", RFC 4301, DOI 10.17487/RFC4301,
-              December 2005, <https://www.rfc-editor.org/info/rfc4301>.
 
    [RFC5155]  Laurie, B., Sisson, G., Arends, R., and D. Blacka, "DNS
               Security (DNSSEC) Hashed Authenticated Denial of
               Existence", RFC 5155, DOI 10.17487/RFC5155, March 2008,
               <https://www.rfc-editor.org/info/rfc5155>.
 
-
-
-
-
-
-Migault, et al.           Expires 20 March 2023                [Page 29]
-
-Internet-Draft                public-names                September 2022
-
-
    [RFC5936]  Lewis, E. and A. Hoenes, Ed., "DNS Zone Transfer Protocol
               (AXFR)", RFC 5936, DOI 10.17487/RFC5936, June 2010,
               <https://www.rfc-editor.org/info/rfc5936>.
-
-   [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
-              of Named Entities (DANE) Transport Layer Security (TLS)
-              Protocol: TLSA", RFC 6698, DOI 10.17487/RFC6698, August
-              2012, <https://www.rfc-editor.org/info/rfc6698>.
-
-   [RFC6762]  Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
-              DOI 10.17487/RFC6762, February 2013,
-              <https://www.rfc-editor.org/info/rfc6762>.
-
-   [RFC6887]  Wing, D., Ed., Cheshire, S., Boucadair, M., Penno, R., and
-              P. Selkirk, "Port Control Protocol (PCP)", RFC 6887,
-              DOI 10.17487/RFC6887, April 2013,
-              <https://www.rfc-editor.org/info/rfc6887>.
-
-   [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
-              Kivinen, "Internet Key Exchange Protocol Version 2
-              (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
-              2014, <https://www.rfc-editor.org/info/rfc7296>.
 
    [RFC7344]  Kumari, W., Gudmundsson, O., and G. Barwood, "Automating
               DNSSEC Delegation Trust Maintenance", RFC 7344,
               DOI 10.17487/RFC7344, September 2014,
               <https://www.rfc-editor.org/info/rfc7344>.
-
-   [RFC7404]  Behringer, M. and E. Vyncke, "Using Only Link-Local
-              Addressing inside an IPv6 Network", RFC 7404,
-              DOI 10.17487/RFC7404, November 2014,
-              <https://www.rfc-editor.org/info/rfc7404>.
-
-   [RFC7788]  Stenberg, M., Barth, S., and P. Pfister, "Home Networking
-              Control Protocol", RFC 7788, DOI 10.17487/RFC7788, April
-              2016, <https://www.rfc-editor.org/info/rfc7788>.
 
    [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
               and P. Hoffman, "Specification for DNS over Transport
@@ -1677,7 +1621,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 30]
+Migault, et al.           Expires 20 March 2023                [Page 29]
 
 Internet-Draft                public-names                September 2022
 
@@ -1686,26 +1630,9 @@ Internet-Draft                public-names                September 2022
               'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
               <https://www.rfc-editor.org/info/rfc8375>.
 
-   [RFC8415]  Mrugalski, T., Siodelski, M., Volz, B., Yourtchenko, A.,
-              Richardson, M., Jiang, S., Lemon, T., and T. Winters,
-              "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)",
-              RFC 8415, DOI 10.17487/RFC8415, November 2018,
-              <https://www.rfc-editor.org/info/rfc8415>.
-
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
-
-   [RFC8555]  Barnes, R., Hoffman-Andrews, J., McCarney, D., and J.
-              Kasten, "Automatic Certificate Management Environment
-              (ACME)", RFC 8555, DOI 10.17487/RFC8555, March 2019,
-              <https://www.rfc-editor.org/info/rfc8555>.
-
-   [RFC8981]  Gont, F., Krishnan, S., Narten, T., and R. Draves,
-              "Temporary Address Extensions for Stateless Address
-              Autoconfiguration in IPv6", RFC 8981,
-              DOI 10.17487/RFC8981, February 2021,
-              <https://www.rfc-editor.org/info/rfc8981>.
 
    [RFC9103]  Toorop, W., Dickinson, S., Sahib, S., Aras, P., and A.
               Mankin, "DNS Zone Transfer over TLS", RFC 9103,
@@ -1730,14 +1657,6 @@ Internet-Draft                public-names                September 2022
    [I-D.ietf-dnsop-nsec3-guidance]
               Hardaker, W. and V. Dukhovni, "Guidance for NSEC3
               Parameter Settings", Work in Progress, Internet-Draft,
-
-
-
-Migault, et al.           Expires 20 March 2023                [Page 31]
-
-Internet-Draft                public-names                September 2022
-
-
               draft-ietf-dnsop-nsec3-guidance-10, 25 May 2022,
               <https://www.ietf.org/archive/id/draft-ietf-dnsop-nsec3-
               guidance-10.txt>.
@@ -1750,12 +1669,30 @@ Internet-Draft                public-names                September 2022
               <https://www.ietf.org/archive/id/draft-ietf-homenet-
               naming-architecture-dhc-options-16.txt>.
 
+
+
+
+
+
+
+
+
+Migault, et al.           Expires 20 March 2023                [Page 30]
+
+Internet-Draft                public-names                September 2022
+
+
    [I-D.richardson-homerouter-provisioning]
               Richardson, M., "Provisioning Initial Device Identifiers
               into Home Routers", Work in Progress, Internet-Draft,
               draft-richardson-homerouter-provisioning-02, 14 November
               2021, <https://www.ietf.org/archive/id/draft-richardson-
               homerouter-provisioning-02.txt>.
+
+   [RFC2136]  Vixie, P., Ed., Thomson, S., Rekhter, Y., and J. Bound,
+              "Dynamic Updates in the Domain Name System (DNS UPDATE)",
+              RFC 2136, DOI 10.17487/RFC2136, April 1997,
+              <https://www.rfc-editor.org/info/rfc2136>.
 
    [RFC3007]  Wellington, B., "Secure Domain Name System (DNS) Dynamic
               Update", RFC 3007, DOI 10.17487/RFC3007, November 2000,
@@ -1766,6 +1703,11 @@ Internet-Draft                public-names                September 2022
               (IS-IS)", RFC 3787, DOI 10.17487/RFC3787, May 2004,
               <https://www.rfc-editor.org/info/rfc3787>.
 
+   [RFC3927]  Cheshire, S., Aboba, B., and E. Guttman, "Dynamic
+              Configuration of IPv4 Link-Local Addresses", RFC 3927,
+              DOI 10.17487/RFC3927, May 2005,
+              <https://www.rfc-editor.org/info/rfc3927>.
+
    [RFC4192]  Baker, F., Lear, E., and R. Droms, "Procedures for
               Renumbering an IPv6 Network without a Flag Day", RFC 4192,
               DOI 10.17487/RFC4192, September 2005,
@@ -1775,24 +1717,44 @@ Internet-Draft                public-names                September 2022
               Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
               <https://www.rfc-editor.org/info/rfc4193>.
 
+   [RFC4291]  Hinden, R. and S. Deering, "IP Version 6 Addressing
+              Architecture", RFC 4291, DOI 10.17487/RFC4291, February
+              2006, <https://www.rfc-editor.org/info/rfc4291>.
+
+   [RFC4301]  Kent, S. and K. Seo, "Security Architecture for the
+              Internet Protocol", RFC 4301, DOI 10.17487/RFC4301,
+              December 2005, <https://www.rfc-editor.org/info/rfc4301>.
+
    [RFC6092]  Woodyatt, J., Ed., "Recommended Simple Security
               Capabilities in Customer Premises Equipment (CPE) for
               Providing Residential IPv6 Internet Service", RFC 6092,
               DOI 10.17487/RFC6092, January 2011,
               <https://www.rfc-editor.org/info/rfc6092>.
 
+
+
+Migault, et al.           Expires 20 March 2023                [Page 31]
+
+Internet-Draft                public-names                September 2022
+
+
+   [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
+              of Named Entities (DANE) Transport Layer Security (TLS)
+              Protocol: TLSA", RFC 6698, DOI 10.17487/RFC6698, August
+              2012, <https://www.rfc-editor.org/info/rfc6698>.
+
    [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
               RFC 6749, DOI 10.17487/RFC6749, October 2012,
               <https://www.rfc-editor.org/info/rfc6749>.
 
+   [RFC6762]  Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
+              DOI 10.17487/RFC6762, February 2013,
+              <https://www.rfc-editor.org/info/rfc6762>.
 
-
-
-
-Migault, et al.           Expires 20 March 2023                [Page 32]
-
-Internet-Draft                public-names                September 2022
-
+   [RFC6887]  Wing, D., Ed., Cheshire, S., Boucadair, M., Penno, R., and
+              P. Selkirk, "Port Control Protocol (PCP)", RFC 6887,
+              DOI 10.17487/RFC6887, April 2013,
+              <https://www.rfc-editor.org/info/rfc6887>.
 
    [RFC7010]  Liu, B., Jiang, S., Carpenter, B., Venaas, S., and W.
               George, "IPv6 Site Renumbering Gap Analysis", RFC 7010,
@@ -1804,19 +1766,48 @@ Internet-Draft                public-names                September 2022
               DOI 10.17487/RFC7084, November 2013,
               <https://www.rfc-editor.org/info/rfc7084>.
 
+   [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
+              Kivinen, "Internet Key Exchange Protocol Version 2
+              (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
+              2014, <https://www.rfc-editor.org/info/rfc7296>.
+
    [RFC7368]  Chown, T., Ed., Arkko, J., Brandt, A., Troan, O., and J.
               Weil, "IPv6 Home Networking Architecture Principles",
               RFC 7368, DOI 10.17487/RFC7368, October 2014,
               <https://www.rfc-editor.org/info/rfc7368>.
 
+   [RFC7404]  Behringer, M. and E. Vyncke, "Using Only Link-Local
+              Addressing inside an IPv6 Network", RFC 7404,
+              DOI 10.17487/RFC7404, November 2014,
+              <https://www.rfc-editor.org/info/rfc7404>.
+
    [RFC7707]  Gont, F. and T. Chown, "Network Reconnaissance in IPv6
               Networks", RFC 7707, DOI 10.17487/RFC7707, March 2016,
               <https://www.rfc-editor.org/info/rfc7707>.
+
+
+
+
+
+Migault, et al.           Expires 20 March 2023                [Page 32]
+
+Internet-Draft                public-names                September 2022
+
+
+   [RFC7788]  Stenberg, M., Barth, S., and P. Pfister, "Home Networking
+              Control Protocol", RFC 7788, DOI 10.17487/RFC7788, April
+              2016, <https://www.rfc-editor.org/info/rfc7788>.
 
    [RFC8094]  Reddy, T., Wing, D., and P. Patil, "DNS over Datagram
               Transport Layer Security (DTLS)", RFC 8094,
               DOI 10.17487/RFC8094, February 2017,
               <https://www.rfc-editor.org/info/rfc8094>.
+
+   [RFC8415]  Mrugalski, T., Siodelski, M., Volz, B., Yourtchenko, A.,
+              Richardson, M., Jiang, S., Lemon, T., and T. Winters,
+              "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)",
+              RFC 8415, DOI 10.17487/RFC8415, November 2018,
+              <https://www.rfc-editor.org/info/rfc8415>.
 
    [RFC8484]  Hoffman, P. and P. McManus, "DNS Queries over HTTPS
               (DoH)", RFC 8484, DOI 10.17487/RFC8484, October 2018,
@@ -1830,6 +1821,11 @@ Internet-Draft                public-names                September 2022
               Providers", RFC 8501, DOI 10.17487/RFC8501, November 2018,
               <https://www.rfc-editor.org/info/rfc8501>.
 
+   [RFC8555]  Barnes, R., Hoffman-Andrews, J., McCarney, D., and J.
+              Kasten, "Automatic Certificate Management Environment
+              (ACME)", RFC 8555, DOI 10.17487/RFC8555, March 2019,
+              <https://www.rfc-editor.org/info/rfc8555>.
+
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
               Express Concise Binary Object Representation (CBOR) and
@@ -1840,7 +1836,11 @@ Internet-Draft                public-names                September 2022
               with Tickets", RFC 8672, DOI 10.17487/RFC8672, October
               2019, <https://www.rfc-editor.org/info/rfc8672>.
 
-
+   [RFC8981]  Gont, F., Krishnan, S., Narten, T., and R. Draves,
+              "Temporary Address Extensions for Stateless Address
+              Autoconfiguration in IPv6", RFC 8981,
+              DOI 10.17487/RFC8981, February 2021,
+              <https://www.rfc-editor.org/info/rfc8981>.
 
 
 
