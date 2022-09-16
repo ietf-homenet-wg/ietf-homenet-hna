@@ -746,18 +746,22 @@ Publication of the name does not imply that the service is necessarily reachable
 {{?RFC7084}} mandates that the outgoing-only policy {{?RFC6092}} be available, and in many cases it is configured by default.
 A well designed User Interface would combine a policy for making a service public by a name with a policy on who may access it.
 
-In many cases, the home network owner wishes to publish names for services that only they will be able to access.
+In many cases, and for privacy reasons, the home network owner wished publish names only for services that they will be able to access.
 The access control may consist of an IP source address range, or access may be restricted via some VPN functionality.
-The purpose of publishing the name is so that the service may be access by the same name both within the home, and outside the home.
-Sending traffic to the relevant IPv6 address causes the relevant VPN policy to be enacted upon. Typically, a user may configure its device to reach its homenet devices via a VPN while the remaining of the traffic is accessed directly. 
+The main advantages of publishing the name are that service may be access by the same name both within the home and outside the home and that the DNS resolution can be handled similarly within the home and outside the home. This considerably eases the ability to use VPNs where the VPN can be chosen according to the IP address of the service. 
+Typically, a user may configure its device to reach its homenet devices via a VPN while the remaining of the traffic is accessed directly. 
 In such cases, the routing policy is likely to be defined by the destination IP address. 
-This IP address is potentially results from a DNS resolution over the Internet. 
 
-While the problem of getting access to internal names has been solved in Enterprise configurations with a  split-DNS, and such a thing could be done in the home, many recent improvements to VPN user interfaces make it more likely that an individual might have multiple connections configured.
-For instance, an adult child checking on the state of a home automation system for a parent.
+Enterprise networks have generally adopted another strategy designated as split-DNS. 
+While such strategy might appear as providing more privacy at first sight, its implementation remains challenging and the privacy advantages needs to be considered carefully. 
+In split-DNS, names are designated with internal names that can only be resolved within the corporate network. 
+When such strategy is applied to homenet, VPNs needs to be both configured with a naming resolution policies and routing policies. Such approach might be reasonable with a single VPN, but maintaining a coherent DNS space and IP space among various VPNs comes with serious complexities.
+Firstly, if multiple homenets are using the same domain name -like home.arpa - it becomes difficult to determine on which network the resolution should be performed. 
+As a result, homenets should at least be differentiated by a domain name.  
+Secondly, the use of split-DNS requires each VPN being associated to a resolver and specific resolutions being performed by the dedicated resolver. Such policies can easily raises some conflicts (with significant privacy issues) while remaining hard to be implemented.
 
-In addition to the Public Homenet Zone, pervasive DNS monitoring can also monitor
-the traffic associated with the Public Homenet Zone.
+
+In addition to the Public Homenet Zone, pervasive DNS monitoring can also monitor the traffic associated with the Public Homenet Zone.
 This traffic may provide an indication of the services an end user accesses, plus how and when they use these services.
 Although, caching may obfuscate this information inside the home network, it is likely that outside your  home network this information will not be cached.
 
