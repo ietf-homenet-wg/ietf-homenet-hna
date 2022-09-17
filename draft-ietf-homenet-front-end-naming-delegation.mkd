@@ -653,7 +653,7 @@ The HNA SHOULD reject any incoming messages other than DNS NOTIFY response, SOA
 # Homenet Reverse Zone {#sec-reverse}
 
 Homenet Reverse Zone works similarly to the Public Homenet Zone.
-The main difference is that ISP that provides the IP connectivity is likely also owning the corresponding reverse zone and act as a default DOI for it.
+The main difference is that ISP that provides the IP connectivity is likely also the owner of the corresponding reverse zone and act as a default DOI for it.
 If so, the configuration and the setting of the Synchronization Channel and Control Channel can largely be automated.
 
 The Public Homenet Zone is associated to a Registered Homenet Domain and the ownership of that domain requires a specific registration from the end user as well as the HNA being provisioned with some authentication credentials.
