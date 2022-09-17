@@ -198,8 +198,8 @@ defined in this document but some configuration steps will be needed.
 1. The owner of the home network buys a domain name to a registrar, and
 as such creates an account on that registrar
 
-2. Either the registrar is also providing the outsourcing infrastructure
-or the home network needs to create a specific account on the
+2. the registrar may also be providing the outsourcing infrastructure
+or the home network may need to create a specific account on the
 outsourcing infrastructure.
 
   * If the DOI is the registrar, it has by
