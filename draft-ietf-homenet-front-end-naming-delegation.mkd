@@ -186,7 +186,7 @@ domain name does not need to be necessary human readable.
 One possible way is that the vendor also provisions the HNA with a private and public keys as well as a certificate. Note that these keys are not expected to be used for DNSSEC signing.
 Instead these keys are solely used by the HNA to proceed to the authentication.
 Normally the keys should be necessary and sufficient to proceed to the authentication.
-The reason to combine the domain name and the key is that DOI are likely handle names better than keys and that domain names might be used as a login which enables the key to be regenerated.
+The reason to combine the domain name and the key is that the outsourcing infrastructure (DOI) are likely handle names better than keys and that domain names might be used as a login which enables the key to be regenerated.
 
 When the home network owner plugs the CPE at home, the relation between HNA and DM is expected to work out-of-the-box.
 
