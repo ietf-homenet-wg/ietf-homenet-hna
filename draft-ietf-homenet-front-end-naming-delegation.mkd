@@ -202,7 +202,7 @@ as such creates an account on that registrar
 or the home network may need to create a specific account on the
 outsourcing infrastructure.
 
-  * If the DOI is the registrar, it has by
+* If the DOI is the registrar, it has by
 design a proof of ownership of the domain name by the homenet owner.
 In this case, it is expected the DOI provides the necessary
 parameters to the home  network owner to configure the HNA. A good way
@@ -212,7 +212,7 @@ What matters at that point is the DOI being able to generate authentication cred
 This obviously requires the home network to provide the public key generated
 by the HNA in a CSR.
 
-  * If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{?RFC8555}} for example that will end in the generation of a certificate.
+* If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{?RFC8555}} for example that will end in the generation of a certificate.
 ACME is used here to the purpose of automating the generation of the certificate, the CA may be a specific CA or the DOI.
 With that being done, the DOI has a roof of ownership and can proceed as above.
 
