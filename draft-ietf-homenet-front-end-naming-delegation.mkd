@@ -116,12 +116,65 @@ Finally, {{sec-privacy}} and {{sec-security}} respectively discuss privacy and s
 The appendices discuss several management (see {{sec-reverse}}) provisioning (see {{sec-reverse}}), configurations (see {{info-model}}) and deployment (see {{sec-deployment}} and {{sec-ex-manu}}) aspects.
 
 
+
+#Terminology
+
+{::boilerplate bcp14}
+
+Customer Premises Equipment:
+: (CPE) is a router providing connectivity to the home network.
+
+Homenet Zone:
+: is the DNS zone for use within the boundaries of the home network: 'home.arpa' (see {{!RFC8375}}).
+This zone is not considered public and is out of scope for this document.
+
+Registered Homenet Domain:
+: is the domain name that is associated with the home network. A given home network may have multiple Registered Homenet Domain. 
+
+Public Homenet Zone:
+: contains the names in the home network that are expected to be publicly resolvable on the Internet. A home network can have multiple Public Homenet Zones.
+
+Homenet Naming Authority(HNA):
+is a function responsible for managing the Public Homenet Zone.
+This includes populating the Public Homenet Zone, signing the zone for DNSSEC, as well as managing the distribution of that Homenet Zone to the DNS Outsourcing Infrastructure (DOI).
+
+DNS Outsourcing Infrastructure (DOI):
+: is the infrastructure responsible for receiving the Public Homenet Zone and publishing it on the Internet.
+It is mainly composed of a Distribution Manager and Public Authoritative Servers.
+
+Public Authoritative Servers:
+: are the authoritative name servers for the Public Homenet Zone.
+Name resolution requests for the Registered Homenet Domain are sent to these servers.
+
+Homenet Authoritative Servers:
+: are authoritative name servers for the Homenet Zone within the Homenet network.
+
+Distribution Manager (DM):
+: is the (set of) server(s) to which the HNA synchronizes the Public Homenet Zone, and which then distributes the relevant information to the Public Authoritative Servers.
+
+Public Homenet Reverse Zone:
+: The reverse zone file associated with the Public Homenet Zone.
+
+Reverse Public Authoritative Servers:
+: equivalent to Public Authoritative Servers specifically for reverse resolution.
+
+Reverse Distribution Manager:
+: equivalent to Distribution Manager specifically for reverse resolution.
+
+Homenet DNSSEC Resolver:
+: a resolver that performs a DNSSEC resolution on the home network for the Public Homenet Zone.
+The resolution is performed requesting the Homenet Authoritative Servers.
+
+DNSSEC Resolver:
+: a resolver that performs a DNSSEC resolution on the Internet for the Public Homenet Zone.
+The resolution is performed requesting the Public Authoritative Servers.
+
 # Selecting Names and Addresses to Publish {#selectingnames}
 
 While this document does not create any normative mechanism to select the names to publish, this document anticipates that the home network administrator (a human being), will be presented with a list of current names and addresses.
 
 The administrator would mark which devices and services (by name), are to be published.
-The HNA would then collect the IPv6 address(es) associated with that device or service, and put the name into the Public Homenet Zone.
+The HNA would then collect the IP address(es) associated with that device or service, and put the name into the Public Homenet Zone.
 The address of the device or service can be collected from a number of places: mDNS {{?RFC6762}}, DHCP {{?RFC8415}}, UPnP, PCP {{?RFC6887}}, or manual configuration.
 
 A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), Unique Local IPv6 Addresses (ULA) {{?RFC4193}}, as well IPv6-Link-Local addresses{{?RFC4291}}{{?RFC7404}}, IPv4-Link-Local Addresses {{?RFC3927}} (LLA), and private IPv4 addresses {{!RFC1918}}.
@@ -168,7 +221,7 @@ Distinguishing similar names by delegation of zones was among the primary design
 The homenet user is dependent on the service provider supporting new types.
 By providing full DNS delegation, this document enables all RR types and also future extensions.
 
-* Dynamic Updates solution are not interoperable and each provider has its own way to implement it. {{?RFC3007}} is the standard solution to update a DNS RRset, but most Dynamic Update providers use HTTPS RESTful API.
+* Dynamic Update solution are not interoperable and each provider has its own way to implement it. {{?RFC3007}} is the standard solution to update a DNS RRset, but most Dynamic Update providers use HTTPS RESTful API.
 
 There is no technical reason why a RESTful service could not provide solutions to many of these  problems, but this document describes a DNS-based solution.
 
@@ -216,60 +269,6 @@ But, what matters here for the DOI is that the HNA is able to authenticate itsel
 * If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{?RFC8555}} for example that will end in the generation of a certificate.
 ACME is used here to the purpose of automating the generation of the certificate, the CA may be a specific CA or the DOI.
 With that being done, the DOI has a roof of ownership and can proceed as above.
-
-
-#Terminology
-
-{::boilerplate bcp14}
-
-Customer Premises Equipment:
-: (CPE) is a router providing connectivity to the home network.
-
-Homenet Zone:
-: is the DNS zone for use within the boundaries of the home network: 'home.arpa' (see {{!RFC8375}}).
-This zone is not considered public and is out of scope for this document.
-
-Registered Homenet Domain:
-: is the domain name that is associated with the home network. A given home network may have multiple Registered Homenet Domain. 
-
-Public Homenet Zone:
-: contains the names in the home network that are expected to be publicly resolvable on the Internet. A home network can have multiple Public Homenet Zones.
-
-Homenet Naming Authority(HNA):
-is a function responsible for managing the Public Homenet Zone.
-This includes populating the Public Homenet Zone, signing the zone for DNSSEC, as well as managing the distribution of that Homenet Zone to the DNS Outsourcing Infrastructure (DOI).
-
-DNS Outsourcing Infrastructure (DOI):
-: is the infrastructure responsible for receiving the Public Homenet Zone and publishing it on the Internet.
-It is mainly composed of a Distribution Manager and Public Authoritative Servers.
-
-Public Authoritative Servers:
-: are the authoritative name servers for the Public Homenet Zone.
-Name resolution requests for the Registered Homenet Domain are sent to these servers.
-For resiliency the Public Homenet Zone SHOULD be hosted on multiple servers.
-
-Homenet Authoritative Servers:
-: are authoritative name servers for the Homenet Zone within the Homenet network.
-
-Distribution Manager (DM):
-: is the (set of) server(s) to which the HNA synchronizes the Public Homenet Zone, and which then distributes the relevant information to the Public Authoritative Servers.
-
-Public Homenet Reverse Zone:
-: The reverse zone file associated with the Public Homenet Zone.
-
-Reverse Public Authoritative Servers:
-: equivalent to Public Authoritative Servers specifically for reverse resolution.
-
-Reverse Distribution Manager:
-: equivalent to Distribution Manager specifically for reverse resolution.
-
-Homenet DNSSEC Resolver:
-: a resolver that performs a DNSSEC resolution on the home network for the Public Homenet Zone.
-The resolution is performed requesting the Homenet Authoritative Servers.
-
-DNSSEC Resolver:
-: a resolver that performs a DNSSEC resolution on the Internet for the Public Homenet Zone.
-The resolution is performed requesting the Public Authoritative Servers.
 
 
 # Architecture Description  {#sec-arc-desc}
