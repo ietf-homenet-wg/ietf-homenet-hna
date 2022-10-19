@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-18
+docname: draft-ietf-homenet-front-end-naming-delegation-19
 
 stand_alone: true
 
@@ -116,7 +116,7 @@ Finally, {{sec-privacy}} and {{sec-security}} respectively discuss privacy and s
 The appendices discuss several management (see {{sec-reverse}}) provisioning (see {{sec-reverse}}), configurations (see {{info-model}}) and deployment (see {{sec-deployment}} and {{sec-ex-manu}}) aspects.
 
 
-# Selecting Names to Publish {#selectingnames}
+# Selecting Names and Addresses to Publish {#selectingnames}
 
 While this document does not create any normative mechanism to select the names to publish, this document anticipates that the home network administrator (a human being), will be presented with a list of current names and addresses.
 
@@ -174,7 +174,7 @@ There is no technical reason why a RESTful service could not provide solutions t
 
 # Envisioned deployment scenarios {#sec-deployment}
 
-A number of deployment have been envisioned, this section aims at
+A number of deployment scenarios have been envisioned, this section aims at
 providing a brief description. The use cases are not limitations and
 this section is not normative.
 
@@ -184,7 +184,8 @@ A specific vendor with specific relations with a registrar or a registry
 may sell a CPE that is provisioned with provisioned domain name. Such
 domain name does not need to be necessary human readable.
 
-One possible way is that the vendor also provisions the HNA with a private and public keys as well as a certificate. Note that these keys are not expected to be used for DNSSEC signing.
+One possible way is that the vendor also provisions the HNA with a private and public keys as well as a certificate used for the mutual TLS authentication. 
+Note that these keys are not expected to be used for DNSSEC signing.
 Instead these keys are solely used by the HNA to proceed to the authentication.
 Normally the keys should be necessary and sufficient to proceed to the authentication.
 The reason to combine the domain name and the key is that the outsourcing infrastructure (DOI) are likely handle names better than keys and that domain names might be used as a login which enables the key to be regenerated.
@@ -229,7 +230,7 @@ Homenet Zone:
 This zone is not considered public and is out of scope for this document.
 
 Registered Homenet Domain:
-: is the domain name that is associated with the home network.
+: is the domain name that is associated with the home network. A given home network may have multiple Registered Homenet Domain. 
 
 Public Homenet Zone:
 : contains the names in the home network that are expected to be publicly resolvable on the Internet. A home network can have multiple Public Homenet Zones.
@@ -244,7 +245,7 @@ It is mainly composed of a Distribution Manager and Public Authoritative Servers
 
 Public Authoritative Servers:
 : are the authoritative name servers for the Public Homenet Zone.
-Name resolution requests for the Homenet Domain are sent to these servers.
+Name resolution requests for the Registered Homenet Domain are sent to these servers.
 For resiliency the Public Homenet Zone SHOULD be hosted on multiple servers.
 
 Homenet Authoritative Servers:
@@ -253,7 +254,7 @@ Homenet Authoritative Servers:
 Distribution Manager (DM):
 : is the (set of) server(s) to which the HNA synchronizes the Public Homenet Zone, and which then distributes the relevant information to the Public Authoritative Servers.
 
-Homenet Reverse Zone:
+Public Homenet Reverse Zone:
 : The reverse zone file associated with the Public Homenet Zone.
 
 Reverse Public Authoritative Servers:
@@ -342,7 +343,7 @@ Note that {{info-model}} defines necessary parameters to configure the HNA.
 
 {{fig-naming-arch}} illustrates the architecture where the HNA outsources the publication of the Public Homenet Zone to the DOI.
 The DOI will serve every DNSSEC request of the Public Homenet Zone coming from outside the home network.
-When the request is coming within the home network, the resolution is expected to be handled by the Homenet Resolver as detaille din further details below.
+When the request is coming within the home network, the resolution is expected to be handled by the Homenet Resolver as detailed in further details below.
 
 The Public Homenet Zone is identified by the Registered Homenet Domain Name -- myhome.example.
 The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as Homenet Zone in {{fig-naming-arch}}.
@@ -394,17 +395,15 @@ This section details the DM channels, that is the Control Channel, the Synchroni
 
 The Control Channel and the Synchronization Channel are the interfaces used between the HNA and the DOI.
 The entity within the DOI responsible to handle these communications is the DM and communications between the HNA and the DM MUST be protected and mutually authenticated.
-While {{sec-ctrl-security}} discusses in more depth the different security protocols that could be used to secure, it is RECOMMENDED to use TLS with mutually authentication based on certificates to secure the channel between the HNA and the DM.
+While {{sec-ctrl-security}} discusses in more depth the different security protocols that could be used to secure, it is RECOMMENDED to use TLS with mutual authentication based on certificates to secure the channel between the HNA and the DM.
 
 
 The information exchanged between the HNA and the DM uses DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}.
 This is configured identically to that described in {{!RFC9103, Section 9.3.3}}.
 In the future, other specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?RFC9250}}.
 
-The main issue is that the Dynamic DNS update would also update the parent zone's (NS, DS and associated A or AAAA records) while the goal is to update the DM configuration files.
-The visible NS records SHOULD remain pointing at the cloud provider's server IP address -- which in many cases will be an anycast addresses.
-Revealing the address of the HNA in the DNS is not desirable.
-Refer to {{sec-chain-of-trust}} for more details.
+It is worth noticing that both DM and HNA need to agree on a common configuration to set up the synchronization channel as well as to build and server a coherent Public Homenet Zone. 
+Typically,  the visible NS records of the Public Homenet Zone (built by the HNA) SHOULD remain pointing at the cloud provider's server IP address -- which in many cases will be an anycast address. Revealing the address of the HNA in the DNS is not desirable. In addition, and depending on the configuration of the DOI, the DM also needs to update the  parent zone's (NS, DS and associated A or AAAA records). Refer to {{sec-chain-of-trust}} for more details.
 
 This specification assumes:
 
@@ -638,7 +637,7 @@ The HNA acts as a Hidden Primary Server, which is a regular authoritative DNS Se
 The DM is configured as a secondary for the Registered Homenet Domain Name.
 This secondary configuration has been previously agreed between the end user and the provider of the DOI as part of either the provisioning or due to receipt of DNS UPDATE messages on the DM Control Channel.
 
-The Homenet Reverse Zone MAY also be updated either with DNS UPDATE {{?RFC2136}} or using a primary / secondary synchronization.
+The Public Homenet Reverse Zone MAY also be updated either with DNS UPDATE {{?RFC2136}} or using a primary / secondary synchronization.
 
 ## Securing the Synchronization Channel {#sec-synch-security}
 
@@ -650,7 +649,7 @@ More specifically, the HNA sends a NOTIFY message, which is a small packet that 
 Then, the DM sends  AXFR {{!RFC1034}} or IXFR {{!RFC1995}} request. This request consists in a small packet sent over TCP (Section 4.2 {{!RFC5936}}), which also mitigates reflection attacks using a forged NOTIFY.
 
 The AXFR request from the DM to the HNA SHOULD be secured and the use of TLS is RECOMMENDED {{!RFC9103}}.
-While {{!RFC9103}} does not consider the protection by TLS of NOTIFY and SOA requests, these MAY still be protected by TLS to provide additional privacy.
+While {{!RFC9103}} MAY not consider the protection by TLS of NOTIFY and SOA requests, these MAY still be protected by TLS to provide additional privacy.
 
 When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {{?RFC6698}}.
 In addition, to guarantee the DM remains the same across multiple TLS session, the HNA and DM MAY implement {{?RFC8672}}.
@@ -678,9 +677,9 @@ Depending how the communications between the HNA and the DM are secured, only pa
 The HNA SHOULD NOT send DNS messages other than DNS NOTIFY query, SOA response, IXFR response or AXFR responses.
 The HNA SHOULD reject any incoming messages other than DNS NOTIFY response, SOA   query, IXFR query or AXFR query. 
 
-# Homenet Reverse Zone {#sec-reverse}
+# Public Homenet Reverse Zone {#sec-reverse}
 
-Homenet Reverse Zone works similarly to the Public Homenet Zone.
+Public Homenet Reverse Zone works similarly to the Public Homenet Zone.
 The main difference is that ISP that provides the IP connectivity is likely also the owner of the corresponding reverse zone and act as a default DOI for it.
 If so, the configuration and the setting of the Synchronization Channel and Control Channel can largely be automated.
 
@@ -746,7 +745,7 @@ In a renumbering scenario, the HNA or Hidden Primary is informed it is being ren
 In most cases, this occurs because the whole home network is being renumbered.
 As a result, the Public Homenet Zone will also be updated.
 Although the new and old IP addresses may be stored in the Public Homenet Zone, it is RECOMMENDED that only the newly reachable IP addresses be published.
-Regarding the Homenet Reverse Zone, the new Homenet Reverse Zone has to be populated as soon as possible, and the old Homenet Reverse Zone will be deleted by the owner of the zone (and the owner of the old prefix which is usually the ISP) once the prefix is no longer assigned to the HNA. The ISP SHOULD ensure that the DNS cache has expired before re-assigning the prefix to a new home network. This may be enforced by controlling the TTL values.
+Regarding the Public Homenet Reverse Zone, the new Public Homenet Reverse Zone has to be populated as soon as possible, and the old Public Homenet Reverse Zone will be deleted by the owner of the zone (and the owner of the old prefix which is usually the ISP) once the prefix is no longer assigned to the HNA. The ISP SHOULD ensure that the DNS cache has expired before re-assigning the prefix to a new home network. This may be enforced by controlling the TTL values.
 
 To avoid reachability disruption, IP connectivity information provided by the DNS SHOULD be coherent with the IP in use.
 In our case, this means the old IP address SHOULD NOT be provided via the DNS when it is not reachable anymore.
