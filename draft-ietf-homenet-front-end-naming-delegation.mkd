@@ -107,9 +107,9 @@ The Control Channel (see {{sec-ctrl}}) is used to set the Synchronization Channe
 For example, to build the Public Homenet Zone, the HNA needs the authoritative servers (and associated IP addresses) of the servers of the DOI actually serving the zone.
 Similarly, the DOI needs to know the IP address of the primary (HNA) as well as potentially the hash of the KSK (DS RRset) to secure the DNSSEC delegation with the parent zone.
 
-The remaining of the document is as follows.
-{{sec-arc-desc}} provides an architectural view of the  HNA, DM and DOI as well as its different communication channels (Control Channel, Synchronization Channel, DM Distribution Channel) respectively described in {{sec-ctrl}}, {{sec-synch}} and {{sec-dist}}.
-{{sec-cpe-sec-policies}} and {{sec-dnssec-deployment}} respectively details HNA security policies as well as DNSSEC compliance within the home network.
+The remainder of the document is as follows.
+{{sec-arc-desc}} provides an architectural view of the  HNA, DM and DOI as well as their different communication channels (Control Channel, Synchronization Channel, DM Distribution Channel) respectively described in {{sec-ctrl}}, {{sec-synch}} and {{sec-dist}}.
+{{sec-cpe-sec-policies}} and {{sec-dnssec-deployment}} respectively detail HNA security policies as well as DNSSEC compliance within the home network.
 {{sec-renumbering}} discusses how renumbering should be handled.
 Finally, {{sec-privacy}} and {{sec-security}} respectively discuss privacy and security considerations when outsourcing the Public Homenet Zone.
 
@@ -178,7 +178,7 @@ The HNA would then collect the IP address(es) associated with that device or ser
 The address of the device or service can be collected from a number of places: mDNS {{?RFC6762}}, DHCP {{?RFC8415}}, UPnP, PCP {{?RFC6887}}, or manual configuration.
 
 A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), Unique Local IPv6 Addresses (ULA) {{?RFC4193}}, as well IPv6-Link-Local addresses{{?RFC4291}}{{?RFC7404}}, IPv4-Link-Local Addresses {{?RFC3927}} (LLA), and private IPv4 addresses {{!RFC1918}}.
-Of these the link-local are never useful for the Public Zone, and should be omitted.
+Of these the link-local are almost never useful for the Public Zone, and should be omitted.
 The IPv6 ULA and the private IPv4 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
 
 The IPv6 ULA addresses are safer to publish with a significantly lower probability of collision than RFC1918 addresses.
@@ -186,15 +186,14 @@ The IPv6 ULA addresses are safer to publish with a significantly lower probabili
 In general, one expects the GUA to be the default address to be published.
 However, publishing the ULA and private IPv4 addresses may enable local communications within the home network.
 A direct advantage of enabling local communication is to enable communications even in case of Internet disruption.
-However, since communications are established with names which remains a global identifier, the communication can be protected by TLS the same way it is protected on the global Internet.  
-
+Since communications are established with names which remain a global identifier, the communication can be protected by TLS the same way it is protected on the global Internet - using certificates.  
 
 
 # Dynamic DNS Alternative solutions {#sec:alt}
 
-An alternative existing solution is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
+An alternative existing solution for residential customers is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
 This is often called "Dynamic DNS" {{DDNS}}, and there are a number of commercial providers.
-While the IETF has defined Dynamic Update {{?RFC3007}}, in many -- as far as the co-authors know in all cases -- case commercial "Dynamic Update" solutions are implemented via a HTTPS RESTful API.
+While the IETF has defined a DNS based mechanism Dynamic Update {{?RFC2136}}, in many -- as far as the co-authors know in all cases -- case commercial "Dynamic Update" solutions are implemented via a HTTPS RESTful API.
 
 These solutions were typically used by a host behind the CPE and since the CPE implements some NAT, the host can only be reached from the global Internet via its CPE IPv4 address.
 This is the most common scenario considered in this section, while some variant may also consider the client being hosted in the CPE.
@@ -234,23 +233,23 @@ this section is not normative.
 ### CPE Vendor
 
 A specific vendor with specific relations with a registrar or a registry
-may sell a CPE that is provisioned with provisioned domain name. Such
-domain name does not need to be necessary human readable.
+may sell a CPE that is provisioned with a domain name. Such a
+domain name does not need to be human readable.
 
-One possible way is that the vendor also provisions the HNA with a private and public keys as well as a certificate used for the mutual TLS authentication. 
+One possible scenario is that the vendor also provisions the HNA with a private and public key as well as a certificate used for the mutual TLS authentication. 
 Note that these keys are not expected to be used for DNSSEC signing.
-Instead these keys are solely used by the HNA to proceed to the authentication.
+Instead these keys are solely used by the HNA for the authentication.
 Normally the keys should be necessary and sufficient to proceed to the authentication.
-The reason to combine the domain name and the key is that the outsourcing infrastructure (DOI) are likely handle names better than keys and that domain names might be used as a login which enables the key to be regenerated.
+The reason to combine the domain name and the key is that the outsourcing infrastructure (DOI) likely handles names better than keys and that domain names might be used as a login which enables the key to be regenerated.
 
-When the home network owner plugs the CPE at home, the relation between HNA and DM is expected to work out-of-the-box.
+When the home network owner plugs in the CPE at home, the relation between HNA and DM is expected to work out-of-the-box.
 
 ### Agnostic CPE
 
-An CPE that is not preconfigured may also take advantage to the protocol
+A CPE that is not preconfigured may also use the protocol
 defined in this document but some configuration steps will be needed.
 
-1. The owner of the home network buys a domain name to a registrar, and
+1. The owner of the home network buys a domain name from a registrar, and
 as such creates an account on that registrar
 
 2. the registrar may also be providing the outsourcing infrastructure
@@ -261,9 +260,8 @@ outsourcing infrastructure.
 design a proof of ownership of the domain name by the homenet owner.
 In this case, it is expected the DOI provides the necessary
 parameters to the home  network owner to configure the HNA.
-One good way
-to provide the parameters would be the home network be able to
-copy/paste a JSON object - such as described in {{info-model}}.
+One potential mechanism
+to provide the parameters would be to provide the user with a JSON object which they can copy paste into the CPE - such as described in {{info-model}}.
 But, what matters here for the DOI is that the HNA is able to authenticate itself to the DOI.
 
 * If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{?RFC8555}} for example that will end in the generation of a certificate.
@@ -298,7 +296,7 @@ Of course the DOI needs to be informed dynamically about the content of myhome.e
 ~~~~
 {: #fig-naming-arch-overview title="Homenet Naming Architecture Overview" }
 
-Note that {{info-model}} defines necessary parameters to configure the HNA.
+Note that {{info-model}} shows necessary parameters to configure the HNA.
 
 
 
@@ -341,10 +339,10 @@ Note that {{info-model}} defines necessary parameters to configure the HNA.
 {: #fig-naming-arch title="Homenet Naming Architecture" }
 
 {{fig-naming-arch}} illustrates the architecture where the HNA outsources the publication of the Public Homenet Zone to the DOI.
-The DOI will serve every DNSSEC request of the Public Homenet Zone coming from outside the home network.
+The DOI will serve every DNS request of the Public Homenet Zone coming from outside the home network.
 When the request is coming within the home network, the resolution is expected to be handled by the Homenet Resolver as detailed in further details below.
 
-The Public Homenet Zone is identified by the Registered Homenet Domain Name -- myhome.example.
+The Public Homenet Zone is identified by the Registered Homenet Domain name -- myhome.example.
 The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as Homenet Zone in {{fig-naming-arch}}.
 
 The HNA SHOULD build the Public Homenet Zone in a single view populated with all resource records that are expected to be published on the Internet.
@@ -352,7 +350,7 @@ The HNA also signs the Public Homenet Zone.
 The HNA handles all operations and keying material required for DNSSEC, so there is no provision made in this architecture for transferring private DNSSEC related keying material between the HNA and the DM.
 
 Once the Public Homenet Zone has been built, the HNA communicates and synchronizes it with the DOI using a primary/secondary setting as described in {{fig-naming-arch}}.
-The HNA acts as a hidden primary {{?RFC8499}} while the DM behaves as a secondary responsible to distribute the Public Homenet Zone to the multiple Public Authoritative Servers that DOI is responsible
+The HNA acts as a hidden master (now designated as hidden primary) {{?RFC8499}} while the DM behaves as a secondary responsible for distributing the Public Homenet Zone to the multiple Public Authoritative Servers that DOI is responsible
 for.
 The DM has three communication channels:
 
@@ -360,7 +358,7 @@ The DM has three communication channels:
 
 * DM Synchronization Channel ({{sec-synch}}) to synchronize the Public Homenet Zone on the HNA and on the DM with the appropriately configured primary/secondary.
 
-* one or more Distribution Channels ({{sec-dist}} that distribute the Public Homenet Zone from the DM to the Public Authoritative Server serving the Public Homenet Zone on the Internet.
+* one or more Distribution Channels ({{sec-dist}}) that distribute the Public Homenet Zone from the DM to the Public Authoritative Servers serving the Public Homenet Zone on the Internet.
 
 There might be multiple DM's, and multiple servers per DM.
 This document assumes a single DM server for simplicity, but there is no reason why each channel needs to be implemented on the same server or use the same code base.
@@ -370,7 +368,7 @@ More specifically, the addresses associated with the HNA SHOULD NOT be mentioned
 
 The DOI is also responsible for ensuring the DS record has been updated in the parent zone.
 
-Resolution is performed by the DNSSEC resolvers.
+Resolution is performed by DNS(SEC) resolvers.
 When the resolution is performed outside the home network, the DNSSEC Resolver resolves the DS record on the Global DNS and the name associated to the Public Homenet Zone (myhome.example) on the Public Authoritative Servers.
 
 When the resolution is performed from within the home network, the Homenet DNSSEC Resolver MAY proceed similarly.
@@ -424,7 +422,7 @@ For more detail to see how this can be achieved, please see {{hna-provisioning}}
 
 ## Information to Build the Public Homenet Zone  {#sec-pbl-homenet-zone}
 
-The HNA builds the Public Homenet Zone based on information retrieved from the DM.
+The HNA builds the Public Homenet Zone based on information retrieved from the DM (see {{sec-ctrl-messages}}).
 
 The information includes at least names and IP addresses of the Public Authoritative Name Servers.
 In term of RRset information this includes:
@@ -437,7 +435,7 @@ As the information is necessary for the HNA to proceed and the information is as
 
 ## Information to build the DNSSEC chain of trust {#sec-chain-of-trust}
 
-The HNA SHOULD provide the hash of the KSK (DS RRset), so the DOI provides this value to the parent zone.
+The HNA SHOULD provide the hash of the KSK via the DS RRset, so the DOI provides this value to the parent zone.
 A common deployment use case is that the DOI is the registrar of the Registered Homenet Domain and as such, its relationship with the registry of the parent zone enables it to update the parent zone.
 When such relation exists, the HNA should be able to request the DOI to update the DS RRset in the parent zone.
 A direct update is especially necessary to initialize the chain of trust.
