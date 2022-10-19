@@ -5,12 +5,12 @@
 Homenet                                                       D. Migault
 Internet-Draft                                                  Ericsson
 Intended status: Standards Track                                R. Weber
-Expires: 20 March 2023                                           Nominum
+Expires: 24 March 2023                                           Nominum
                                                            M. Richardson
                                                 Sandelman Software Works
                                                                R. Hunter
                                                     Globis Consulting BV
-                                                       16 September 2022
+                                                       20 September 2022
 
 
       Simple Provisioning of Public Names for Residential Networks
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 March 2023.
+   This Internet-Draft will expire on 24 March 2023.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Migault, et al.           Expires 20 March 2023                 [Page 1]
+Migault, et al.           Expires 24 March 2023                 [Page 1]
 
 Internet-Draft                public-names                September 2022
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Migault, et al.           Expires 20 March 2023                 [Page 2]
+Migault, et al.           Expires 24 March 2023                 [Page 2]
 
 Internet-Draft                public-names                September 2022
 
@@ -165,7 +165,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                 [Page 3]
+Migault, et al.           Expires 24 March 2023                 [Page 3]
 
 Internet-Draft                public-names                September 2022
 
@@ -221,7 +221,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                 [Page 4]
+Migault, et al.           Expires 24 March 2023                 [Page 4]
 
 Internet-Draft                public-names                September 2022
 
@@ -277,7 +277,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                 [Page 5]
+Migault, et al.           Expires 24 March 2023                 [Page 5]
 
 Internet-Draft                public-names                September 2022
 
@@ -333,7 +333,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                 [Page 6]
+Migault, et al.           Expires 24 March 2023                 [Page 6]
 
 Internet-Draft                public-names                September 2022
 
@@ -389,7 +389,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                 [Page 7]
+Migault, et al.           Expires 24 March 2023                 [Page 7]
 
 Internet-Draft                public-names                September 2022
 
@@ -445,7 +445,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                 [Page 8]
+Migault, et al.           Expires 24 March 2023                 [Page 8]
 
 Internet-Draft                public-names                September 2022
 
@@ -501,7 +501,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                 [Page 9]
+Migault, et al.           Expires 24 March 2023                 [Page 9]
 
 Internet-Draft                public-names                September 2022
 
@@ -557,7 +557,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 10]
+Migault, et al.           Expires 24 March 2023                [Page 10]
 
 Internet-Draft                public-names                September 2022
 
@@ -613,7 +613,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 11]
+Migault, et al.           Expires 24 March 2023                [Page 11]
 
 Internet-Draft                public-names                September 2022
 
@@ -669,7 +669,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 12]
+Migault, et al.           Expires 24 March 2023                [Page 12]
 
 Internet-Draft                public-names                September 2022
 
@@ -725,7 +725,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 13]
+Migault, et al.           Expires 24 March 2023                [Page 13]
 
 Internet-Draft                public-names                September 2022
 
@@ -781,7 +781,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 14]
+Migault, et al.           Expires 24 March 2023                [Page 14]
 
 Internet-Draft                public-names                September 2022
 
@@ -837,7 +837,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 15]
+Migault, et al.           Expires 24 March 2023                [Page 15]
 
 Internet-Draft                public-names                September 2022
 
@@ -893,7 +893,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 16]
+Migault, et al.           Expires 24 March 2023                [Page 16]
 
 Internet-Draft                public-names                September 2022
 
@@ -949,7 +949,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 17]
+Migault, et al.           Expires 24 March 2023                [Page 17]
 
 Internet-Draft                public-names                September 2022
 
@@ -1005,7 +1005,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 18]
+Migault, et al.           Expires 24 March 2023                [Page 18]
 
 Internet-Draft                public-names                September 2022
 
@@ -1061,7 +1061,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 19]
+Migault, et al.           Expires 24 March 2023                [Page 19]
 
 Internet-Draft                public-names                September 2022
 
@@ -1117,7 +1117,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 20]
+Migault, et al.           Expires 24 March 2023                [Page 20]
 
 Internet-Draft                public-names                September 2022
 
@@ -1173,7 +1173,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 21]
+Migault, et al.           Expires 24 March 2023                [Page 21]
 
 Internet-Draft                public-names                September 2022
 
@@ -1229,7 +1229,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 22]
+Migault, et al.           Expires 24 March 2023                [Page 22]
 
 Internet-Draft                public-names                September 2022
 
@@ -1285,7 +1285,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 23]
+Migault, et al.           Expires 24 March 2023                [Page 23]
 
 Internet-Draft                public-names                September 2022
 
@@ -1341,7 +1341,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 24]
+Migault, et al.           Expires 24 March 2023                [Page 24]
 
 Internet-Draft                public-names                September 2022
 
@@ -1397,7 +1397,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 25]
+Migault, et al.           Expires 24 March 2023                [Page 25]
 
 Internet-Draft                public-names                September 2022
 
@@ -1453,7 +1453,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 26]
+Migault, et al.           Expires 24 March 2023                [Page 26]
 
 Internet-Draft                public-names                September 2022
 
@@ -1509,7 +1509,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 27]
+Migault, et al.           Expires 24 March 2023                [Page 27]
 
 Internet-Draft                public-names                September 2022
 
@@ -1565,7 +1565,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 28]
+Migault, et al.           Expires 24 March 2023                [Page 28]
 
 Internet-Draft                public-names                September 2022
 
@@ -1621,7 +1621,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 29]
+Migault, et al.           Expires 24 March 2023                [Page 29]
 
 Internet-Draft                public-names                September 2022
 
@@ -1658,9 +1658,9 @@ Internet-Draft                public-names                September 2022
               Migault, D., Weber, R., and T. Mrugalski, "DHCPv6 Options
               for Home Network Naming Authority", Work in Progress,
               Internet-Draft, draft-ietf-homenet-naming-architecture-
-              dhc-options-17, 16 September 2022,
+              dhc-options-18, 20 September 2022,
               <https://www.ietf.org/archive/id/draft-ietf-homenet-
-              naming-architecture-dhc-options-17.txt>.
+              naming-architecture-dhc-options-18.txt>.
 
    [I-D.richardson-homerouter-provisioning]
               Richardson, M., "Provisioning Initial Device Identifiers
@@ -1677,7 +1677,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 30]
+Migault, et al.           Expires 24 March 2023                [Page 30]
 
 Internet-Draft                public-names                September 2022
 
@@ -1733,7 +1733,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 31]
+Migault, et al.           Expires 24 March 2023                [Page 31]
 
 Internet-Draft                public-names                September 2022
 
@@ -1789,7 +1789,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 32]
+Migault, et al.           Expires 24 March 2023                [Page 32]
 
 Internet-Draft                public-names                September 2022
 
@@ -1845,7 +1845,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 33]
+Migault, et al.           Expires 24 March 2023                [Page 33]
 
 Internet-Draft                public-names                September 2022
 
@@ -1901,7 +1901,7 @@ A.1.  Homenet Public Zone
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 34]
+Migault, et al.           Expires 24 March 2023                [Page 34]
 
 Internet-Draft                public-names                September 2022
 
@@ -1957,7 +1957,7 @@ Appendix B.  Information Model for Outsourced information
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 35]
+Migault, et al.           Expires 24 March 2023                [Page 35]
 
 Internet-Draft                public-names                September 2022
 
@@ -2013,7 +2013,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 36]
+Migault, et al.           Expires 24 March 2023                [Page 36]
 
 Internet-Draft                public-names                September 2022
 
@@ -2069,7 +2069,7 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 37]
+Migault, et al.           Expires 24 March 2023                [Page 37]
 
 Internet-Draft                public-names                September 2022
 
@@ -2125,7 +2125,7 @@ Appendix C.  Example: A manufacturer provisioned HNA product flow
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 38]
+Migault, et al.           Expires 24 March 2023                [Page 38]
 
 Internet-Draft                public-names                September 2022
 
@@ -2181,7 +2181,7 @@ Authors' Addresses
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 39]
+Migault, et al.           Expires 24 March 2023                [Page 39]
 
 Internet-Draft                public-names                September 2022
 
@@ -2237,4 +2237,4 @@ Internet-Draft                public-names                September 2022
 
 
 
-Migault, et al.           Expires 20 March 2023                [Page 40]
+Migault, et al.           Expires 24 March 2023                [Page 40]

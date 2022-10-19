@@ -97,6 +97,7 @@ To do so, these names needs to be made publicly available in the DNS.
 
 This document describes how a Homenet Naming Authority (HNA) can instruct a DNS Outsourcing Infrastructure (DOI) to publish a Public Homenet Zone on its behalf.
 
+
 The document introduces the Synchronization Channel and  the Control Channel  between the HNA and the  Distribution Manager (DM) that belongs to the DOI.
 
 The Synchronization Channel (see {{sec-synch}}) is used to synchronize the Public Homenet Zone.
@@ -115,7 +116,7 @@ Finally, {{sec-privacy}} and {{sec-security}} respectively discuss privacy and s
 The appendices discuss several management (see {{sec-reverse}}) provisioning (see {{sec-reverse}}), configurations (see {{info-model}}) and deployment (see {{sec-deployment}} and {{sec-ex-manu}}) aspects.
 
 
-## Selecting Names to Publish {#selectingnames}
+# Selecting Names to Publish {#selectingnames}
 
 While this document does not create any normative mechanism to select the names to publish, this document anticipates that the home network administrator (a human being), will be presented with a list of current names and addresses.
 
@@ -136,7 +137,7 @@ However, since communications are established with names which remains a global
 
 
 
-## Dynamic DNS Alternative solutions {#sec:alt}
+# Dynamic DNS Alternative solutions {#sec:alt}
 
 An alternative existing solution is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
 This is often called "Dynamic DNS" {{DDNS}}, and there are a number of commercial providers.
@@ -171,7 +172,7 @@ By providing full DNS delegation, this document enables all RR types and also fu
 
 There is no technical reason why a RESTful service could not provide solutions to many of these  problems, but this document describes a DNS-based solution.
 
-## Envisioned deployment scenarios {#sec-deployment}
+# Envisioned deployment scenarios {#sec-deployment}
 
 A number of deployment have been envisioned, this section aims at
 providing a brief description. The use cases are not limitations and
@@ -274,7 +275,33 @@ The resolution is performed requesting the Public Authoritative Servers.
 # Architecture Description  {#sec-arc-desc}
 
 This section provides an overview of the architecture for outsourcing the authoritative naming service from the HNA to the DOI.
-Note that {{info-model}} defines necessary parameter to configure the HNA.
+As a consequence, this prevents HNA to handle the DNS traffic from the Internet associated to the resolution of the Homenet Zone as depicted in {{fig-naming-arch-overview}}.
+More specifically, DNS resolution for the Public Homenet Zone ( here myhome.example) from Internet DNSSEC resolvers is handled by the DOI as opposed to the HNA. 
+The DOI benefits from a cloud infrastructure while the HNA is dimension ed for home network and as such likely enable to support any load. 
+In the case the HNA is a CPE, outsourcing to the DOI protects the homenetwork against DDoS for example.
+Of course the DOI needs to be informed dynamically about the content of myhome.example. The description of such a synchronization mechanism is the purpose of this document.  
+
+~~~~
+       Home network                 |         Internet
++----------------------+            | +----------------------+
+|           HNA        |            | |          DOI         |
+|+--------------------+|            | |+--------------------+|
+|| Public Homenet Zone||<------------>|| Public Homenet Zone||
+||   (myhome.example) ||            | ||   (myhome.example) ||
+|+--------------------+|  DNS Zone  | |+--------------------+|
++----------------------+  Synchron- | +----------------------+
+                          ization   |       ^  | (DNS resolution)
+                                    |       |  v  
+                                    | +-----------------------+
+                                    | |       Internet        |
+                                    | |    DNSSEC Resolver    |
+                                    | +-----------------------+
+~~~~
+{: #fig-naming-arch-overview title="Homenet Naming Architecture Overview" }
+
+Note that {{info-model}} defines necessary parameters to configure the HNA.
+
+
 
 ## Architecture Overview {#sec-arch-overview}
 
