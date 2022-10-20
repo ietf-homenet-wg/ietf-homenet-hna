@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-19
+docname: draft-ietf-homenet-front-end-naming-delegation-20
 
 stand_alone: true
 
@@ -195,48 +195,6 @@ However, publishing the ULA and private IPv4 addresses may enable local communic
 A direct advantage of enabling local communication is to enable communications even in case of Internet disruption.
 Since communications are established with names which remain a global identifier, the communication can be protected by TLS the same way it is protected on the global Internet - using certificates.  
 
-
-# Dynamic DNS Alternative solutions {#sec:alt}
-
-An alternative existing solution for residential customers is to have a single zone, where a host uses a RESTful HTTP service to register a single name into a common public zone.
-This is often called "Dynamic DNS" {{DDNS}}, and there are a number of commercial providers.
-While the IETF has defined a DNS based mechanism Dynamic Update {{?RFC2136}}, in many -- as far as the co-authors know in all cases -- case commercial "Dynamic Update" solutions are primarily implemented via a HTTPS RESTful API.
-
-This section discusses the case where every individual devices are configured with a Dynamic Update client, followed by the case where Dynamic Update is being used by a centralized entity like the CPE.   
-
-These solutions were typically used by a host behind the CPE and since the CPE implements some NAT, the host can only be reached from the global Internet via its CPE IPv4 address.
-This is the most common scenario considered in this section, while some variant may also consider the client being hosted in the CPE.
-
-For a very few numbers of hosts, the use of such a system provides an alternative to the architecture described in this document.
-Dynamic DNS - even adapted to IPv6 and ignoring those associated with an IPv4 development - does suffer from some severe limitations:
-
-* When devices are individually configured with Dynamic DNS, any centralized network management entity such as the CPE router is unaware of the process, and cannot respond to queries for these names and communications to these names require an Internet connectivity is order to perform the DNS resolution.
-Such dependence does not meet the requirement for internal communications to be resilient to ISP connectivity disruptions {{?RFC7368}} Section 3.7.5.
-
-* Similarly, the CPE router cannot control the process.
-Any host can do this regardless of whether or not the home network administrator wants the name published  or not.
-There is therefore no possible audit trail.
-
-* the credentials for the dynamic DNS server need to be securely transferred to all hosts that wish to use it.
-This is not a problem for a technical user to do with one or two hosts, but it does not scale to multiple hosts and becomes a problem for non-technical users.
-
-* "all the good names are taken" -- current services provide a small set of zones shared by all hosts across all home networks. More especially, there is no notion of a domain specific home network.
-As there are some commonalities provided by individual home networks, there are often conflicts.
-This makes the home user or application dependent on having to resolve different names in the event of outages or disruptions.
-Distinguishing similar names by delegation of zones was among the primary design goals of the DNS system.
-
-* The RESTful services do not always support all RR types.
-The homenet user is dependent on the service provider supporting new types.
-By providing full DNS delegation, this document enables all RR types and also future extensions.
-
-* Dynamic Update solution are not interoperable and each provider has its own way to implement it. {{?RFC3007}} is the standard solution to update a DNS RRset, but most Dynamic Update providers use HTTPS RESTful API.
-
-There is no technical reason why a RESTful service could not provide solutions to many of these  problems, but this document describes a DNS-based solution.
-
-
-Dynamic Update can also be implemented by a CPE, in which case the handling of the zone as well the synchronization of the zone with the DNS provider is handled by the CPE.  
-The DNS zone are then synchronized using an alternative mechanism as the one designed for zone synchronisation inherited from the primary used case where the synchronization is performed at the node level. 
-Our proposal use the standard mechanism defined by DNS for zone synchronisation.
 
 
 # Envisioned deployment scenarios {#sec-deployment}
