@@ -635,7 +635,7 @@ The HNA SHOULD reject any incoming messages other than DNS NOTIFY response, SOA
 # Public Homenet Reverse Zone {#sec-reverse}
 
 Public Homenet Reverse Zone works similarly to the Public Homenet Zone.
-The main difference is that ISP that provides the IP connectivity is likely also the owner of the corresponding reverse zone and act as a default DOI for it.
+The main difference is that ISP that provides the IP connectivity is likely also the owner of the corresponding reverse zone and administrating the Reverse Public Authoritative Servers ( or being the DOI)
 If so, the configuration and the setting of the Synchronization Channel and Control Channel can largely be automated.
 
 The Public Homenet Zone is associated with a Registered Homenet Domain and the ownership of that domain requires a specific registration from the end user as well as the HNA being provisioned with some authentication credentials.
@@ -770,7 +770,7 @@ The interfaces between the HNA and DM are using TLS over TCP, which prevents suc
 Note that Public Authoritative servers hosted by the DOI are subject to such attacks, but that is out of scope of our document.
 
 Note that in the case of the Reverse Homenet Zone, the data is less subject to attacks than in the Public Homenet Zone.
-In addition, the DM and RDM may be provided by the ISP - as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}, in which case DM and RDM might be less exposed to attacks - as communications within a network.
+In addition, the DM and Reverse Distribution Manager (RDM) may be provided by the ISP - as described in {{?I-D.ietf-homenet-naming-architecture-dhc-options}}, in which case DM and RDM might be less exposed to attacks - as communications within a network.
 
 ## Names are less secure than IP addresses {#sec-name-less-secure}
 
