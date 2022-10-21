@@ -112,7 +112,7 @@ The HNA is configured as a primary, while the DM is configured as a secondary.
 
 The Control Channel (see {{sec-ctrl}}) is used to set the Synchronization Channel.
 For example, to build the Public Homenet Zone, the HNA needs the authoritative servers (and associated IP addresses) of the servers of the DOI actually serving the zone.
-Similarly, the DOI needs to know the IP address of the primary (HNA) as well as potentially the hash of the Key SIgning Key (KSK) in the DS RRset to secure the DNSSEC delegation with the parent zone.
+Similarly, the DOI needs to know the IP address of the primary (HNA) as well as potentially the hash of the Key Signing Key (KSK) in the DS RRset to secure the DNSSEC delegation with the parent zone.
 
 The remainder of the document is as follows.
 Section 2 defines the terminology, Section 3 presents the general problem of publishing names and IP addresses, Section 4 presents an alternative solution to the current mechanism described in this document and Section 5 presents some deployment scenarios.
