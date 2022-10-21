@@ -168,12 +168,12 @@ Reverse Public Authoritative Servers:
 Reverse Distribution Manager:
 : equivalent to Distribution Manager specifically for reverse resolution.
 
-Homenet DNSSEC Resolver:
-: a resolver that performs a DNSSEC resolution on the home network for the Public Homenet Zone.
+Homenet DNS(SEC) Resolver:
+: a resolver that performs a DNS(SEC) resolution on the home network for the Public Homenet Zone.
 The resolution is performed requesting the Homenet Authoritative Servers.
 
-DNSSEC Resolver:
-: a resolver that performs a DNSSEC resolution on the Internet for the Public Homenet Zone.
+DNS(SEC) Resolver:
+: a resolver that performs a DNS resolution on the Internet for the Public Homenet Zone.
 The resolution is performed requesting the Public Authoritative Servers.
 
 # Selecting Names and Addresses to Publish {#selectingnames}
@@ -265,7 +265,7 @@ Of course the DOI needs to be informed dynamically about the content of myhome.e
                                     |       |  v  
                                     | +-----------------------+
                                     | |       Internet        |
-                                    | |    DNSSEC Resolver    |
+                                    |    DNS(SEC) Resolver    |
                                     | +-----------------------+
 ~~~~
 {: #fig-naming-arch-overview title="Homenet Naming Architecture Overview" }
@@ -307,7 +307,7 @@ Note that {{info-model}} shows necessary parameters to configure the HNA.
            |   v                    |            |   v
  +----------------------+           | +-----------------------+
  |       Homenet        |           | |       Internet        |
- |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
+ |  DNS(SEC) Resolver   |           | |  DNS(SEC) Resolver    |
  +----------------------+           | +-----------------------+
 ~~~~
 {: #fig-naming-arch title="Homenet Naming Architecture" }
@@ -343,11 +343,12 @@ More specifically, the addresses associated with the HNA SHOULD NOT be mentioned
 The DOI is also responsible for ensuring the DS record has been updated in the parent zone.
 
 Resolution is performed by DNS(SEC) resolvers.
-When the resolution is performed outside the home network, the DNSSEC Resolver resolves the DS record on the Global DNS and the name associated with the Public Homenet Zone (myhome.example) on the Public Authoritative Servers.
+When the resolution is performed outside the home network, the DNS(SEC) Resolver resolves the DS record on the Global DNS and the name associated with the Public Homenet Zone (myhome.example) on the Public Authoritative Servers.
 
-On the other hand, to provide resilience to the Public Homenet Zone in case of WAN connectivity disruption, the Homenet DNSSEC Resolver SHOULD be able to perform the resolution on the Homenet Authoritative Servers.
+On the other hand, to provide resilience to the Public Homenet Zone in case of WAN connectivity disruption, the Homenet DNS(SEC) Resolver SHOULD be able to perform the resolution on the Homenet Authoritative Servers.
+Note that the use of the Homenet resolver enhances privacy since the user on the home network would no longer be leaking interactions with internal services to an external DNS provider and to an on-path observer.
 These servers are not expected to be mentioned in the Public Homenet Zone, nor to be accessible from the Internet.
-As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNSSEC Resolvers, e.g., using HNCP {{?RFC7788}} or a by configuring a trust anchor {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
+As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNS(SEC) Resolvers, e.g., using HNCP {{?RFC7788}} or a by configuring a trust anchor {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
 Such configuration is outside the scope of this document.
 Since the scope of the Homenet Authoritative Servers is limited to the home network, these servers are expected to serve the Homenet Zone as represented in {{fig-naming-arch}}.
 
@@ -364,7 +365,8 @@ Other mechanisms may also be used.
 This section details the DM channels, that is the Control Channel, the Synchronization Channel and the Distribution Channel.
 
 The Control Channel and the Synchronization Channel are the interfaces used between the HNA and the DOI.
-The entity within the DOI responsible to handle these communications is the DM and communications between the HNA and the DM MUST be protected and mutually authenticated.
+The entity within the DOI responsible to handle these communications is the DM and communications between the HNA and the DM MUST be protected and mutually authenticated (see {{sec-ctrl-security}}).
+
 While {{sec-ctrl-security}} discusses in more depth the different security protocols that could be used to secure, it is RECOMMENDED to use TLS with mutual authentication based on certificates to secure the channel between the HNA and the DM.
 
 
@@ -448,7 +450,6 @@ The Control Channel is not expected to be a long-term session.
 After a predefined timer - similar to those used for TCP - the Control Channel is expected to be terminated - by closing the transport channel.
 The Control Channel MAY be re-opened at any time later.
 
-The provisioning process SHOULD provide a method of securing the Control Channel, so that the content of messages can be authenticated.
 This authentication MAY be based on certificates for both the DM and each HNA.
 The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
 
@@ -758,9 +759,10 @@ This section analyses the attack surface associated with these communications, t
 The channels between HNA and DM are mutually authenticated and encrypted with TLS {{?RFC8446}} and its associated security considerations apply.
 To ensure the multiple TLS session are continuously authenticating the same entity, TLS may take advantage of second factor authentication as described in {{?RFC8672}}.
 
-At the time of writing TLS 1.2 or TLS 1.3 can be used and TLS 1.3 (or newer) SHOULD be supported.
-It is RECOMMENDED that all DNS exchanges between the HNA and the DM be protected by TLS to provide integrity protection as well as confidentiality. As noted in {{!RFC9103}}, some level of privacy may be relaxed, by not protecting the existence of the zone.
-This MAY involved a mix of exchanges protected by TLS and exchanges not protected by TLS.
+The TLS communication between the HNA and the DM MUST comply with {{!I-D.ietf-uta-rfc7525bis}}.
+The Control Channel and the Synchronization Channel respectively follow {{!RFC7858}} and {{!RFC9103}} guidelines.
+The highest level of privacy provided by {{!RFC9103}} SHOULD be enforced.
+As noted in {{!RFC9103}}, some level of privacy may be relaxed, by not protecting the existence of the zone.This MAY involve a mix of exchanges protected by TLS and exchanges not protected by TLS.
 This MAY be handled by a off-line agreement between the DM and HNA as well as with the use of RCODES defined in Section 7.8 of {{!RFC9103}}.
 
 The DNS protocol is subject to reflection attacks, however, these attacks are largely applicable when DNS is carried over UDP.
