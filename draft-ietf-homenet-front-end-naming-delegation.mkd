@@ -251,7 +251,7 @@ The DOI benefits from a cloud infrastructure while the HNA is dimensioned for ho
 In the case the HNA is a CPE, outsourcing to the DOI protects the home network against DDoS for example.
 Of course the DOI needs to be informed dynamically about the content of myhome.example. The description of such a synchronization mechanism is the purpose of this document.
 
-~~~~
+~~~~ aasvg
        Home network                 |         Internet
 +----------------------+            | +----------------------+
 |           HNA        |            | |          DOI         |
@@ -276,7 +276,7 @@ Note that {{info-model}} shows necessary parameters to configure the HNA.
 
 ## Architecture Overview {#sec-arch-overview}
 
-~~~~
+~~~~ aasvg
 
        Home network                 |         Internet
                                     |
