@@ -88,7 +88,7 @@ that they wish to access from the Internet (i.e., from a network outside of the
 home network).  To enable this access, the names and IP addresses of these
 devices and services needs to be made available in the public DNS.
 
-The names and IP address of the home network are present in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs the DNS Outsourcing Infrastructure (DOI) to publish the zone on the behalf of the HNA. 
+The names and IP address of the home network are present in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs the DNS Outsourcing Infrastructure (DOI) to publish the zone on the behalf of the HNA.
 This document describes how an HNA can instruct a DOI to publish a Public Homenet Zone on its behalf.
 
 --- middle
@@ -100,7 +100,7 @@ that they wish to access from the Internet (i.e., from a network outside of the
 home network).  To enable this access, the names and IP addresses of these
 devices and services needs to be made available in the public DNS.
 
-The names and IP address of the home network are present in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs the DNS Outsourcing Infrastructure (DOI) to publish the zone on the behalf of the HNA. 
+The names and IP address of the home network are present in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs the DNS Outsourcing Infrastructure (DOI) to publish the zone on the behalf of the HNA.
 This document describes how an HNA can instruct a DOI to publish a Public Homenet Zone on its behalf.
 
 
@@ -112,10 +112,10 @@ The HNA is configured as a primary, while the DM is configured as a secondary.
 
 The Control Channel (see {{sec-ctrl}}) is used to set the Synchronization Channel.
 For example, to build the Public Homenet Zone, the HNA needs the authoritative servers (and associated IP addresses) of the servers of the DOI actually serving the zone.
-Similarly, the DOI needs to know the IP address of the primary (HNA) as well as potentially the hash of the Key SIgning Key (KSK) in the DS RRset to secure the DNSSEC delegation with the parent zone.
+Similarly, the DOI needs to know the IP address of the primary (HNA) as well as potentially the hash of the Key Signing Key (KSK) in the DS RRset to secure the DNSSEC delegation with the parent zone.
 
 The remainder of the document is as follows.
-Section 2 defines the terminology, Section 3 presents the general problem of publishing names and IP addresses, Section 4 presents an alternative solution to the current mechanism described in this document and Section 5 presents some deployment scenarios.  
+Section 2 defines the terminology, Section 3 presents the general problem of publishing names and IP addresses, Section 4 presents an alternative solution to the current mechanism described in this document and Section 5 presents some deployment scenarios.
 {{sec-arc-desc}} provides an architectural view of the  HNA, DM and DOI as well as their different communication channels (Control Channel, Synchronization Channel, DM Distribution Channel) respectively described in {{sec-ctrl}}, {{sec-synch}} and {{sec-dist}}.
 {{sec-cpe-sec-policies}} and {{sec-dnssec-deployment}} respectively detail HNA security policies as well as DNSSEC compliance within the home network.
 {{sec-renumbering}} discusses how renumbering should be handled.
@@ -124,7 +124,7 @@ Finally, {{sec-privacy}} and {{sec-security}} respectively discuss privacy and s
 The appendices discuss several management (see {{sec-reverse}}) provisioning (see {{sec-reverse}}), configurations (see {{info-model}}) and deployment (see {{sec-deployment}} and {{sec-ex-manu}}) aspects.
 
 
-# Terminology 
+# Terminology
 
 {::boilerplate bcp14}
 
@@ -136,7 +136,7 @@ Homenet Zone:
 This zone is not considered public and is out of scope for this document.
 
 Registered Homenet Domain:
-: is the domain name that is associated with the home network. A given home network may have multiple Registered Homenet Domain. 
+: is the domain name that is associated with the home network. A given home network may have multiple Registered Homenet Domain.
 
 Public Homenet Zone:
 : contains the names in the home network that are expected to be publicly resolvable on the Internet. A home network can have multiple Public Homenet Zones.
@@ -209,7 +209,7 @@ A specific vendor with specific relations with a registrar or a registry
 may sell a CPE that is provisioned with a domain name. Such a
 domain name does not need to be human readable.
 
-One possible scenario is that the vendor also provisions the HNA with a private and public key as well as a certificate used for the mutual TLS authentication. 
+One possible scenario is that the vendor also provisions the HNA with a private and public key as well as a certificate used for the mutual TLS authentication.
 Note that these keys are not expected to be used for DNSSEC signing.
 Instead these keys are solely used by the HNA for the authentication to the DM.
 Normally the keys should be necessary and sufficient to proceed to the authentication.
@@ -246,12 +246,12 @@ With that being done, the DOI has a roof of ownership and can proceed as above.
 
 This section provides an overview of the architecture for outsourcing the authoritative naming service from the HNA to the DOI.
 As a consequence, this prevents HNA to handle the DNS traffic from the Internet associated with the resolution of the Homenet Zone as depicted in {{fig-naming-arch-overview}}.
-More specifically, DNS resolution for the Public Homenet Zone (here myhome.example) from Internet DNSSEC resolvers is handled by the DOI as opposed to the HNA. 
-The DOI benefits from a cloud infrastructure while the HNA is dimensioned for home network and as such likely enable to support any load. 
+More specifically, DNS resolution for the Public Homenet Zone (here myhome.example) from Internet DNSSEC resolvers is handled by the DOI as opposed to the HNA.
+The DOI benefits from a cloud infrastructure while the HNA is dimensioned for home network and as such likely enable to support any load.
 In the case the HNA is a CPE, outsourcing to the DOI protects the home network against DDoS for example.
-Of course the DOI needs to be informed dynamically about the content of myhome.example. The description of such a synchronization mechanism is the purpose of this document.  
+Of course the DOI needs to be informed dynamically about the content of myhome.example. The description of such a synchronization mechanism is the purpose of this document.
 
-~~~~
+~~~~ aasvg
        Home network                 |         Internet
 +----------------------+            | +----------------------+
 |           HNA        |            | |          DOI         |
@@ -262,7 +262,7 @@ Of course the DOI needs to be informed dynamically about the content of myhome.e
 +----------------------+  Synchron- | +----------------------+
       (primary)           ization   |       ^  |   (secondary)
                                     |       |  | (DNS resolution)
-                                    |       |  v  
+                                    |       |  v
                                     | +-----------------------+
                                     | |       Internet        |
                                     |    DNS(SEC) Resolver    |
@@ -276,7 +276,7 @@ Note that {{info-model}} shows necessary parameters to configure the HNA.
 
 ## Architecture Overview {#sec-arch-overview}
 
-~~~~
+~~~~ aasvg
 
        Home network                 |         Internet
                                     |
@@ -373,7 +373,7 @@ While {{sec-ctrl-security}} discusses in more depth the different security proto
 The information exchanged between the HNA and the DM uses DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}.
 This is configured identically to that described in {{!RFC9103}}.
 
-It is worth noticing that both DM and HNA need to agree on a common configuration to set up the synchronization channel as well as to build and server a coherent Public Homenet Zone. 
+It is worth noticing that both DM and HNA need to agree on a common configuration to set up the synchronization channel as well as to build and server a coherent Public Homenet Zone.
 Typically,  the visible NS records of the Public Homenet Zone (built by the HNA) SHOULD remain pointing at the DOI's Public Authoritative Servers' IP address -- which in many cases will be an anycast address. Revealing the address of the HNA in the DNS is not desirable. In addition, and depending on the configuration of the DOI, the DM also needs to update the  parent zone's (NS, DS and associated A or AAAA records). Refer to {{sec-chain-of-trust}} for more details.
 
 This specification assumes:
