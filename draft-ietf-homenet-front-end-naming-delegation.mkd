@@ -472,7 +472,8 @@ The zone template MUST contain a RRset of type SOA, one or multiple RRset of typ
 The NS RRsets carry the Public Authoritative Servers of the DOI.
 Their associated NAME MUST be the Registered Homenet Domain.
 
-The TTL and RDATA are those expected to be published on the Public Homenet Zone.
+The TTL and RDATA are those expected to be published on the Public Homenet Zone. 
+Note that the TTL SHOULD be set following the resolver's guide line {{?I-D.ietf-dnsop-ns-revalidation}} {{?I-D.ietf-dnsop-dnssec-validator-requirements}} with a TTL not exceeding those of the NS.
 The RRsets of Type A and AAAA MUST have their NAME matching the NSDNAME of one of the NS RRsets.
 
 Upon receiving the response, the HNA MUST validate format and properties of the SOA, NS and A or AAAA RRsets.
@@ -677,7 +678,7 @@ It is RECOMMENDED the HNA signs the Public Homenet Zone.
 
 Secure delegation is achieved only if the DS RRset is properly set in the parent zone.
 Secure delegation can be performed by the HNA or the DOIs and the choice highly depends on which entity is authorized to perform such updates.
-Typically, the DS RRset can be updated manually in the parent zone with nsupdate for example.
+Typically, the DS RRset can be updated manually in the parent zone with nsupdate or other mechanisms such as CDS {{!RFC7344}} for example.
 This requires the HNA or the DOI to be authenticated by the DNS server hosting the parent of the Public Homenet Zone.
 Such a trust channel between the HNA and the parent DNS server may be hard to maintain with HNAs, and thus may be easier to establish with the DOI.
 In fact, the Public Authoritative Server(s) may use Automating DNSSEC Delegation Trust Maintenance  {{!RFC7344}}.
