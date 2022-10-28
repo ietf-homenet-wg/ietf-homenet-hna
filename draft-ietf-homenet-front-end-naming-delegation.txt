@@ -5,16 +5,16 @@
 Homenet                                                       D. Migault
 Internet-Draft                                                  Ericsson
 Intended status: Standards Track                                R. Weber
-Expires: 26 April 2023                                           Nominum
+Expires: 1 May 2023                                              Nominum
                                                            M. Richardson
                                                 Sandelman Software Works
                                                                R. Hunter
                                                     Globis Consulting BV
-                                                         23 October 2022
+                                                         28 October 2022
 
 
       Simple Provisioning of Public Names for Residential Networks
-           draft-ietf-homenet-front-end-naming-delegation-21
+           draft-ietf-homenet-front-end-naming-delegation-22
 
 Abstract
 
@@ -46,14 +46,14 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 April 2023.
+   This Internet-Draft will expire on 1 May 2023.
 
 
 
 
 
 
-Migault, et al.           Expires 26 April 2023                 [Page 1]
+Migault, et al.            Expires 1 May 2023                   [Page 1]
 
 Internet-Draft                public-names                  October 2022
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Migault, et al.           Expires 26 April 2023                 [Page 2]
+Migault, et al.            Expires 1 May 2023                   [Page 2]
 
 Internet-Draft                public-names                  October 2022
 
@@ -153,8 +153,8 @@ Internet-Draft                public-names                  October 2022
    belongs to the DOI.
 
    The Synchronization Channel (see Section 7) is used to synchronize
-   the Public Homenet Zone.  The HNA is configured as a primary, while
-   the DM is configured as a secondary.
+   the Public Homenet Zone.  The HNA is configured as a primary DNS name
+   server, while the DM is configured as a secondary DNS name server.
 
 
 
@@ -165,7 +165,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                 [Page 3]
+Migault, et al.            Expires 1 May 2023                   [Page 3]
 
 Internet-Draft                public-names                  October 2022
 
@@ -221,7 +221,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                 [Page 4]
+Migault, et al.            Expires 1 May 2023                   [Page 4]
 
 Internet-Draft                public-names                  October 2022
 
@@ -277,7 +277,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                 [Page 5]
+Migault, et al.            Expires 1 May 2023                   [Page 5]
 
 Internet-Draft                public-names                  October 2022
 
@@ -333,7 +333,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                 [Page 6]
+Migault, et al.            Expires 1 May 2023                   [Page 6]
 
 Internet-Draft                public-names                  October 2022
 
@@ -389,7 +389,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                 [Page 7]
+Migault, et al.            Expires 1 May 2023                   [Page 7]
 
 Internet-Draft                public-names                  October 2022
 
@@ -445,7 +445,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                 [Page 8]
+Migault, et al.            Expires 1 May 2023                   [Page 8]
 
 Internet-Draft                public-names                  October 2022
 
@@ -494,14 +494,14 @@ Internet-Draft                public-names                  October 2022
    In this example, The Public Homenet Zone is identified by the
    Registered Homenet Domain name - myhome.example.  The ".local" as
    well as ".home.arpa" are explicitly not considered as Public Homenet
-   zones and represented as Homenet Zone in Figure 2.
+   zones and represented as Homenet Zone in Figure 2 and that the DOI
+   MUST not accept any such names.
 
 
 
 
 
-
-Migault, et al.           Expires 26 April 2023                 [Page 9]
+Migault, et al.            Expires 1 May 2023                   [Page 9]
 
 Internet-Draft                public-names                  October 2022
 
@@ -557,7 +557,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 10]
+Migault, et al.            Expires 1 May 2023                  [Page 10]
 
 Internet-Draft                public-names                  October 2022
 
@@ -613,7 +613,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 11]
+Migault, et al.            Expires 1 May 2023                  [Page 11]
 
 Internet-Draft                public-names                  October 2022
 
@@ -623,7 +623,7 @@ Internet-Draft                public-names                  October 2022
    configured identically to that described in [RFC9103].
 
    It is worth noticing that both DM and HNA need to agree on a common
-   configuration to set up the synchronization channel as well as to
+   configuration to set up the Synchronization Channel as well as to
    build and server a coherent Public Homenet Zone.  Typically, the
    visible NS records of the Public Homenet Zone (built by the HNA)
    SHOULD remain pointing at the DOI's Public Authoritative Servers' IP
@@ -669,7 +669,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 12]
+Migault, et al.            Expires 1 May 2023                  [Page 12]
 
 Internet-Draft                public-names                  October 2022
 
@@ -725,7 +725,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 13]
+Migault, et al.            Expires 1 May 2023                  [Page 13]
 
 Internet-Draft                public-names                  October 2022
 
@@ -733,14 +733,22 @@ Internet-Draft                public-names                  October 2022
 6.3.  Information to set the Synchronization Channel
 
    The HNA works as a primary authoritative DNS server, while the DM
-   works like a secondary.  As a result, the HNA must provide the IP
-   address the DM should use to reach the HNA.  The synchronization
-   Channel will be set between that IP address and the IP address of the
-   DM.  By default, the IP address used by the HNA in the Control
-   Channel is considered by the DM and the explicit specification of the
-   IP by the HNA is only OPTIONAL.  The transport channel (including
-   port number) is the same as the one used between the HNA and the DM
-   for the Control Channel.
+   works like a secondary.  As a result, the DM needs to know what IP
+   address it should use to reach the HNA.  Since the HNA initiates the
+   Control Channel to the DM, the DM will normally be able to use the
+   source address from the Control Channel as the IP address it will use
+   to reach the HNA.  The explicit specification of the IP address by
+   the HNA is only OPTIONAL.
+
+   The DNS exchanges performed by the DM to synchronize the zone is
+   using the same destination port and same transport protocol as for
+   the Control Channel.  This document, only specifies DNS over TLS as
+   the transport protocol.  If the Control Channel between the HNA and
+   the DM uses DNS over TLS [RFC7858] over port XX (XX being 853 by
+   default), the Synchronization Channel between the DM and the HNA will
+   use DNS Zone transfer over TLS [RFC9103] using port XX.  Note that
+   the source port may be different for both channels (see Section 7 for
+   more details ).
 
 6.4.  Deleting the delegation
 
@@ -768,23 +776,19 @@ Internet-Draft                public-names                  October 2022
    Channel is expected to be terminated - by closing the transport
    channel.  The Control Channel MAY be re-opened at any time later.
 
-   This authentication MAY be based on certificates for both the DM and
-   each HNA.  The DM may also create the initial configuration for the
-   delegation zone in the parent zone during the provisioning process.
 
 
 
 
 
-
-
-
-
-
-Migault, et al.           Expires 26 April 2023                [Page 14]
+Migault, et al.            Expires 1 May 2023                  [Page 14]
 
 Internet-Draft                public-names                  October 2022
 
+
+   This authentication MAY be based on certificates for both the DM and
+   each HNA.  The DM may also create the initial configuration for the
+   delegation zone in the parent zone during the provisioning process.
 
 6.5.1.  Retrieving information for the Public Homenet Zone.
 
@@ -822,26 +826,6 @@ Internet-Draft                public-names                  October 2022
    exceeding those of the NS.  The RRsets of Type A and AAAA MUST have
    their NAME matching the NSDNAME of one of the NS RRsets.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Migault, et al.           Expires 26 April 2023                [Page 15]
-
-Internet-Draft                public-names                  October 2022
-
-
    Upon receiving the response, the HNA MUST validate format and
    properties of the SOA, NS and A or AAAA RRsets.  If an error occurs,
    the HNA MUST stop proceeding and MUST log an error.  Otherwise, the
@@ -850,6 +834,14 @@ Internet-Draft                public-names                  October 2022
    SHOULD set the value of NAME, REFRESH, RETRY, EXPIRE and MINIMUM of
    the SOA to those provided by the AXFR response.  The HNA MUST insert
    the NS and corresponding A or AAAA RRset in its Public Homenet Zone.
+
+
+
+Migault, et al.            Expires 1 May 2023                  [Page 15]
+
+Internet-Draft                public-names                  October 2022
+
+
    The HNA MUST ignore other RRsets.  If an error message is returned by
    the DM, the HNA MUST proceed as a regular DNS resolution.  Error
    messages SHOULD be logged for further analysis.  If the resolution
@@ -890,17 +882,21 @@ Internet-Draft                public-names                  October 2022
    when RRsets are missing.  A SERVFAIL error is returned when a
    internal error is encountered.  A NOTZONE error is returned when
    update and Zone sections are not coherent, a NOTAUTH error is
-
-
-
-Migault, et al.           Expires 26 April 2023                [Page 16]
-
-Internet-Draft                public-names                  October 2022
-
-
    returned when the DM is not authoritative for the Zone section.  A
    REFUSED error is returned when the DM refuses to proceed to the
    configuration and the requested action.
+
+
+
+
+
+
+
+
+Migault, et al.            Expires 1 May 2023                  [Page 16]
+
+Internet-Draft                public-names                  October 2022
+
 
 6.5.3.  Providing information for the Synchronization Channel
 
@@ -949,7 +945,11 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 17]
+
+
+
+
+Migault, et al.            Expires 1 May 2023                  [Page 17]
 
 Internet-Draft                public-names                  October 2022
 
@@ -999,13 +999,13 @@ Internet-Draft                public-names                  October 2022
    port such as 853 for DoT).
 
    On the other hand, the Synchronization Channel is set between the DM
-   working as a client using port ZZZZ ( another high range port) toward
+   working as a client using port ZZZZ (another high range port) toward
    a service provided by the HNA at port XX.
 
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 18]
+Migault, et al.            Expires 1 May 2023                  [Page 18]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1061,7 +1061,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 19]
+Migault, et al.            Expires 1 May 2023                  [Page 19]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1117,7 +1117,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 20]
+Migault, et al.            Expires 1 May 2023                  [Page 20]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1173,7 +1173,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 21]
+Migault, et al.            Expires 1 May 2023                  [Page 21]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1229,7 +1229,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 22]
+Migault, et al.            Expires 1 May 2023                  [Page 22]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1285,7 +1285,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 23]
+Migault, et al.            Expires 1 May 2023                  [Page 23]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1341,7 +1341,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 24]
+Migault, et al.            Expires 1 May 2023                  [Page 24]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1397,7 +1397,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 25]
+Migault, et al.            Expires 1 May 2023                  [Page 25]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1453,7 +1453,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 26]
+Migault, et al.            Expires 1 May 2023                  [Page 26]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1509,7 +1509,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 27]
+Migault, et al.            Expires 1 May 2023                  [Page 27]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1565,7 +1565,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 28]
+Migault, et al.            Expires 1 May 2023                  [Page 28]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1621,7 +1621,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 29]
+Migault, et al.            Expires 1 May 2023                  [Page 29]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1677,7 +1677,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 30]
+Migault, et al.            Expires 1 May 2023                  [Page 30]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1700,9 +1700,9 @@ Internet-Draft                public-names                  October 2022
               Migault, D., Weber, R., and T. Mrugalski, "DHCPv6 Options
               for Home Network Naming Authority", Work in Progress,
               Internet-Draft, draft-ietf-homenet-naming-architecture-
-              dhc-options-22, 19 October 2022,
+              dhc-options-23, 23 October 2022,
               <https://www.ietf.org/archive/id/draft-ietf-homenet-
-              naming-architecture-dhc-options-22.txt>.
+              naming-architecture-dhc-options-23.txt>.
 
    [I-D.richardson-homerouter-provisioning]
               Richardson, M., "Provisioning Initial Device Identifiers
@@ -1733,7 +1733,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 31]
+Migault, et al.            Expires 1 May 2023                  [Page 31]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1789,7 +1789,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 32]
+Migault, et al.            Expires 1 May 2023                  [Page 32]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1845,7 +1845,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 33]
+Migault, et al.            Expires 1 May 2023                  [Page 33]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1901,7 +1901,7 @@ A.1.  Homenet Public Zone
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 34]
+Migault, et al.            Expires 1 May 2023                  [Page 34]
 
 Internet-Draft                public-names                  October 2022
 
@@ -1957,7 +1957,7 @@ Appendix B.  Information Model for Outsourced information
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 35]
+Migault, et al.            Expires 1 May 2023                  [Page 35]
 
 Internet-Draft                public-names                  October 2022
 
@@ -2013,7 +2013,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 36]
+Migault, et al.            Expires 1 May 2023                  [Page 36]
 
 Internet-Draft                public-names                  October 2022
 
@@ -2069,7 +2069,7 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 37]
+Migault, et al.            Expires 1 May 2023                  [Page 37]
 
 Internet-Draft                public-names                  October 2022
 
@@ -2125,7 +2125,7 @@ Appendix C.  Example: A manufacturer provisioned HNA product flow
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 38]
+Migault, et al.            Expires 1 May 2023                  [Page 38]
 
 Internet-Draft                public-names                  October 2022
 
@@ -2181,7 +2181,7 @@ Authors' Addresses
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 39]
+Migault, et al.            Expires 1 May 2023                  [Page 39]
 
 Internet-Draft                public-names                  October 2022
 
@@ -2237,4 +2237,4 @@ Internet-Draft                public-names                  October 2022
 
 
 
-Migault, et al.           Expires 26 April 2023                [Page 40]
+Migault, et al.            Expires 1 May 2023                  [Page 40]

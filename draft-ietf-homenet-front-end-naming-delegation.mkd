@@ -429,7 +429,7 @@ The explicit specification of the IP address by the HNA is only OPTIONAL.
 
 The DNS exchanges performed by the DM to synchronize the zone is using the same destination port and same transport protocol as for the Control Channel. 
 This document, only specifies DNS over TLS as the transport protocol.  
-If the Control Channel between the HNA and the DM uses DNS over TLS {{!RFC7858}} over port XX (XX being 853 by default), the Synchronization Channel between the DM and the HNA will use DNS Zone transfer over TLS {{!9103}} using port XX.
+If the Control Channel between the HNA and the DM uses DNS over TLS {{!RFC7858}} over port XX (XX being 853 by default), the Synchronization Channel between the DM and the HNA will use DNS Zone transfer over TLS {{!RFC9103}} using port XX.
 Note that the source port may be different for both channels (see {{sec-synch}} for more details ).   
 
 ## Deleting the delegation
