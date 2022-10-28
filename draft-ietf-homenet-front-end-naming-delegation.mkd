@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-20
+docname: draft-ietf-homenet-front-end-naming-delegation-22
 
 stand_alone: true
 
@@ -373,7 +373,7 @@ While {{sec-ctrl-security}} discusses in more depth the different security proto
 The information exchanged between the HNA and the DM uses DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}.
 This is configured identically to that described in {{!RFC9103}}.
 
-It is worth noticing that both DM and HNA need to agree on a common configuration to set up the synchronization channel as well as to build and server a coherent Public Homenet Zone.
+It is worth noticing that both DM and HNA need to agree on a common configuration to set up the Synchronization Channel as well as to build and server a coherent Public Homenet Zone.
 Typically,  the visible NS records of the Public Homenet Zone (built by the HNA) SHOULD remain pointing at the DOI's Public Authoritative Servers' IP address -- which in many cases will be an anycast address. Revealing the address of the HNA in the DNS is not desirable. In addition, and depending on the configuration of the DOI, the DM also needs to update the  parent zone's (NS, DS and associated A or AAAA records). Refer to {{sec-chain-of-trust}} for more details.
 
 This specification assumes:
@@ -418,18 +418,19 @@ Though the HNA may also later directly update the values of the DS via the Contr
 
 As some deployments may not provide a DOI that will be able to update the DS in the parent zone, this information exchange is OPTIONAL.
 
-By accepting the DS RR, the DM commits to advertise
-   the DS to the parent zone.  On the other hand if the DM
-   does not have the capacity to advertise the DS to the
-   parent zone, it indicates this by refusing the DS RR.
+By accepting the DS RR, the DM commits to advertise the DS to the parent zone.  On the other hand if the DM does not have the capacity to advertise the DS to the parent zone, it indicates this by refusing the DS RR.
 
 ## Information to set the Synchronization Channel {#sec-sync-info}
 
 The HNA works as a primary authoritative DNS server, while the DM works like a secondary.
-As a result, the HNA must provide the IP address the DM should use to reach the HNA.
-The synchronization Channel will be set between that IP address and the IP address of the DM.
-By default, the IP address used by the HNA in the Control Channel is considered by the DM and the explicit specification  of the IP by the HNA is only OPTIONAL.
-The transport channel (including port number) is the same as the one used between the HNA and the DM for the Control Channel.
+As a result, the DM needs to know what IP address it should use to reach the HNA.
+Since the HNA initiates the Control Channel to the DM, the DM will normally be able to use the source address from the Control Channel as the IP address it will use to reach the HNA. 
+The explicit specification of the IP address by the HNA is only OPTIONAL. 
+
+The DNS exchanges performed by the DM to synchronize the zone is using the same destination port and same transport protocol as for the Control Channel. 
+This document, only specifies DNS over TLS as the transport protocol.  
+If the Control Channel between the HNA and the DM uses DNS over TLS {{!RFC7858}} over port XX (XX being 853 by default), the Synchronization Channel between the DM and the HNA will use DNS Zone transfer over TLS {{!9103}} using port XX.
+Note that the source port may be different for both channels (see {{sec-synch}} for more details ).   
 
 ## Deleting the delegation
 
@@ -573,7 +574,7 @@ Note that the Control Channel and the Synchronization Channel are by constructio
 Suppose the HNA and the DM are using a single IP address and let designate by XX, YYYY and ZZZZ the various ports involved in the communications.
 The Control Channel is between the HNA working as a client using port number YYYY (a high range port) toward a service provided by the DM at port number XX (well-known port such as 853 for DoT).
 
-On the other hand, the Synchronization Channel is set between the DM working as a client using port ZZZZ ( another high range port) toward a service provided  by the HNA at port XX.
+On the other hand, the Synchronization Channel is set between the DM working as a client using port ZZZZ (another high range port) toward a service provided  by the HNA at port XX.
 
 As a result, even though the same pair of IP addresses may be involved the Control Channel and the Synchronization Channel are always distinct channels.
 
