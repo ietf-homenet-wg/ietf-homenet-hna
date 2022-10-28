@@ -108,7 +108,7 @@ This document describes how an HNA can instruct a DOI to publish a Public Homene
 The document introduces the Synchronization Channel and  the Control Channel  between the HNA and the  Distribution Manager (DM) that belongs to the DOI.
 
 The Synchronization Channel (see {{sec-synch}}) is used to synchronize the Public Homenet Zone.
-The HNA is configured as a primary, while the DM is configured as a secondary.
+The HNA is configured as a primary DNS name server, while the DM is configured as a secondary DNS name server.
 
 The Control Channel (see {{sec-ctrl}}) is used to set the Synchronization Channel.
 For example, to build the Public Homenet Zone, the HNA needs the authoritative servers (and associated IP addresses) of the servers of the DOI actually serving the zone.
@@ -317,7 +317,7 @@ The DOI will serve every DNS request of the Public Homenet Zone coming from outs
 When the request is coming within the home network, the resolution is expected to be handled by the Homenet Resolver as detailed in further details below.
 
 In this example, The Public Homenet Zone is identified by the Registered Homenet Domain name -- myhome.example.
-The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as Homenet Zone in {{fig-naming-arch}}.
+The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as Homenet Zone in {{fig-naming-arch}} and that the DOI MUST not accept any such names.
 
 The HNA SHOULD build the Public Homenet Zone in a single view populated with all resource records that are expected to be published on the Internet.
 The HNA also signs the Public Homenet Zone.
