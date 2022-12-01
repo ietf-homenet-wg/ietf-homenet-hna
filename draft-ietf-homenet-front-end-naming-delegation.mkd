@@ -81,6 +81,10 @@ informative:
       - ins: R. Wang
     title: An efficient DNSSEC zone enumeration algorithm
 
+  REBIND:
+    title: DNS rebinding
+    target: https://en.wikipedia.org/wiki/DNS_rebinding
+
 --- abstract
 
 Home network owners may have devices or services hosted on this home network
@@ -156,7 +160,7 @@ Public Homenet Zone:
 : contains the names in the home network that are expected to be publicly resolvable on the Internet. A home network can have multiple Public Homenet Zones.
 
 Homenet Naming Authority(HNA):
-is a function responsible for managing the Public Homenet Zone.
+: is a function responsible for managing the Public Homenet Zone.
 This includes populating the Public Homenet Zone, signing the zone for DNSSEC, as well as managing the distribution of that Homenet Zone to the DNS Outsourcing Infrastructure (DOI).
 
 DNS Outsourcing Infrastructure (DOI):
@@ -166,12 +170,14 @@ It is mainly composed of a Distribution Manager and Public Authoritative Servers
 Public Authoritative Servers:
 : are the authoritative name servers for the Public Homenet Zone.
 Name resolution requests for the Registered Homenet Domain are sent to these servers.
+Some DNS operators would refer to these as public secondaries, and for higher resiliency networks, are often implemented in an anycast fashion.
 
 Homenet Authoritative Servers:
-: are authoritative name servers for the Homenet Zone within the Homenet network.
+: are authoritative name servers for the Homenet Zone within the Homenet network itself. These are sometimes called the hidden primary servers.
 
 Distribution Manager (DM):
 : is the (set of) server(s) to which the HNA synchronizes the Public Homenet Zone, and which then distributes the relevant information to the Public Authoritative Servers.
+This server has been historically known as the Distribution Master.
 
 Public Homenet Reverse Zone:
 : The reverse zone file associated with the Public Homenet Zone.
@@ -192,20 +198,21 @@ The resolution is performed requesting the Public Authoritative Servers.
 
 # Selecting Names and Addresses to Publish {#selectingnames}
 
-While this document does not create any normative mechanism to select the names to publish, this document anticipates that the home network administrator (a human being), will be presented with a list of current names and addresses either directly on the HNA or via another device such as a phone.
+While this document does not create any normative mechanism to select the names to publish, this document anticipates that the home network administrator (a human being), will be presented with a list of current names and addresses either directly on the HNA or via another device such as a smartphone.
 
 The administrator would mark which devices and services (by name), are to be published.
 The HNA would then collect the IP address(es) associated with that device or service, and put the name into the Public Homenet Zone.
 The address of the device or service can be collected from a number of places: mDNS {{?RFC6762}}, DHCP {{?RFC8415}}, UPnP, PCP {{?RFC6887}}, or manual configuration.
 
-A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), Unique Local IPv6 Addresses (ULA) {{?RFC4193}}, as well IPv6-Link-Local addresses{{?RFC4291}}{{?RFC7404}}, IPv4-Link-Local Addresses {{?RFC3927}} (LLA), and private IPv4 addresses {{!RFC1918}}.
-Of these the link-local are almost never useful for the Public Zone, and should be omitted.
-The IPv6 ULA and the private IPv4 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
+A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), Unique Local IPv6 Addresses (ULA) {{?RFC4193}}, IPv6-Link-Local addresses{{?RFC4291}}{{?RFC7404}}, IPv4-Link-Local Addresses {{?RFC3927}} (LLA), and finally, private IPv4 addresses {{!RFC1918}}.
 
+Of these the link-local are almost never useful for the Public Zone, and should be omitted.
+
+The IPv6 ULA and the private IPv4 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
 The IPv6 ULA addresses are safer to publish with a significantly lower probability of collision than RFC1918 addresses.
+RFC1918 addresses in public zones are generally filtered out by many DNS servers as they are considered rebind attacks {{REBIND}}.
 
 In general, one expects the GUA to be the default address to be published.
-However, publishing the ULA and private IPv4 addresses may enable local communications within the home network.
 A direct advantage of enabling local communication is to enable communications even in case of Internet disruption.
 Since communications are established with names which remain a global identifier, the communication can be protected by TLS the same way it is protected on the global Internet - using certificates.  
 
