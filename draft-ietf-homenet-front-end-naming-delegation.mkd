@@ -221,20 +221,20 @@ Since communications are established with names which remain a global identifie
 # Envisioned deployment scenarios {#sec-deployment}
 
 A number of deployment scenarios have been envisioned, this section aims at
-providing a brief description. The use cases are not limitations and
-this section is not normative.
+providing a brief description.
+The use cases are not limitations and this section is not normative.
 
 ### CPE Vendor
 
 A specific vendor with specific relations with a registrar or a registry
-may sell a CPE that is provisioned with a domain name. Such a
-domain name does not need to be human readable.
+may sell a CPE that is provisioned with a domain name.
+Such a domain name is probably not human friendly, and may consist of some kind of serial number associated with the device being sold.
 
-One possible scenario is that the vendor also provisions the HNA with a private and public key as well as a certificate used for the mutual TLS authentication.
+One possible scenario is that the vendor provisions the HNA with a private key, with an associated certificate used for the mutual TLS authentication.
 Note that these keys are not expected to be used for DNSSEC signing.
+
 Instead these keys are solely used by the HNA for the authentication to the DM.
 Normally the keys should be necessary and sufficient to proceed to the authentication.
-The reason to combine the domain name and the key is that the outsourcing infrastructure (DOI) likely handles names better than keys and that domain names might be used as a login which enables the key to be regenerated.
 
 When the home network owner plugs in the CPE at home, the relation between HNA and DM is expected to work out-of-the-box.
 
@@ -250,15 +250,12 @@ as such creates an account on that registrar
 or the home network may need to create a specific account on the
 outsourcing infrastructure.
 
-* If the DOI is the registrar, it has by
-design a proof of ownership of the domain name by the homenet owner.
-In this case, it is expected the DOI provides the necessary
-parameters to the home  network owner to configure the HNA.
-One potential mechanism
-to provide the parameters would be to provide the user with a JSON object which they can copy paste into the CPE - such as described in {{info-model}}.
-But, what matters here for the DOI is that the HNA is able to authenticate itself to the DOI.
+* If the DOI is the DNS Registrar, it has by design a proof of ownership of the domain name by the  homenet owner.
+In this case, it is expected the DOI provides the necessary parameters to the home  network owner to configure the HNA.
+One potential mechanism to provide the parameters would be to provide the user with a JSON object which they can copy paste into the CPE - such as described in {{info-model}}.
+But, what matters to infrastructure is that the HNA is able to authenticate itself to the DOI.
 
-* If the DOI is not the registrar, then the proof of ownership needs to be established using protocols like ACME {{?RFC8555}} for example that will end in the generation of a certificate.
+* If the DOI is not the DNS Registrar, then the proof of ownership needs to be established using a protocols.  ACME {{?RFC8555}} for example that will end in the generation of a certificate.
 ACME is used here to the purpose of automating the generation of the certificate, the CA may be a specific CA or the DOI.
 With that being done, the DOI has a roof of ownership and can proceed as above.
 
