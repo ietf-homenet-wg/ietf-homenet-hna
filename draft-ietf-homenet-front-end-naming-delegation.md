@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-22
+docname: draft-ietf-homenet-front-end-naming-delegation-latest
 
 stand_alone: true
 
@@ -297,7 +297,7 @@ Note that {{info-model}} shows necessary parameters to configure the HNA.
 ~~~~ aasvg
 {::include architecture-overview.txt}
 ~~~~
-{: #fig-naming-arch title="Homenet Naming Architecture" }
+{: #fig-naming-arch artwork-align="center" title="Homenet Naming Architecture"}
 
 {{fig-naming-arch}} illustrates the architecture where the HNA outsources the publication of the Public Homenet Zone to the DOI.
 The DOI will serve every DNS request of the Public Homenet Zone coming from outside the home network.

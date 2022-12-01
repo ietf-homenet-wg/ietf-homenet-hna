@@ -30,4 +30,3 @@
  |       Homenet        |           | |       Internet        |
  |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
  +----------------------+           | +-----------------------+
-~~~~
