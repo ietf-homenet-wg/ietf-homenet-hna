@@ -295,38 +295,7 @@ Note that {{info-model}} shows necessary parameters to configure the HNA.
 ## Architecture Overview {#sec-arch-overview}
 
 ~~~~ aasvg
-
-       Home network                 |         Internet
-                                    |
-                                    | +----------------------------+
-                                    | |          DOI               |
-       (primary)          Control   | |        (secondary)         |
-+-----------------------+ Channel   | |  +-----------------------+ |
-|         HNA           |<-------------->| Distribution Manager  | |
-|+---------------------+|           | |  |+---------------------+| |
-|| Public Homenet Zone ||Synchronization || Public Homenet Zone || |
-||   (myhome.example)  || Channel   | |  ||  (myhome.example)   || |
-|+---------------------+|<-------------->|+---------------------+| |
-+-----------^-----------+           | |  +-----------------------+ |
-            .                       | |           ^ Distribution   |
-            .                       | |           | Channel        |
-+-----------v-----------+           | |           v                |
-| Homenet Authoritative |           | |  +-----------------------+ |
-| Server(s)             |           | |  | Public Authoritative  | |
-|+---------------------+|           | |  | Server(s)             | |
-||Public Homenet Zone  ||           | |  |+---------------------+| |
-||  (myhome.example)   ||           | |  || Public Homenet Zone || |
-|+---------------------+|           | |  ||  (myhome.example)   || |
-||     Homenet Zone    ||           | |  |+---------------------+| |
-||     (home.arpa)     ||           | |  +-----------------------+ |
-|+---------------------+|           | +----------^---|-------------+
-+----------^---|--------+           |            |   |
-           |   |           name resolution       |   |
-           |   v                    |            |   v
- +----------------------+           | +-----------------------+
- |       Homenet        |           | |       Internet        |
- |  DNS(SEC) Resolver   |           | |  DNS(SEC) Resolver    |
- +----------------------+           | +-----------------------+
+{::include architecture-overview.txt}
 ~~~~
 {: #fig-naming-arch title="Homenet Naming Architecture" }
 

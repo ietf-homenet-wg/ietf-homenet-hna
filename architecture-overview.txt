@@ -1,0 +1,33 @@
+
+       Home network                 |         Internet
+                                    |
+                                    | +----------------------------+
+                                    | |          DOI               |
+       (primary)          Control   | |        (secondary)         |
++-----------------------+ Channel   | |  +-----------------------+ |
+|         HNA           |<-------------->| Distribution Manager  | |
+|+---------------------+|           | |  |+---------------------+| |
+|| Public Homenet Zone ||Synchronization || Public Homenet Zone || |
+||   (myhome.example)  || Channel   | |  ||  (myhome.example)   || |
+|+---------------------+|<-------------->|+---------------------+| |
++-----------^-----------+           | |  +-----------------------+ |
+            .                       | |           ^ Distribution   |
+            .                       | |           | Channel        |
++-----------v-----------+           | |           v                |
+| Homenet Authoritative |           | |  +-----------------------+ |
+| Server(s)             |           | |  | Public Authoritative  | |
+|+---------------------+|           | |  | Server(s)             | |
+||Public Homenet Zone  ||           | |  |+---------------------+| |
+||  (myhome.example)   ||           | |  || Public Homenet Zone || |
+|+---------------------+|           | |  ||  (myhome.example)   || |
+||     Homenet Zone    ||           | |  |+---------------------+| |
+||     (home.arpa)     ||           | |  +-----------------------+ |
+|+---------------------+|           | +----------^---|-------------+
++----------^---|--------+           |            |   |
+           |   |           name resolution       |   |
+           |   v                    |            |   v
+ +----------------------+           | +-----------------------+
+ |       Homenet        |           | |       Internet        |
+ |    DNSSEC Resolver   |           | |    DNSSEC Resolver    |
+ +----------------------+           | +-----------------------+
+~~~~
