@@ -466,7 +466,7 @@ If the resolution does not succeed, the outsourcing operation is aborted and the
 
 ### Providing information for the DNSSEC chain of trust {#sec-ds}
 
-To provide the DS RRset to initialize the DNSSEC chain of trust the HNA MAY send a DNS update {{?RFC2136}} message.
+To provide the DS RRset to initialize the DNSSEC chain of trust the HNA MAY send a DNS update {{!RFC3007}} message.
 
 The DNS update message is composed of a Header section, a Zone section, a Pre-requisite section, and Update section and an additional section.
 The Zone section MUST set the ZNAME to the parent zone of the Registered Homenet Domain - that is where the DS records should be inserted. As described {{?RFC2136}}, ZTYPE is set to SOA and ZCLASS is set to the zone's class.
