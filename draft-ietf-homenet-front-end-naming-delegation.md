@@ -407,7 +407,7 @@ The transport channel (including port number) is the same as the one used betwee
 The purpose of the previous sections were to exchange information in order to set a delegation.
 The HNA MUST also be able to delete a delegation with a specific DM.
 
-This is done by sending a DNS Update operation on the Control Channel that deletes the NS records that were previously created.
+{#sec-zone-delete} explains how a DNS Update operation on the Control Channel is used.
 
 Upon an instruction of deleting the delegation, the DM MUST stop serving the Public Homenet Zone.
 
@@ -504,7 +504,7 @@ The DM configures the secondary with the IP addresses and returns a NOERROR resp
 
 Similarly to {{sec-ds}}, DNS errors are used and an error indicates the DM is not configured as a secondary.
 
-### HNA instructing deleting the delegation
+### HNA instructing deleting the delegation {#sec-zone-delete}
 
 To instruct to delete the delegation the HNA sends a DNS UPDATE Delete message.
 
