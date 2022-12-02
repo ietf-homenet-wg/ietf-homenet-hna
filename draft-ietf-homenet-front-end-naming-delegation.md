@@ -263,30 +263,11 @@ With that being done, the DOI has a roof of ownership and can proceed as above.
 # Architecture Description  {#sec-arch-desc}
 
 This section provides an overview of the architecture for outsourcing the authoritative naming service from the HNA to the DOI.
-As a consequence, this prevents HNA to handle the DNS traffic from the Internet associated with the resolution of the Homenet Zone as depicted in {{fig-naming-arch-overview}}.
+As a consequence, this prevents HNA to handle the DNS traffic from the Internet associated with the resolution of the Homenet Zone.
 More specifically, DNS resolution for the Public Homenet Zone (here myhome.example) from Internet DNSSEC resolvers is handled by the DOI as opposed to the HNA.
 The DOI benefits from a cloud infrastructure while the HNA is dimensioned for home network and as such likely enable to support any load.
 In the case the HNA is a CPE, outsourcing to the DOI protects the home network against DDoS for example.
 Of course the DOI needs to be informed dynamically about the content of myhome.example. The description of such a synchronization mechanism is the purpose of this document.
-
-~~~~ aasvg
-       Home network                           Internet
-+------------------------+            +------------------------+
-|           HNA         -|            |          DOI           |
-| +--------------------+ |            | +--------------------+ |
-| | Public Homenet Zone| |<------------>| Public Homenet Zone| |
-| |   (myhome.example) | |            | |   (myhome.example) | |
-| +--------------------+ |  DNS Zone  | +--------------------+ |
-+------------------------+  Synchron- +------------------------+
-      (primary)             ization         ^  |   (secondary)
-                                            |  | (DNS resolution)
-                                            |  v
-                                      +-----------------------+
-                                      |       Internet        |
-                                      |    DNSSEC Resolver    |
-                                      +-----------------------+
-~~~~
-{: #fig-naming-arch-overview title="Homenet Naming Architecture Overview" }
 
 Note that {{info-model}} shows necessary parameters to configure the HNA.
 
