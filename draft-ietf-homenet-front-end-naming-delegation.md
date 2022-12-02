@@ -326,15 +326,14 @@ As such their information as well as the corresponding signed DS record MAY be p
 Such configuration is outside the scope of this document.
 Since the scope of the Homenet Authoritative Servers is limited to the home network, these servers are expected to serve the Homenet Zone as represented in {{fig-naming-arch}}.
 
-## Distribution Manager Communication Channels {#sec-comms}
+## Distribution Manager (DM) Communication Channels {#sec-comms}
 
 This section details the DM channels, that is the Control Channel, the Synchronization Channel and the Distribution Channel.
 
 The Control Channel and the Synchronization Channel are the interfaces used between the HNA and the DOI.
-The entity within the DOI responsible to handle these communications is the DM and communications between the HNA and the DM MUST be protected and mutually authenticated (see {{sec-ctrl-security}}).
-
-While {{sec-ctrl-security}} discusses in more depth the different security protocols that could be used to secure, it is RECOMMENDED to use TLS with mutual authentication based on certificates to secure the channel between the HNA and the DM.
-
+The entity within the DOI responsible to handle these communications is the DM.
+Communications between the HNA and the DM MUST be protected and mutually authenticated.
+{{sec-ctrl-security}} discusses in more depth the different security protocols that could be used to secure.
 
 The information exchanged between the HNA and the DM uses DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}.
 This is configured identically to that described in {{!RFC9103}}.
@@ -518,6 +517,7 @@ the DM and HNA MUST be mutually authenticated.
 The DNS exchanges are performed using DNS over TLS {{!RFC7858}}.
 
 The HNA may be provisioned by the manufacturer, or during some user-initiated onboarding process, for example, with a browser, signing up to a service provider, with a resulting OAUTH2 token to be provided to the HNA. (see {{hna-provisioning}}).
+
 In the future, other specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?RFC9250}}.
 
 
