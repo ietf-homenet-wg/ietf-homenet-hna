@@ -383,7 +383,7 @@ The DOI does not publish this NS record, but uses it to perform zone transfers.
 
 ## Information to build the DNSSEC chain of trust {#sec-chain-of-trust}
 
-The HNA SHOULD provide the hash of the KSK via the DS RRset, so the DOI provides this value to the parent zone.
+The HNA SHOULD provide the hash of the KSK via the DS RRset, so that the DOI can provide this value to the parent zone.
 A common deployment use case is that the DOI is the registrar of the Registered Homenet Domain and as such, its relationship with the registry of the parent zone enables it to update the parent zone.
 When such relation exists, the HNA should be able to request the DOI to update the DS RRset in the parent zone.
 A direct update is especially necessary to initialize the chain of trust.
@@ -392,7 +392,8 @@ Though the HNA may also later directly update the values of the DS via the Contr
 
 As some deployments may not provide a DOI that will be able to update the DS in the parent zone, this information exchange is OPTIONAL.
 
-By accepting the DS RR, the DM commits to advertise the DS to the parent zone.  On the other hand if the DM does not have the capacity to advertise the DS to the parent zone, it indicates this by refusing the DS RR.
+By accepting the DS RR, the DM commits to advertise the DS to the parent zone.
+On the other hand if the DM does not have the capacity to advertise the DS to the parent  zone, it indicates this by refusing the update to the DS RR.
 
 ## Information to set the Synchronization Channel {#sec-sync-info}
 
