@@ -418,13 +418,16 @@ The decision to delete an inactive HNA by the DM is part of the commercial agree
 
 ## Messages Exchange Description {#sec-ctrl-messages}
 
-There are multiple ways this information could be exchanged between the HNA and the DM.
+Multiple ways were considered on how the control information could be exchanged between the HNA and the DM.
+
 This specification defines a mechanism that re-use the DNS exchanges format, while the exchange in itself is not a DNS exchange involved in any DNS operations such as DNS resolution.
 Note that while information is provided using DNS exchanges, the exchanged information is not expected to  be set in any zone file, instead this information is used as commands between the HNA and the DM.
 
 The Control Channel is not expected to be a long-term session.
 After a predefined timer - similar to those used for TCP - the Control Channel is expected to be terminated - by closing the transport channel.
 The Control Channel MAY be re-opened at any time later.
+
+The use of a TLS session tickets {{?RFC5077}} is encouraged.
 
 This authentication MAY be based on certificates for both the DM and each HNA.
 The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
@@ -433,8 +436,6 @@ The DM may also create the initial configuration for the delegation zone in the 
 
 The information provided by the DM to the HNA is retrieved by the HNA with an AXFR exchange {{!RFC1034}}.
 AXFR enables the response to contain any type of RRsets.
-The response might be extended in the future if additional information will be needed.
-Alternatively, the information provided by the HNA to the DM is pushed by the HNA via a DNS update exchange {{?RFC2136}}.
 
 To retrieve the necessary information to build the Public Homenet Zone, the HNA MUST send a DNS request of type AXFR associated with the Registered Homenet Domain.
 The DM MUST respond with a zone template.
