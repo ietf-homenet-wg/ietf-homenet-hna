@@ -16,7 +16,7 @@
 | | Homenet Authoritative |  |         |   | Public Authoriative |   |
 | |        Server         |  |         |   | (secondary) Servers |   |
 | | + myhome.example      |  |         |   | + myhome.example    |   |
-| | + home.arpa           |  |         |   | + home.arpa         |   |
+| | + home.arpa           |  |         |   | + x.y.z.ip6.arpa    |   |
 | |                       |  |         |   |                     |   |
 | '-----------------------'  |         |   |                     |   |
 |        |       ^           |         |   '---------------------'   |
