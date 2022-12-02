@@ -336,7 +336,7 @@ Communications between the HNA and the DM MUST be protected and mutually authent
 {{sec-ctrl-security}} discusses in more depth the different security protocols that could be used to secure.
 
 The information exchanged between the HNA and the DM uses DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}.
-This is configured identically to that described in {{!RFC9103}}.
+This is configured identically to that described in {{!RFC9103, Section 9.3.3}}.
 
 It is worth noticing that both DM and HNA need to agree on a common configuration to set up the Synchronization Channel as well as to build and server a coherent Public Homenet Zone.
 Typically,  the visible NS records of the Public Homenet Zone (built by the HNA) SHOULD remain pointing at the DOI's Public Authoritative Servers' IP address -- which in many cases will be an anycast address. Revealing the address of the HNA in the DNS is not desirable. In addition, and depending on the configuration of the DOI, the DM also needs to update the  parent zone's (NS, DS and associated A or AAAA records). Refer to {{sec-chain-of-trust}} for more details.
