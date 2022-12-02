@@ -270,21 +270,21 @@ In the case the HNA is a CPE, outsourcing to the DOI protects the home network a
 Of course the DOI needs to be informed dynamically about the content of myhome.example. The description of such a synchronization mechanism is the purpose of this document.
 
 ~~~~ aasvg
-       Home network                 |         Internet
-+----------------------+            | +----------------------+
-|           HNA        |            | |          DOI         |
-|+--------------------+|            | |+--------------------+|
-|| Public Homenet Zone||<------------>|| Public Homenet Zone||
-||   (myhome.example) ||            | ||   (myhome.example) ||
-|+--------------------+|  DNS Zone  | |+--------------------+|
-+----------------------+  Synchron- | +----------------------+
-      (primary)           ization   |       ^  |   (secondary)
-                                    |       |  | (DNS resolution)
-                                    |       |  v
-                                    | +-----------------------+
-                                    | |       Internet        |
-                                    |    DNS(SEC) Resolver    |
-                                    | +-----------------------+
+       Home network                           Internet
++------------------------+            +------------------------+
+|           HNA         -|            |          DOI           |
+| +--------------------+ |            | +--------------------+ |
+| | Public Homenet Zone| |<------------>| Public Homenet Zone| |
+| |   (myhome.example) | |            | |   (myhome.example) | |
+| +--------------------+ |  DNS Zone  | +--------------------+ |
++------------------------+  Synchron- +------------------------+
+      (primary)             ization         ^  |   (secondary)
+                                            |  | (DNS resolution)
+                                            |  v
+                                      +-----------------------+
+                                      |       Internet        |
+                                      |    DNSSEC Resolver    |
+                                      +-----------------------+
 ~~~~
 {: #fig-naming-arch-overview title="Homenet Naming Architecture Overview" }
 
