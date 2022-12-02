@@ -557,20 +557,13 @@ As a result, even though the same pair of IP addresses may be involved the Contr
 Uploading and dynamically updating the zone file on the DM can be seen as zone provisioning between the HNA (Hidden Primary) and the DM (Secondary Server).
 This is handled via AXFR + DNS UPDATE.
 
-The use of a primary / secondary mechanism {{!RFC1996}} is RECOMMENDED instead of the use of DNS UPDATE {{?RFC2136}}.
-The primary / secondary mechanism is RECOMMENDED as it scales better and avoids DoS attacks.
-Note that even when UPDATE messages are used, these messages are using a distinct channel as those used to set the configuration.
+This specification standardizes the use of a primary / secondary mechanism {{!RFC1996}} rather than an extended series of DNS update messages.
+The primary / secondary mechanism was selected as it scales better and avoids DoS attacks.
+As this AXFR runs over a TCP channel secured by TLS, then DNS Update is just more complicated.
 
-Note that there is no standard way to distribute a DNS primary between multiple devices.
+Note that this document provides no standard way to distribute a DNS primary between multiple devices.
 As a result, if multiple devices are candidate for hosting the Hidden Primary, some specific mechanisms should be designed so the home network only selects a single HNA for the Hidden Primary.
-Selection mechanisms based on HNCP {{?RFC7788}} are good candidates.
-
-The HNA acts as a Hidden Primary Server, which is a regular authoritative DNS Server listening on the WAN interface.
-
-The DM is configured as a secondary for the Registered Homenet Domain Name.
-This secondary configuration has been previously agreed between the end user and the provider of the DOI as part of either the provisioning or due to receipt of DNS UPDATE messages on the DM Control Channel.
-
-The Public Homenet Reverse Zone MAY also be updated either with DNS UPDATE {{?RFC2136}} or using a primary / secondary synchronization.
+Selection mechanisms based on HNCP {{?RFC7788}} are good candidates for future work.
 
 ## Securing the Synchronization Channel {#sec-synch-security}
 
