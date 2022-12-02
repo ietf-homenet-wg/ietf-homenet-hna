@@ -397,22 +397,22 @@ On the other hand if the DM does not have the capacity to advertise the DS to th
 
 ## Information to set the Synchronization Channel {#sec-sync-info}
 
-The HNA works as a primary authoritative DNS server, while the DM works like a secondary.
-As a result, the DM needs to know what IP address it should use to reach the HNA.
-Since the HNA initiates the Control Channel to the DM, the DM will normally be able to use the source address from the Control Channel as the IP address it will use to reach the HNA.
-The explicit specification of the IP address by the HNA is only OPTIONAL.
+The HNA works as a hidden primary authoritative DNS server, while the DM works like a secondary.
+As a result, the HNA must provide the IP address the DM should use to reach the HNA.
+If the HNA detects that it has been renumbered, then it MUST use the Control Channel to update the DOI with its new IPv4 and IPv6 addresses.
 
-The DNS exchanges performed by the DM to synchronize the zone is using the same destination port and same transport protocol as for the Control Channel.
-This document, only specifies DNS over TLS as the transport protocol.
-If the Control Channel between the HNA and the DM uses DNS over TLS {{!RFC7858}} over port XX (XX being 853 by default), the Synchronization Channel between the DM and the HNA will use DNS Zone transfer over TLS {{!RFC9103}} using port XX.
-Note that the source port may be different for both channels (see {{sec-synch}} for more details ).
+The Synchronization Channel will be set between that IP address and the IP address of the DM.
+By default, the IP address used by the HNA in the Control Channel is considered by the DM and the explicit specification  of the IP by the HNA is only OPTIONAL.
+The transport channel (including port number) is the same as the one used between the HNA and the DM for the Control Channel.
 
 ## Deleting the delegation
 
 The purpose of the previous sections were to exchange information in order to set a delegation.
 The HNA MUST also be able to delete a delegation with a specific DM.
-Upon an instruction of deleting the delegation, the DM MUST stop serving the Public Homenet Zone.
 
+This is done by sending a DNS Update operation on the Control Channel that deletes the NS records that were previously created.
+
+Upon an instruction of deleting the delegation, the DM MUST stop serving the Public Homenet Zone.
 
 The decision to delete an inactive HNA by the DM is part of the commercial agreement between DOI and HNA.
 
