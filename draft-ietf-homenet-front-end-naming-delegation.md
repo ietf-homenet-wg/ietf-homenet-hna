@@ -524,7 +524,14 @@ TLS {{!RFC8446}}) MUST be used to secure the transactions between the DM and the
 the DM and HNA MUST be mutually authenticated.
 The DNS exchanges are performed using DNS over TLS {{!RFC7858}}.
 
-The HNA may be provisioned by the manufacturer, or during some user-initiated onboarding process, for example, with a browser, signing up to a service provider, with a resulting OAUTH2 token to be provided to the HNA. (see {{hna-provisioning}}).
+The HNA may be provisioned by the manufacturer, or during some user-initiated onboarding process, for example, with a browser, signing up to a service provider, with a resulting OAUTH2 token to be provided to the HNA.
+Such a process may result in a passing of a settings from a Registrar into the HNA through an http API interface. (This is not in scope)
+
+When the HNA connects to the DM's control channel, TLS will be used, and the connection will be mutually authenticated.
+The DM will authenticate the HNA's certificate based upon having participating in some provisioning process that is not standardized by this document.
+The results of the provisioning process is a series of settings described in {{hna-provisioning}}.
+
+The HNA will validate the DM's control channel certificate by doing {{!RFC6125}}/{{!I-D.ietf-uta-rfc6125bis}} DNS-ID check on the name.
 
 In the future, other specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?RFC9250}}.
 
@@ -548,14 +555,18 @@ Note that the Control Channel and the Synchronization Channel are by constructio
 Suppose the HNA and the DM are using a single IP address and let designate by XX.
 YYYY and ZZZZ the various ports involved in the communications.
 
-The Control Channel is between the HNA working as a client using port number YYYY (a high range port) toward a service provided by the DM at port number XX (well-known port such as 853 for DoT).
+The Control Channel is between the HNA working as a client using port number YYYY (a high range port) toward a service provided by the DM at port 853, when using DoT.
 
-On the other hand, the Synchronization Channel is set between the DM working as a client using port ZZZZ (another high range port) toward a service provided  by the HNA at port XX.
+On the other hand, the Synchronization Channel is set between the DM working as a client using port ZZZZ (another high range port) toward a service provided  by the HNA at port 853.
 
 As a result, even though the same pair of IP addresses may be involved the Control Channel and the Synchronization Channel are always distinct channels.
 
 Uploading and dynamically updating the zone file on the DM can be seen as zone provisioning between the HNA (Hidden Primary) and the DM (Secondary Server).
-This is handled via AXFR + DNS UPDATE.
+This is handled using the normal zone transfer mechanism involving AXFR/IXFR.
+
+Part of this zone update process involves the owner of the zone (the hidden primary, the HNA) sending a DNS Notify to the secondaries.
+In this situation the only destination that is known by the HNA is the DM's Control Channel, and so DNS updates are to sent over the Control Channel, secured by TLS.
+DNS Notifies are not critical: they always cause the DM to use the Synchronization channel to do an SOA Query to detect any updates, and if there are some, then to transfer the zone.
 
 This specification standardizes the use of a primary / secondary mechanism {{!RFC1996}} rather than an extended series of DNS update messages.
 The primary / secondary mechanism was selected as it scales better and avoids DoS attacks.
@@ -567,21 +578,21 @@ Selection mechanisms based on HNCP {{?RFC7788}} are good candidates for future w
 
 ## Securing the Synchronization Channel {#sec-synch-security}
 
-The Synchronization Channel uses standard DNS requests.
+The Synchronization Channel uses mutually authenticated TLS, as described by {{RFC9103}}.
 
-First the HNA (primary) notifies the DM (secondary) that the zone must be updated and leaves the DM (secondary) to proceed with the update when possible/convenient.
+There is a TLS client certificate used by the DM to authenticate itself.
+The DM uses the same certificate which was configured into the HNA for authenticating the Control Channel, but as a client certificate rather than a server certificate.
 
-More specifically, the HNA sends a NOTIFY message, which is a small packet that is less likely to load the secondary.
-Then, the DM sends  AXFR {{!RFC1034}} or IXFR {{!RFC1995}} request. This request consists in a small packet sent over TCP (Section 4.2 {{!RFC5936}}), which also mitigates reflection attacks using a forged NOTIFY.
+{{RFC9103}} makes no requirements or recommendations on any extended key usage flags for zone transfers, and this document adopts the view that none should be required, but that if there are any set, they should be tolerated and ignored.
+A revision to this specification could change this, and if there is a revision to {{RFC9103}} to clarify this, then this document should be marked as updated as well.
 
-The AXFR request from the DM to the HNA MUST be secured with TLS {{!RFC8446}}) following DNS Zone Transfer over TLS {{!RFC9103}}.
-While {{!RFC9103}} MAY not consider the protection by TLS of NOTIFY and SOA requests, these MAY still be protected by TLS to provide additional privacy.
+For the TLS server certificate, the HNA uses the same certificate which it uses to authenticate itself to the DM for the Control Channel.
 
-When using TLS, the HNA MAY authenticate inbound connections from the DM using standard mechanisms, such as a public certificate with baked-in root certificates on the HNA, or via DANE {{?RFC6698}}.
-In addition, to guarantee the DM remains the same across multiple TLS session, the HNA and DM MAY implement {{?RFC8672}}.
+The HNA MAY use this certificate as the authorization for the zone transfer, or the HNA MAY have been configured with an Access Control List that will determine if the zone transfer can proceed.
+This is a local configuration option, as it is premature to determine which will be operationally simpler.
 
-The HNA SHOULD apply an ACL on inbound AXFR requests to ensure they only arrive from the DM Synchronization Channel.
-In this case, the HNA SHOULD regularly check (via a DNS resolution) that the address of the DM in the filter is still valid.
+When the HNA expects to do zone transfer authorization by certificate only, the HNA CAN still apply an ACL on inbound connection requests to avoid load.
+In this case, the HNA SHOULD regularly check (via a DNS resolution) that the address(es) of the DM in the filter is still valid.
 
 # DM Distribution Channel {#sec-dist}
 
@@ -916,12 +927,12 @@ As the session between the HNA and the DM is authenticated with TLS, the use of 
 As certificates are more commonly emitted for FQDN than for IP addresses, it is preferred to use names and authenticate the name of the DM during the TLS session establishment.
 
 
-Supported Transport (dm\_transport)
+Supported Transport (dm\_transport):
 : The transport that carries the DNS exchanges between the HNA and the DM.
 Typical value is "DoT" but it may be extended in the future with "DoH", "DoQ" for example.
 This parameter is optional and by default the HNA uses DoT.
 
-Distribution Manager Port (dm\_port)
+Distribution Manager Port (dm\_port):
 : Indicates the port used by the DM.
 This parameter is optional and the default value is provided by the Supported Transport.
 In the future, additional transport may not have default port, in which case either a default port needs to be defined or this parameter become mandatory.
@@ -939,8 +950,7 @@ This Parameter is optional and by default the Authentication Method is "certific
 
 
 Authentication data ("hna\_certificate", "hna\_key"):
-:
-The certificate chain used to authenticate the HNA.
+: The certificate chain used to authenticate the HNA.
 This parameter is optional and when not specified, a self-signed certificate is used.
 
 Distribution Manager AXFR permission netmask (dm\_acl):
