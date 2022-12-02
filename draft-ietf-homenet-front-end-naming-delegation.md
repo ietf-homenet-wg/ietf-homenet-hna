@@ -355,9 +355,12 @@ The Distribution Channel is internal to the DOI and as such is not normatively d
 # Control Channel {#sec-ctrl}
 
 The DM Control Channel is used by the HNA and the DOI to exchange information related to the configuration of the delegation which includes information to build the Public Homenet Zone ({{sec-pbl-homenet-zone}}), information to build the DNSSEC chain of trust ({{sec-chain-of-trust}}) and information to set the Synchronization Channel ({{sec-sync-info}}).
-While information is carried from the DOI to the HNA and from the HNA to the DOI, the HNA is always initiating the exchange in both directions.
 
-As such the HNA has a prior knowledge of the DM identity (X509 certificate), the IP address and port number to use and protocol to establish a secure session.
+Some information is carried from the DOI to the HNA, described in the next section.
+The HNA updates the DOI with the the IP address on which the zone is to be transferred using the synchronization channel.
+The HNA is always initiating the exchange in both directions.
+
+As such the HNA has a prior knowledge of the DM identity (via X509 certificate), the IP address and port number to use and protocol to establish a secure session.
 The DM acquires knowledge of the identity of the HNA (X509 certificate) as well as the Registered Homenet Domain.
 For more detail to see how this can be achieved, please see {{hna-provisioning}}.
 
@@ -366,14 +369,17 @@ For more detail to see how this can be achieved, please see {{hna-provisioning}}
 
 The HNA builds the Public Homenet Zone based on information retrieved from the DM (see {{sec-ctrl-messages}}).
 
-The information includes at least names and IP addresses of the Public Authoritative Name Servers.
-In term of RRset information this includes:
+The information that the HNA needs to build its zone is retrieve by using DNS queries using the Control Channel.  The HNA needs the names and IP addresses of the Public Authoritative  Name Servers in order to form the NS records for the zone.
+(All contents of the zone must be created by the HNA, because it is DNSSEC signed)
 
-* the MNAME of the SOA,
-* the NS and associated A and AAA RRsets of the name servers.
+In addition, the HNA needs to know what to put into the MNAME of the SOA, and only the DOI knows what to put there.
+The DM MUST also provide useful operational parameters such as other fields of SOA (SERIAL, RNAME, REFRESH, RETRY, EXPIRE and MINIMUM), however, the HNA is free to override these values based upon local configuration.
+For instance, an HNA might want to change these values if it thinks that a renumbering event if approaching.
 
-The DM MAY also provide operational parameters such as other fields of SOA (SERIAL, RNAME, REFRESH, RETRY, EXPIRE and MINIMUM).
 As the information is necessary for the HNA to proceed and the information is associated with the DM, this information exchange is mandatory.
+
+The HNA then perhaps and DNS Update operation to the DOI, updating the DOI with an NS, DS, A and AAAA records. These indicates where its Synchronization Channel is.
+The DOI does not publish this NS record, but uses it to perform zone transfers.
 
 ## Information to build the DNSSEC chain of trust {#sec-chain-of-trust}
 
