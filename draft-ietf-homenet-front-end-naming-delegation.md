@@ -62,10 +62,6 @@ author:
 
 
 informative:
-  DDNS:
-    author:
-    target: https://ddclient.net/protocols.html
-    title: ddclient
   GPUNSEC3:
     author:
       - ins: M. Wander
