@@ -369,7 +369,8 @@ For more detail to see how this can be achieved, please see {{hna-provisioning}}
 
 The HNA builds the Public Homenet Zone based on information retrieved from the DM (see {{sec-ctrl-messages}}).
 
-The information that the HNA needs to build its zone is retrieve by using DNS queries using the Control Channel.  The HNA needs the names and IP addresses of the Public Authoritative  Name Servers in order to form the NS records for the zone.
+The information that the HNA needs to build its zone is retrieve by using a DNS AXFR on the Control Channel (see {{zonetemplate}})
+The HNA needs the names and IP addresses of the Public Authoritative  Name Servers in order to form the NS records for the zone.
 (All contents of the zone must be created by the HNA, because it is DNSSEC signed)
 
 In addition, the HNA needs to know what to put into the MNAME of the SOA, and only the DOI knows what to put there.
@@ -432,7 +433,7 @@ The use of a TLS session tickets {{?RFC5077}} is encouraged.
 This authentication MAY be based on certificates for both the DM and each HNA.
 The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
 
-### Retrieving information for the Public Homenet Zone.
+### Retrieving information for the Public Homenet Zone {#zonetemplate}
 
 The information provided by the DM to the HNA is retrieved by the HNA with an AXFR exchange {{!RFC1034}}.
 AXFR enables the response to contain any type of RRsets.
