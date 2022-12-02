@@ -338,8 +338,11 @@ Communications between the HNA and the DM MUST be protected and mutually authent
 The information exchanged between the HNA and the DM uses DNS messages protected by DNS over TLS (DoT) {{!RFC7858}}.
 This is configured identically to that described in {{!RFC9103, Section 9.3.3}}.
 
-It is worth noticing that both DM and HNA need to agree on a common configuration to set up the Synchronization Channel as well as to build and server a coherent Public Homenet Zone.
-Typically,  the visible NS records of the Public Homenet Zone (built by the HNA) SHOULD remain pointing at the DOI's Public Authoritative Servers' IP address -- which in many cases will be an anycast address. Revealing the address of the HNA in the DNS is not desirable. In addition, and depending on the configuration of the DOI, the DM also needs to update the  parent zone's (NS, DS and associated A or AAAA records). Refer to {{sec-chain-of-trust}} for more details.
+It is worth noting that both DM and HNA need to agree on a common configuration to set up the synchronization channel as well as to build and server a coherent Public Homenet Zone.
+Typically,  the visible NS records of the Public Homenet Zone (built by the HNA) SHOULD remain pointing at the DOI's Public Authoritative Servers' IP address.
+Revealing the address of the HNA in the DNS is not desirable.
+In addition, and depending on the configuration of the DOI, the DM also needs to update the parent zone's NS, DS and associated A or AAAA glue records.
+Refer to {{sec-chain-of-trust}} for more details.
 
 This specification assumes:
 
@@ -347,7 +350,7 @@ This specification assumes:
 * By default, the HNA uses a single IP address for both the Control and Synchronization channel.
 However,  the HNA MAY use distinct IP addresses for the Control Channel and the Synchronization Channel - see {{sec-synch}} and {{sec-sync-info}} for more details.
 
-The Distribution Channel is internal to the DOI and as such is not the primary concern of this specification.
+The Distribution Channel is internal to the DOI and as such is not normatively defined by this specification.
 
 # Control Channel {#sec-ctrl}
 
