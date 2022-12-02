@@ -285,27 +285,33 @@ The DOI will serve every DNS request of the Public Homenet Zone coming from outs
 When the request is coming within the home network, the resolution is expected to be handled by the Homenet Resolver as detailed in further details below.
 
 In this example, The Public Homenet Zone is identified by the Registered Homenet Domain name -- myhome.example.
-The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as Homenet Zone in {{fig-naming-arch}} and that the DOI MUST not accept any such names.
+This diagram also shows a reverse IPv6 map being hosted.
 
-The HNA SHOULD build the Public Homenet Zone in a single view populated with all resource records that are expected to be published on the Internet.
-The HNA also signs the Public Homenet Zone.
+The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as a Homenet Zone in {{fig-naming-arch}}.
+They are resolved locally, but not published as they are local content.
+
+The HNA SHOULD build the Public Homenet Zone in a single zone populated with all resource records that are expected to be published on the Internet.
+The use of zone cuts/delegations is NOT RECOMMENDED.
+
+The HNA also signs the Public Homenet Zone with DNSSEC.
 The HNA handles all operations and keying material required for DNSSEC, so there is no provision made in this architecture for transferring private DNSSEC related keying material between the HNA and the DM.
 
 Once the Public Homenet Zone has been built, the HNA communicates and synchronizes it with the DOI using a primary/secondary setting as depicted in {{fig-naming-arch}}.
-The HNA acts as a hidden master (now designated as hidden primary) {{?RFC8499}} while the DM behaves as a secondary responsible for distributing the Public Homenet Zone to the multiple Public Authoritative Servers that DOI is responsible
-for.
+The HNA acts as a stealth server (see {{?RFC8499}}) while the DM behaves as a hidden secondary.
+It is responsible for distributing the Public Homenet Zone to the multiple Public Authoritative Servers instances that DOI is responsible for.
 The DM has three communication channels:
 
 * DM Control Channel ({{sec-ctrl}}) to configure the HNA and the DOI. This includes necessary parameters to configure the primary/secondary relation as well as some information provided by the DOI that needs to be included by the HNA in the Public Homenet Zone.
 
 * DM Synchronization Channel ({{sec-synch}}) to synchronize the Public Homenet Zone on the HNA and on the DM with the appropriately configured primary/secondary.
+This is a zone transfer over TLS.
 
 * one or more Distribution Channels ({{sec-dist}}) that distribute the Public Homenet Zone from the DM to the Public Authoritative Servers serving the Public Homenet Zone on the Internet.
 
 There might be multiple DM's, and multiple servers per DM.
 This document assumes a single DM server for simplicity, but there is no reason why each channel needs to be implemented on the same server or use the same code base.
 
-It is important to note that while the HNA is configured as an authoritative server, it is not expected to answer DNS requests from the public Internet for the Public Homenet Zone.
+It is important to note that while the HNA is configured as an authoritative server, it is not expected to answer DNS requests from the *public* Internet for the Public Homenet Zone.
 More specifically, the addresses associated with the HNA SHOULD NOT be mentioned in the NS records of the Public Homenet zone, unless additional security provisions necessary to protect the HNA from external attack have been taken.
 
 The DOI is also responsible for ensuring the DS record has been updated in the parent zone.
@@ -319,14 +325,6 @@ These servers are not expected to be mentioned in the Public Homenet Zone, nor t
 As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNS(SEC) Resolvers, e.g., using HNCP {{?RFC7788}} or a by configuring a trust anchor {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
 Such configuration is outside the scope of this document.
 Since the scope of the Homenet Authoritative Servers is limited to the home network, these servers are expected to serve the Homenet Zone as represented in {{fig-naming-arch}}.
-
-How the Homenet Authoritative Servers are provisioned is also out of scope of this specification.
-It could be implemented using primary and secondary servers, or via rsync.
-In some cases, the HNA and Homenet Authoritative Servers may be combined together which would result in a common instantiation of an authoritative server on the WAN and inner homenet interface.
-Note that {{?RFC6092}} REC-8 states this must not be the default configuration.
-Other mechanisms may also be used.
-
-
 
 ## Distribution Manager Communication Channels {#sec-comms}
 
