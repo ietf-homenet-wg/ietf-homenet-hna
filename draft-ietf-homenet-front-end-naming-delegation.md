@@ -536,18 +536,6 @@ The HNA will validate the DM's control channel certificate by doing {{!RFC6125}}
 In the future, other specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?RFC9250}}.
 
 
-## Implementation Concerns {#sec-ctrl-implementation}
-
-The Hidden Primary Server on the HNA differs from a regular authoritative server for the home network due to:
-
-Interface Binding:
-: the Hidden Primary Server will almost certainly listen on the WAN Interface, whereas a regular Homenet Authoritative Servers would listen on the internal home network interface.
-
-Limited exchanges:
-: the purpose of the Hidden Primary Server is to synchronize with the DM, not to serve any zones to end users, or the public Internet.
-This results in a limited number of possible exchanges (AXFR/IXFR) with a small number of IP addresses and an implementation SHOULD enable filtering policies as described in  {{sec-cpe-sec-policies}}.
-
-
 # Synchronization Channel {#sec-synch}
 
 The DM Synchronization Channel is used for communication between the HNA and the DM for synchronizing the Public Homenet Zone.
@@ -601,18 +589,20 @@ The architecture and communication used for the DM Distribution Channels are out
 
 # HNA Security Policies {#sec-cpe-sec-policies}
 
-The HNA as hidden primary processes only a limited message exchanges. This should be enforced using security policies - to allow only a subset of DNS requests to be received by HNA.
+The HNA as hidden primary processes only a limited message exchanges on it's WAN interface(s).
+This should be enforced using security policies - to allow only a subset of DNS requests to be received by HNA.
 
-The HNA, as Hidden Primary SHOULD drop any DNS queries from the home network -- as opposed to return DNS errors.
-This could be implemented via port binding and/or firewall rules.
-The precise mechanism deployed is out of scope of this document.
+The Hidden Primary Server on the HNA differs the regular authoritative server for the home network due to:
 
-The HNA SHOULD drop any packets arriving on the WAN interface that are not issued from the DM  -- as opposed to server as an Homenet Authoritative Server exposed on the Internet.
+Interface Binding:
+: the Hidden Primary Server will almost certainly listen on the WAN Interface, whereas a regular Homenet Authoritative Servers would listen on the internal home network interface.
 
-Only TLS packet or potentially some DNS packets ( see XoT) packets SHOULD be allowed.
+Limited exchanges:
+: the purpose of the Hidden Primary Server is to synchronize with the DM, not to serve any zones to end users, or the public Internet.
+This results in a limited number of possible exchanges (AXFR/IXFR) with a small number of IP addresses and an implementation SHOULD enable filtering policies: it should only respond to queries that are required to do zone transfers.
+That list includes SOA queries and AXFR/IXFR queries.
 
-The HNA SHOULD NOT send DNS messages other than DNS NOTIFY query, SOA response, IXFR response or AXFR responses.
-The HNA SHOULD reject any incoming messages other than DNS NOTIFY response, SOA   query, IXFR query or AXFR query. 
+The HNA SHOULD drop any packets arriving on the WAN interface that are not issued from the DM.
 
 # Public Homenet Reverse Zone {#sec-reverse}
 
