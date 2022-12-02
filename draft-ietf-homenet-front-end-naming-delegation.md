@@ -545,7 +545,9 @@ This results in a limited number of possible exchanges (AXFR/IXFR) with a small 
 
 The DM Synchronization Channel is used for communication between the HNA and the DM for synchronizing the Public Homenet Zone.
 Note that the Control Channel and the Synchronization Channel are by construction different channels even though there they may use the same IP address.
-Suppose the HNA and the DM are using a single IP address and let designate by XX, YYYY and ZZZZ the various ports involved in the communications.
+Suppose the HNA and the DM are using a single IP address and let designate by XX.
+YYYY and ZZZZ the various ports involved in the communications.
+
 The Control Channel is between the HNA working as a client using port number YYYY (a high range port) toward a service provided by the DM at port number XX (well-known port such as 853 for DoT).
 
 On the other hand, the Synchronization Channel is set between the DM working as a client using port ZZZZ (another high range port) toward a service provided  by the HNA at port XX.
@@ -553,7 +555,7 @@ On the other hand, the Synchronization Channel is set between the DM working as 
 As a result, even though the same pair of IP addresses may be involved the Control Channel and the Synchronization Channel are always distinct channels.
 
 Uploading and dynamically updating the zone file on the DM can be seen as zone provisioning between the HNA (Hidden Primary) and the DM (Secondary Server).
-This can be handled via AXFR + DNS UPDATE.
+This is handled via AXFR + DNS UPDATE.
 
 The use of a primary / secondary mechanism {{!RFC1996}} is RECOMMENDED instead of the use of DNS UPDATE {{?RFC2136}}.
 The primary / secondary mechanism is RECOMMENDED as it scales better and avoids DoS attacks.
