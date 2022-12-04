@@ -607,8 +607,8 @@ The HNA SHOULD drop any packets arriving on the WAN interface that are not issue
 # Public Homenet Reverse Zone {#sec-reverse}
 
 Public Homenet Reverse Zone works similarly to the Public Homenet Zone.
-The main difference is that ISP that provides the IP connectivity is likely also the owner of the corresponding reverse zone and administrating the Reverse Public Authoritative Servers ( or being the DOI)
-If so, the configuration and the setting of the Synchronization Channel and Control Channel can largely be automated.
+The main difference is that ISP that provides the IP connectivity is likely also the owner of the corresponding reverse zone and administrating the Reverse Public Authoritative Servers.
+The configuration and the setting of the Synchronization Channel and Control Channel can largely be automated using DHCPv6 messages that are part of the IPv6 Prefix Delegation process.
 
 The Public Homenet Zone is associated with a Registered Homenet Domain and the ownership of that domain requires a specific registration from the end user as well as the HNA being provisioned with some authentication credentials.
 Such steps are mandatory unless the DOI has some other means to authenticate the HNA.
@@ -643,46 +643,65 @@ How the reverse zone is generated is out of scope of this document.
 # DNSSEC compliant Homenet Architecture {#sec-dnssec-deployment}
 
 {{?RFC7368}} in Section 3.7.3 recommends DNSSEC to be deployed on both the authoritative server and the resolver.
-The resolver side is out of scope of this document, and only the authoritative part of the server is considered.
 
-It is RECOMMENDED the HNA signs the Public Homenet Zone.
+The resolver side is out of scope of this document, and only the authoritative part of the server is considered.
+Other documents such as {{?RFC5011}} deal with continuous update of trust anchors required for operation of a DNSSEC resolver.
+
+It is RECOMMENDED the HNA sign the Public Homenet Zone.
 
 Secure delegation is achieved only if the DS RRset is properly set in the parent zone.
 Secure delegation can be performed by the HNA or the DOIs and the choice highly depends on which entity is authorized to perform such updates.
-Typically, the DS RRset can be updated manually in the parent zone with nsupdate or other mechanisms such as CDS {{!RFC7344}} for example.
-This requires the HNA or the DOI to be authenticated by the DNS server hosting the parent of the Public Homenet Zone.
-Such a trust channel between the HNA and the parent DNS server may be hard to maintain with HNAs, and thus may be easier to establish with the DOI.
-In fact, the Public Authoritative Server(s) may use Automating DNSSEC Delegation Trust Maintenance  {{!RFC7344}}.
+Typically, the DS RRset is updated manually through a registrar interface, and can be maintained with mechanisms such as CDS {{!RFC7344}}.
 
+When the operator of the DOI is also the Registrar for the domain, then it is a trivial matter for the DOI to initialize the relevant DS records in the parent zone.
+In other cases, some other initialization will be required, and that will be specific to the infrastructure involved.  It is beyond the scope of this document.
 
 # Renumbering {#sec-renumbering}
 
-During a renumbering of the network, the HNA IP address is changed and the Public Homenet Zone is updated potentially by the HNA.
-Then, the HNA advertises to the DM via a NOTIFY, that the Public Homenet Zone has been updated and that the IP address of the primary has been updated.
-This corresponds to the standard DNS procedure performed on the Synchronization Channel and no specific actions are expected for the HNA (See {{sec-sync-info}}).
+During a renumbering of the home network, the HNA IP address may be changed and the Public Homenet Zone will be updated by the HNA with new AAAA records.
+
+The HNA will then advertise to the DM via a NOTIFY on the Control Channel.
+The DM will need to note the new originating IP for the connection, and it will need to update it's internal database of Synchronization Channels.
+A new zone transfer will occur with the new records for the resources that the HNA wishes to publish.
 
 The remaining of the section provides recommendations regarding the provisioning of the Public Homenet Zone - especially the IP addresses.
+
 Renumbering has been extensively described in {{?RFC4192}} and analyzed in {{?RFC7010}} and the reader is expected to be familiar with them before reading this section.
 In the make-before-break renumbering scenario, the new prefix is advertised, the network is configured to prepare the transition to the new prefix.
-During a period of time, the two prefixes old and new coexist, before the old prefix is completely removed.
-In the break-before-make renumbering scenario, the new prefix is advertised making the old prefix obsolete.
+During a period of time, the two prefixes old and new coexist, before the old prefix is completely
+removed.
+New resources records containing the new prefix SHOULD be published, while the old resource records with the old prefixes SHOULD be withdrawn.
+If the HNA anticipates that period of overlap is long (perhaps due to knowledge of router and DHCPv6 lifetimes), it MAY publish the old prefixes with a significantly lower time to live.
 
+In break-before-make renumbering scenarios, including flash renumbering scenarios {{?RFC8978}}, the old prefix becomes unuseable before the new prefix is known or advertised.
+As explained in {{?RFC8978}}, some flash renumberings occur due to power cycling of the HNA, where ISPs do not properly remember what prefixes have been assigned to which user.
 
-In a renumbering scenario, the HNA or Hidden Primary is informed it is being renumbered.
-In most cases, this occurs because the whole home network is being renumbered.
-As a result, the Public Homenet Zone will also be updated.
+An HNA that boots up SHOULD immediately use the Control Channel to update the location for the
+Synchronization Channel.
+This is a reasonable thing to do on every boot, as the HNA has no idea how long it has been offline, or if the (DNSSEC) zone has perhaps expired during the time the HNA was powered off.
+
+The HNA will have a list of names that should be published, but it might not yet have IP addresses for those devices.
+This could be because at the time of power on, the other devices are not yet online.
+If the HNA is sure that the prefix has not changed, then it should use the previously known addresses, with a very low TTL.
+
 Although the new and old IP addresses may be stored in the Public Homenet Zone, it is RECOMMENDED that only the newly reachable IP addresses be published.
-Regarding the Public Homenet Reverse Zone, the new Public Homenet Reverse Zone has to be populated as soon as possible, and the old Public Homenet Reverse Zone will be deleted by the owner of the zone (and the owner of the old prefix which is usually the ISP) once the prefix is no longer assigned to the HNA. The ISP SHOULD ensure that the DNS cache has expired before re-assigning the prefix to a new home network. This may be enforced by controlling the TTL values.
+
+Regarding the Public Homenet Reverse Zone, the new Public Homenet Reverse Zone has to be populated as soon as possible, and the old Public Homenet Reverse Zone will be deleted by the owner of the zone (and the owner of the old prefix which is usually the ISP) once the prefix is no longer assigned to the HNA.
+The ISP SHOULD ensure that the DNS cache has expired before re-assigning the prefix to a new home network.
+This may be enforced by controlling the TTL values.
 
 To avoid reachability disruption, IP connectivity information provided by the DNS SHOULD be coherent with the IP in use.
 In our case, this means the old IP address SHOULD NOT be provided via the DNS when it is not reachable anymore.
-Let for example TTL be the TTL associated with a RRset of the Public Homenet Zone, it may be cached for TTL  seconds.
-Let T_NEW be the time the new IP address replaces the old IP address in the Homenet Zone, and T_OLD_UNREACHABLE the time the old IP is not reachable anymore.
 
-In the case of the make-before-break, seamless reachability is provided as long as T_OLD_UNREACHABLE - T_NEW > 2 * TTL.
-If this is not satisfied, then devices associated with the old IP address in the home network may become unreachable for 2 * TTL - (T_OLD_UNREACHABLE - T_NEW).
-In the case of a break-before-make, T_OLD_UNREACHABLE = T_NEW, and the device may become unreachable up to 2 * TTL.
-Of course if T_NEW >= T_OLD_UNREACHABLE, the disruption is increased.
+In the make-before-break scenario, it is possible to make the transition seamless.
+Let T be the TTL associated with a RRset of the Public Homenet Zone.
+Let Time\_NEW be the time the new IP address replaces the old IP address in the Homenet Zone, and Time\_OLD\_UNREACHABLE the time the old IP will not be reachable anymore.
+
+In the case of the make-before-break, seamless reachability is provided as long as Time\_OLD\_UNREACHABLE - T\_NEW > (2 * T).
+If this is not satisfied, then devices associated with the old IP address in the home network may become unreachable for 2 * T - (Time\_OLD\_UNREACHABLE - Time\_NEW).
+
+In the case of a break-before-make, Time\_OLD\_UNREACHABLE = Time\_NEW, and the device may become unreachable up to 2 * T.
+Of course if Time\_NEW >= Time\_OLD\_UNREACHABLE, then then outage is not seamless.
 
 # Privacy Considerations {#sec-privacy}
 
