@@ -595,7 +595,7 @@ The architecture and communication used for the DM Distribution Channels are out
 
 # HNA Security Policies {#sec-cpe-sec-policies}
 
-The HNA as hidden primary processes only a limited message exchanges on it's WAN interface(s).
+The HNA as hidden primary processes only a limited message exchanges on it's Internet facing interface.
 This should be enforced using security policies - to allow only a subset of DNS requests to be received by HNA.
 
 The Hidden Primary Server on the HNA differs the regular authoritative server for the home network due to:
@@ -613,7 +613,7 @@ The HNA SHOULD drop any packets arriving on the WAN interface that are not issue
 # Public Homenet Reverse Zone {#sec-reverse}
 
 Public Homenet Reverse Zone works similarly to the Public Homenet Zone.
-The main difference is that ISP that provides the IP connectivity is likely also the owner of the corresponding reverse zone and administrating the Reverse Public Authoritative Servers.
+The main difference is that ISP that provides the IPv6 connectivity is likely also the owner of the corresponding IPv6 reverse zone and administrating the Reverse Public Authoritative Servers.
 The configuration and the setting of the Synchronization Channel and Control Channel can largely be automated using DHCPv6 messages that are part of the IPv6 Prefix Delegation process.
 
 The Public Homenet Zone is associated with a Registered Homenet Domain and the ownership of that domain requires a specific registration from the end user as well as the HNA being provisioned with some authentication credentials.
