@@ -558,8 +558,9 @@ Uploading and dynamically updating the zone file on the DM can be seen as zone p
 This is handled using the normal zone transfer mechanism involving AXFR/IXFR.
 
 Part of this zone update process involves the owner of the zone (the hidden primary, the HNA) sending a DNS Notify to the secondaries.
-In this situation the only destination that is known by the HNA is the DM's Control Channel, and so DNS updates are to sent over the Control Channel, secured by TLS.
-DNS Notifies are not critical: they always cause the DM to use the Synchronization channel to do an SOA Query to detect any updates, and if there are some, then to transfer the zone.
+In this situation the only destination that is known by the HNA is the DM's Control Channel, and so DNS notifies are sent over the Control Channel, secured by TLS.
+
+However, DNS Notifies are not critical: they just cause the DM to use the Synchronization channel to do an SOA Query to detect any updates, and if there are some, then to transfer the zone.
 
 This specification standardizes the use of a primary / secondary mechanism {{!RFC1996}} rather than an extended series of DNS update messages.
 The primary / secondary mechanism was selected as it scales better and avoids DoS attacks.
