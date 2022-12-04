@@ -363,15 +363,15 @@ For more detail to see how this can be achieved, please see {{hna-provisioning}}
 
 ## Information to Build the Public Homenet Zone  {#sec-pbl-homenet-zone}
 
-The HNA builds the Public Homenet Zone based on information retrieved from the DM (see {{sec-ctrl-messages}}).
+The HNA builds the Public Homenet Zone based on a template that is returned by the DM to the HNA.  {{sec-ctrl-messages}} explains how this leverages the AXFR mechanism.
 
-The information that the HNA needs to build its zone is retrieve by using a DNS AXFR on the Control Channel (see {{zonetemplate}})
-The HNA needs the names and IP addresses of the Public Authoritative  Name Servers in order to form the NS records for the zone.
-(All contents of the zone must be created by the HNA, because it is DNSSEC signed)
+In order to build its zone completely, the HNA needs the names (and possibly IP addresses) of the Public Authoritative Name Servers.
+These are used to populate the NS records for the zone.
+All the content of the zone MUST be created by the HNA, because the zone is DNSSEC signed.
 
 In addition, the HNA needs to know what to put into the MNAME of the SOA, and only the DOI knows what to put there.
 The DM MUST also provide useful operational parameters such as other fields of SOA (SERIAL, RNAME, REFRESH, RETRY, EXPIRE and MINIMUM), however, the HNA is free to override these values based upon local configuration.
-For instance, an HNA might want to change these values if it thinks that a renumbering event if approaching.
+For instance, an HNA might want to change these values if it thinks that a renumbering event is approaching.
 
 As the information is necessary for the HNA to proceed and the information is associated with the DM, this information exchange is mandatory.
 
