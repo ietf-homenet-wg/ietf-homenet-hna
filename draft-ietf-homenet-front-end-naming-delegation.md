@@ -579,7 +579,7 @@ For the TLS server certificate, the HNA uses the same certificate which it uses 
 The HNA MAY use this certificate as the authorization for the zone transfer, or the HNA MAY have been configured with an Access Control List that will determine if the zone transfer can proceed.
 This is a local configuration option, as it is premature to determine which will be operationally simpler.
 
-When the HNA expects to do zone transfer authorization by certificate only, the HNA CAN still apply an ACL on inbound connection requests to avoid load.
+When the HNA expects to do zone transfer authorization by certificate only, the HNA MAY still apply an ACL on inbound connection requests to avoid load.
 In this case, the HNA SHOULD regularly check (via a DNS resolution) that the address(es) of the DM in the filter is still valid.
 
 # DM Distribution Channel {#sec-dist}
