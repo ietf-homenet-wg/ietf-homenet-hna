@@ -392,13 +392,14 @@ As some deployments may not provide a DOI that will be able to update the DS in 
 By accepting the DS RR, the DM commits to advertise the DS to the parent zone.
 On the other hand if the DM does not have the capacity to advertise the DS to the parent  zone, it indicates this by refusing the update to the DS RR.
 
-## Information to set the Synchronization Channel {#sec-sync-info}
+## Information to set up the Synchronization Channel {#sec-sync-info}
 
 The HNA works as a hidden primary authoritative DNS server, while the DM works like a secondary.
 As a result, the HNA must provide the IP address the DM should use to reach the HNA.
-If the HNA detects that it has been renumbered, then it MUST use the Control Channel to update the DOI with its new IPv4 and IPv6 addresses.
 
-The Synchronization Channel will be set between that IP address and the IP address of the DM.
+If the HNA detects that it has been renumbered, then it MUST use the Control Channel to update the DOI with the new IPv6 address it has been assigned.
+
+The Synchronization Channel will be set between the new IPv6 address and the IP address of the DM.
 By default, the IP address used by the HNA in the Control Channel is considered by the DM and the explicit specification  of the IP by the HNA is only OPTIONAL.
 The transport channel (including port number) is the same as the one used between the HNA and the DM for the Control Channel.
 
