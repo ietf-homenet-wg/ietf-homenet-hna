@@ -407,7 +407,7 @@ The transport channel (including port number) is the same as the one used betwee
 The purpose of the previous sections were to exchange information in order to set a delegation.
 The HNA MUST also be able to delete a delegation with a specific DM.
 
-{#sec-zone-delete} explains how a DNS Update operation on the Control Channel is used.
+{{sec-zone-delete}} explains how a DNS Update operation on the Control Channel is used.
 
 Upon an instruction of deleting the delegation, the DM MUST stop serving the Public Homenet Zone.
 
