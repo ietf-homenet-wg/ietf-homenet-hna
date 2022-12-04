@@ -712,7 +712,10 @@ Combined with blocking of AXFR queries, the use of NSEC3 {{!RFC5155}} (vs NSEC {
 However, recent work {{GPUNSEC3}} or {{ZONEENUM}} have shown that the protection provided by NSEC3 against dictionary attacks should be considered cautiously and {{?RFC9276}} provides guidelines to configure NSEC3 properly.
 In addition, the attacker may be able to walk the reverse DNS zone, or use other reconnaissance techniques to learn this information as described in {{?RFC7707}}.
 
-The zone is also exposed during the synchronization between the primary and the secondary. {{!RFC9103}} only specifies the use of TLS for XFR transfers, which leak the existence of the zone and has been clearly specified as out of scope of the threat model of {{!RFC9103}}. Additional privacy MAY be provided by protecting all exchanges of the Synchronization Channel as well as the Control Channel.
+The zone may be also exposed during the synchronization between the primary and the secondary.
+The casual risk of this occuring is low, and the use of {{!RFC9103}} significantly reduces this.
+Even if {{!RFC9103}} is used by the DNS Outsourcing Infrastructure, it may still leak the existence of the zone through Notifies.
+The protocol described in this document does not increase that risk, as all Notifies use the encrypted Control Channel.
 
 In general a home network owner is expected to publish only names for which there is some need to be able to reference externally.
 Publication of the name does not imply that the service is necessarily reachable from any or all parts of the Internet.
@@ -721,18 +724,19 @@ A well designed User Interface would combine a policy for making a service publi
 
 In many cases, and for privacy reasons, the home network owner wished publish names only for services that they will be able to access.
 The access control may consist of an IP source address range, or access may be restricted via some VPN functionality.
-The main advantages of publishing the name are that service may be access by the same name both within the home and outside the home and that the DNS resolution can be handled similarly within the home and outside the home. This considerably eases the ability to use VPNs where the VPN can be chosen according to the IP address of the service.
+The main advantages of publishing the name are that service may be access by the same name both within the home and outside the home and that the DNS resolution can be handled similarly within the home and outside the home.
+This considerably eases the ability to use VPNs where the VPN can be chosen according to the IP address of the service.
 Typically, a user may configure its device to reach its homenet devices via a VPN while the remaining of the traffic is accessed directly.
-In such cases, the routing policy is likely to be defined by the destination IP address.
 
-Enterprise networks have generally adopted another strategy designated as split-DNS.
+Enterprise networks have generally adopted another strategy designated as split-horizon-DNS.
 While such strategy might appear as providing more privacy at first sight, its implementation remains challenging and the privacy advantages needs to be considered carefully.
-In split-DNS, names are designated with internal names that can only be resolved within the corporate network.
-When such strategy is applied to homenet, VPNs needs to be both configured with a naming resolution policies and routing policies. Such approach might be reasonable with a single VPN, but maintaining a coherent DNS space and IP space among various VPNs comes with serious complexities.
-Firstly, if multiple homenets are using the same domain name -like home.arpa - it becomes difficult to determine on which network the resolution should be performed.
+In split-horizon-DNS, names are designated with internal names that can only be resolved within the corporate network.
+When such strategy is applied to homenet, VPNs needs to be both configured with a naming resolution policies and routing policies.
+Such approach might be reasonable with a single VPN, but maintaining a coherent DNS space and IP space among various VPNs comes with serious complexities.
+Firstly, if multiple homenets are using the same domain name -- like home.arpa -- it becomes difficult to determine on which network the resolution should be performed.
 As a result, homenets should at least be differentiated by a domain name.
-Secondly, the use of split-DNS requires each VPN being associated with a resolver and specific resolutions being performed by the dedicated resolver. Such policies can easily raises some conflicts (with significant privacy issues) while remaining hard to be implemented.
-
+Secondly, the use of split-horizon-DNS requires each VPN being associated with a resolver and specific resolutions being performed by the dedicated resolver.
+Such policies can easily raises some conflicts (with significant privacy issues) while remaining hard to be implemented.
 
 In addition to the Public Homenet Zone, pervasive DNS monitoring can also monitor the traffic associated with the Public Homenet Zone.
 This traffic may provide an indication of the services an end user accesses, plus how and when they use these services.
@@ -740,17 +744,21 @@ Although, caching may obfuscate this information inside the home network, it is 
 
 # Security Considerations {#sec-security}
 
-This document exposes a mechanism that prevents the HNA from being exposed to the Internet and served DNS request from the Internet.
+This document exposes a mechanism that prevents the HNA from being exposed to queries from the Internet.
+The HNA never answers DNS requests from the Internet.
 These requests are instead served by the DOI.
-While this limits the level of exposure of the HNA, the HNA remains exposed to the Internet with communications with the DOI.
+
+While this limits the level of exposure of the HNA, the HNA still has some exposure to attacks from the Internet.
 This section analyses the attack surface associated with these communications, the data published by the DOI, as well as operational considerations.
 
 ## HNA DM channels
 
 The channels between HNA and DM are mutually authenticated and encrypted with TLS {{?RFC8446}} and its associated security considerations apply.
-To ensure the multiple TLS session are continuously authenticating the same entity, TLS may take advantage of second factor authentication as described in {{?RFC8672}}.
 
-The TLS communication between the HNA and the DM MUST comply with {{!I-D.ietf-uta-rfc7525bis}}.
+To ensure the multiple TLS session are continuously authenticating the same entity, TLS may take advantage of second factor authentication as described in {{?RFC8672}} for the TLS server certificate for the Control Channel.
+The HNA should also cache the TLS server certificate used by the DM, in order to authenticate the DM during the setup of the Synchronization Channel.
+(Alternatively, the HNA is configured with an ACL from which Synchronization Channel connections will originate)
+
 The Control Channel and the Synchronization Channel respectively follow {{!RFC7858}} and {{!RFC9103}} guidelines.
 The highest level of privacy provided by {{!RFC9103}} SHOULD be enforced.
 As noted in {{!RFC9103}}, some level of privacy may be relaxed, by not protecting the existence of the zone.This MAY involve a mix of exchanges protected by TLS and exchanges not protected by TLS.
