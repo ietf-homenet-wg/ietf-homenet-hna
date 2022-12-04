@@ -289,7 +289,8 @@ They are resolved locally, but not published as they are local content.
 The HNA SHOULD build the Public Homenet Zone in a single zone populated with all resource records that are expected to be published on the Internet.
 The use of zone cuts/delegations is NOT RECOMMENDED.
 
-The HNA also signs the Public Homenet Zone with DNSSEC.
+The HNA signs the Public Homenet Zone with DNSSEC.
+
 The HNA handles all operations and keying material required for DNSSEC, so there is no provision made in this architecture for transferring private DNSSEC related keying material between the HNA and the DM.
 
 Once the Public Homenet Zone has been built, the HNA communicates and synchronizes it with the DOI using a primary/secondary setting as depicted in {{fig-naming-arch}}.
@@ -653,14 +654,18 @@ How the reverse zone is generated is out of scope of this document.
 The resolver side is out of scope of this document, and only the authoritative part of the server is considered.
 Other documents such as {{?RFC5011}} deal with continuous update of trust anchors required for operation of a DNSSEC resolver.
 
-It is RECOMMENDED the HNA sign the Public Homenet Zone.
+The HNA MUST DNSSEC sign the Public Homenet Zone and the Public Reverse Zone.
 
 Secure delegation is achieved only if the DS RRset is properly set in the parent zone.
 Secure delegation can be performed by the HNA or the DOIs and the choice highly depends on which entity is authorized to perform such updates.
 Typically, the DS RRset is updated manually through a registrar interface, and can be maintained with mechanisms such as CDS {{!RFC7344}}.
 
 When the operator of the DOI is also the Registrar for the domain, then it is a trivial matter for the DOI to initialize the relevant DS records in the parent zone.
-In other cases, some other initialization will be required, and that will be specific to the infrastructure involved.  It is beyond the scope of this document.
+In other cases, some other initialization will be required, and that will be specific to the infrastructure involved.
+It is beyond the scope of this document.
+
+There may be some situations where the HNA is unable to arrange for secure delegation of the zones, but the HNA MUST still sign the zones.
+
 
 # Renumbering {#sec-renumbering}
 
