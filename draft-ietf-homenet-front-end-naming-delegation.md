@@ -415,18 +415,20 @@ The decision to delete an inactive HNA by the DM is part of the commercial agree
 
 ## Messages Exchange Description {#sec-ctrl-messages}
 
-Multiple ways were considered on how the control information could be exchanged between the HNA and the DM.
+Multiple ways were considered on how the control information could be exchanged between  the HNA and the DM.
 
-This specification defines a mechanism that re-use the DNS exchanges format, while the exchange in itself is not a DNS exchange involved in any DNS operations such as DNS resolution.
-Note that while information is provided using DNS exchanges, the exchanged information is not expected to  be set in any zone file, instead this information is used as commands between the HNA and the DM.
+This specification defines a mechanism that re-use the DNS zone transfer format.
+Note that while information is provided using DNS exchanges, the exchanged information is not expected to be set in any zone file, instead this information is used as commands between the HNA and the DM.
+This was found to be simpler on the home router side, as the HNA already has to have code to deal with all the DNS encodings/decodings.
+Inventing a new way to encode the DNS information in, for instance, JSON, seemed to add complexity for no return on investment.
 
 The Control Channel is not expected to be a long-term session.
 After a predefined timer - similar to those used for TCP - the Control Channel is expected to be terminated - by closing the transport channel.
 The Control Channel MAY be re-opened at any time later.
 
-The use of a TLS session tickets {{?RFC5077}} is encouraged.
+The use of a TLS session tickets {{?RFC5077}} is RECOMMENDED.
 
-This authentication MAY be based on certificates for both the DM and each HNA.
+The authentication of the channel SHOULD be based on certificates for both the DM and each HNA.
 The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
 
 ### Retrieving information for the Public Homenet Zone {#zonetemplate}
@@ -435,8 +437,10 @@ The information provided by the DM to the HNA is retrieved by the HNA with an AX
 AXFR enables the response to contain any type of RRsets.
 
 To retrieve the necessary information to build the Public Homenet Zone, the HNA MUST send a DNS request of type AXFR associated with the Registered Homenet Domain.
-The DM MUST respond with a zone template.
-The zone template MUST contain a RRset of type SOA, one or multiple RRset of type NS and zero or more RRset of type A or AAAA.
+
+The zone that is returned by the DM is used by the HNA as a template to build its own zone.
+
+The zone template MUST contain a RRset of type SOA, one or multiple RRset of type NS and zero or more RRset of type A or AAAA (if the NS are in-bailiwick {{!RFC8499}}).
 
 * The SOA RR indicates to the HNA the value of the MNAME of the Public Homenet Zone.
 * The NAME of the SOA RR MUST be the Registered Homenet Domain.
