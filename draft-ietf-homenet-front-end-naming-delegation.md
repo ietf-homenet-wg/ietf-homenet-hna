@@ -760,9 +760,6 @@ The HNA should also cache the TLS server certificate used by the DM, in order to
 (Alternatively, the HNA is configured with an ACL from which Synchronization Channel connections will originate)
 
 The Control Channel and the Synchronization Channel respectively follow {{!RFC7858}} and {{!RFC9103}} guidelines.
-The highest level of privacy provided by {{!RFC9103}} SHOULD be enforced.
-As noted in {{!RFC9103}}, some level of privacy may be relaxed, by not protecting the existence of the zone.This MAY involve a mix of exchanges protected by TLS and exchanges not protected by TLS.
-This MAY be handled by a off-line agreement between the DM and HNA as well as with the use of RCODES defined in Section 7.8 of {{!RFC9103}}.
 
 The DNS protocol is subject to reflection attacks, however, these attacks are largely applicable when DNS is carried over UDP.
 The interfaces between the HNA and DM are using TLS over TCP, which prevents such reflection attacks.
@@ -796,15 +793,16 @@ For that reason PTR DNS queries and MAY instead be configured to return with NXD
 ## Deployment Considerations
 
 The HNA is expected to sign the DNSSEC zone and as such hold the private KSK/ZSK.
-To provide resilience against CPE breaks, it is RECOMMENDED to backup these keys to avoid an emergency key roll over when the CPE breaks.
 
-The HNA enables to handle network disruption as it contains the Public Homenet Zone, which is provisioned to the Homenet Authoritative Servers.
-However, DNSSEC validation requires to validate the chain of trust with the DS RRset that is stored into the parent zone of the Registered Homenet Domain.
-As currently defined, the handling of the DS RRset is left to the Homenet DNSSEC resolver which retrieves from the parent zone via a DNS exchange and cache the RRset according to the DNS rules, that is respecting the TTL and RRSIG expiration time.
-Such constraints do put some limitations to the type of disruption the proposed architecture can handle.
-In particular, the disruption is expected to start after the DS RRset has been resolved and end before the DS RRset is removed from the cache.
-One possible way to address such concern is to describe mechanisms to provision the DS RRset to the Homenet DNSSEC resolver for example, via HNCP or by configuring a specific trust anchors {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
-Such work is out of the scope of this document.
+There is no strong justification in this case to use a separate KSK and ZSK.
+If an attacker can get access to one of them, it likely that they will access both of them.
+If the HNA is run in a home router with a secure element (SE) or TPM, storing the private keys in the secure element would be a useful precaution.
+The DNSSEC keys are needed on an hourly to weekly basis, but not more often.
+
+While there is some risk that the DNSSEC keys might be disclosed by malicious parties, the bigger risk is that they will simply be lost if the home router is factory reset, or just thrown out/replaced with a newer model.
+
+Generating new DNSSEC keys is relatively easy, they can be deployed using the Control Channel to the DM.
+The key that is used to authenticate that connection is the critical key that needs protection, and should ideally be backed up to offline storage. (Such as a USB key)
 
 ## Operational Considerations
 
@@ -821,12 +819,11 @@ managing these exposed devices due to their increased risk posture of being
 exposed to the Internet
 
 * Depending on the operational practices of the home network operators, there
-is an increased risk to the Internet architecture through the possible
+is an increased risk to the Internet through the possible
 introduction of additional internet-exposed system that are poorly managed and
-likely to be compromised.  Carriers may not to deployed additional mitigations
-to ensure that attacks do not originate from their networks.
-
-
+likely to be compromised.
+Carriers may need to deploy additional mitigations to ensure that attacks do not originate from their networks.
+The use of RFC8520 (MUD) filters is one such method.
 
 #IANA Considerations
 
@@ -870,15 +867,19 @@ This section details what needs to be provisioned into the HNA and serves as a r
 The HNA needs to be provisioned with:
 
 * the Registered Domain (e.g., myhome.example )
+
 * the contact info for the Distribution Manager (DM), including the DNS name (FQDN), possibly including the IP literal, and a certificate (or anchor) to be used to authenticate the service
+
 * the DM transport protocol and port (the default is DNS over TLS, on port 853)
+
 * the HNA credentials used by the DM for its authentication.
 
 The HNA will need to select an IP address for communication for the Synchronization Channel.
 This is typically the WAN address of the CPE, but could be an IPv6 LAN address in the case of a home with multiple ISPs (and multiple border routers).
 This is detailed in {{sec-ip-hna}} when the NS and A or AAAA RRsets are communicated.
 
-The above parameters MUST be be provisioned for ISP-specific reverse zones. One example of how to do this can be found in  {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
+The above parameters MUST be be provisioned for ISP-specific reverse zones.
+One example of how to do this can be found in  {{?I-D.ietf-homenet-naming-architecture-dhc-options}}.
 ISP-specific forward zones MAY also be provisioned using {{?I-D.ietf-homenet-naming-architecture-dhc-options}}, but zones which are not related to a specific ISP zone (such as with a DNS provider) must be provisioned through other means.
 
 Similarly, if the HNA is provided by a registrar, the HNA may be handed pre-configured to end user.
