@@ -1,0 +1,40 @@
+#!/usr/bin/perl
+
+while(<>) {
+    if(/INSERT_TEXT_FROM_FILE (.*) END/) {
+        my $codewrapper=0;
+        my $file;
+        my $basefile;
+        $file = $1;
+        print STDERR "File: $file\n";
+        if( $file =~ /(.*)\@DATE/ ) {
+            $base = $1;
+            print STDERR "Searching for base=$base\n";
+            # look for the newest file with @DATE, assumed to be in CWD.
+            opendir(DIR, "yang");
+            @files=readdir(DIR);
+            closedir(DIR);
+            #print STDERR join(',', @files);
+            my @sorted = reverse sort grep(/^$base@/,@files);
+            #print STDERR join(',', @sorted);
+            $basefile = shift @sorted;
+            $file = "yang/" . $basefile;
+            print STDERR "Setting file=$file\n";
+        }
+        open(FILE, "<" . $file) || die "Can not open $file: $!\n";
+        print "<artwork><![CDATA[\n";
+        if($file =~ /\.yang$/) {
+            $codewrapper=1;
+            print "<CODE BEGINS> file \"$basefile\"\n"
+        }
+        while(<FILE>) {
+            print;
+        }
+        close(FILE);
+        print "<CODE ENDS>\n" if $codewrapper;
+        print "]]></artwork>\n";
+    } else {
+        print;
+    }
+}
+
