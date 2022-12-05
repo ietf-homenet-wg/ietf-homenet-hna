@@ -443,6 +443,7 @@ To retrieve the necessary information to build the Public Homenet Zone, the HNA 
 The zone that is returned by the DM is used by the HNA as a template to build its own zone.
 
 The zone template MUST contain a RRset of type SOA, one or multiple RRset of type NS and zero or more RRset of type A or AAAA (if the NS are in-bailiwick {{!RFC8499}}).
+The zone template will include Time To Live (TTL) values for each RR, and the HNA SHOULD take these as suggested maximum values, but MAY use lower values for operational reasons, such impending renumbering events.
 
 * The SOA RR indicates to the HNA the value of the MNAME of the Public Homenet Zone.
 * The NAME of the SOA RR MUST be the Registered Homenet Domain.
