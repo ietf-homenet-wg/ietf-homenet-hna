@@ -22,8 +22,6 @@ version:
 clean:
 	-rm -f ${DRAFT}-${VERSION}.txt ${DRAFT}.txt
 
-submit: ${DRAFT}.xml
-
 mysubmit: ${DRAFT}.xml
 	curl -S -F "user=mcr+ietf@sandelman.ca" -F "xml=@${DRAFT}.xml" https://datatracker.ietf.org/api/submit
 
