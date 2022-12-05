@@ -400,7 +400,7 @@ As a result, the HNA must provide the IP address the DM should use to reach the 
 
 If the HNA detects that it has been renumbered, then it MUST use the Control Channel to update the DOI with the new IPv6 address it has been assigned.
 
-The Synchronization Channel will be set between the new IPv6 address and the IP address of the DM.
+The Synchronization Channel will be set between the new IPv6 (and IPv4) address and the IP address of the DM.
 By default, the IP address used by the HNA in the Control Channel is considered by the DM and the explicit specification  of the IP by the HNA is only OPTIONAL.
 The transport channel (including port number) is the same as the one used between the HNA and the DM for the Control Channel.
 
