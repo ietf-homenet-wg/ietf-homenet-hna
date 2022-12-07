@@ -428,7 +428,7 @@ The Control Channel is not expected to be a long-term session.
 After a predefined timer - similar to those used for TCP - the Control Channel is expected to be terminated - by closing the transport channel.
 The Control Channel MAY be re-opened at any time later.
 
-The use of a TLS session tickets {{?RFC5077}} is RECOMMENDED.
+The use of a TLS session tickets {{?RFC8446, Section 4.6.1}} is RECOMMENDED.
 
 The authentication of the channel SHOULD be based on certificates for both the DM and each HNA.
 The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
