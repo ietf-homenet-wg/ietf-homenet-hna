@@ -17,7 +17,7 @@
 | |        Server         |  |         |   | (secondary) Servers |   |
 | | + myhome.example      |  |         |   | + myhome.example    |   |
 | | + home.arpa           |  |         |   | + x.y.z.ip6.arpa    |   |
-| |                       |  |         |   |                     |   |
+| | + x.y.z.ip6.arpa      |  |         |   |                     |   |
 | '-----------------------'  |         |   |                     |   |
 |        |       ^           |         |   '---------------------'   |
 |        |       |           |         |     ^            |          |
