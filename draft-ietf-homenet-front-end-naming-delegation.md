@@ -538,7 +538,7 @@ When the HNA connects to the DM's control channel, TLS will be used, and the con
 The DM will authenticate the HNA's certificate based upon having participating in some provisioning process that is not standardized by this document.
 The results of the provisioning process is a series of settings described in {{hna-provisioning}}.
 
-The HNA will validate the DM's control channel certificate by doing an {{!I-D.ietf-uta-rfc6125bis}} DNS-ID check on the name.
+The HNA will validate the DM's control channel certificate by doing an {{! RFC6125}} / {{!I-D.ietf-uta-rfc6125bis}} DNS-ID check on the name.
 
 In the future, other specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?RFC9250}}.
 
