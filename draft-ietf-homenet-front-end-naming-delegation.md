@@ -428,7 +428,7 @@ The Control Channel is not expected to be a long-term session.
 After a predefined timer - similar to those used for TCP - the Control Channel is expected to be terminated - by closing the transport channel.
 The Control Channel MAY be re-opened at any time later.
 
-The use of a TLS session tickets {{?RFC5077}} is RECOMMENDED.
+The use of a TLS session tickets {{?RFC8446, Section 4.6.1}} is RECOMMENDED.
 
 The authentication of the channel SHOULD be based on certificates for both the DM and each HNA.
 The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
@@ -538,7 +538,7 @@ When the HNA connects to the DM's control channel, TLS will be used, and the con
 The DM will authenticate the HNA's certificate based upon having participating in some provisioning process that is not standardized by this document.
 The results of the provisioning process is a series of settings described in {{hna-provisioning}}.
 
-The HNA will validate the DM's control channel certificate by doing an {{!RFC6125}} / {{!I-D.ietf-uta-rfc6125bis}} DNS-ID check on the name.
+The HNA will validate the DM's control channel certificate by doing an {{!I-D.ietf-uta-rfc6125bis}} DNS-ID check on the name.
 
 In the future, other specifications may consider protecting DNS messages with other transport layers, among others, DNS over DTLS {{?RFC8094}}, or DNS over HTTPs (DoH) {{?RFC8484}} or DNS over QUIC {{?RFC9250}}.
 
