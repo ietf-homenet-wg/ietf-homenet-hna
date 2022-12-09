@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-24
+docname: draft-ietf-homenet-front-end-naming-delegation-25
 
 stand_alone: true
 
