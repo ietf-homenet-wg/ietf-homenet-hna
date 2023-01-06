@@ -628,6 +628,7 @@ This leaves place for setting up automatically the relation between HNA and the 
 In the case of the reverse zone, the DOI authenticates the source of the updates by IPv6 Access Control Lists.
 In the case of the reverse zone, the ISP knows exactly what addresses have been delegated.
 The HNA SHOULD therefore always originate Synchronization Channel updates from an IP address within the zone that is being updated.
+Exceptionally, the synchronization channel might be from a different zone delegated to the HNA (if there were multiple zones, or renumbering events were in progress).
 
 For example, if the ISP has assigned 2001:db8:f00d::/64 to the WAN interface (by DHCPv6, or PPP/RA), then the HNA should originate Synchronization Channel updates from, for example, 2001:db8:f00d::2.
 
