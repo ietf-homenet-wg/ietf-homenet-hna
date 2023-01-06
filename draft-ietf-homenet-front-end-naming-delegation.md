@@ -286,9 +286,6 @@ This diagram also shows a reverse IPv6 map being hosted.
 The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as a Homenet Zone in {{fig-naming-arch}}.
 They are resolved locally, but not published as they are local content.
 
-The HNA SHOULD build the Public Homenet Zone in a single zone populated with all resource records that are expected to be published on the Internet.
-The use of zone cuts/delegations is NOT RECOMMENDED.
-
 The HNA signs the Public Homenet Zone with DNSSEC.
 
 The HNA handles all operations and keying material required for DNSSEC, so there is no provision made in this architecture for transferring private DNSSEC related keying material between the HNA and the DM.
