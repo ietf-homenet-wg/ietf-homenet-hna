@@ -251,9 +251,9 @@ In this case, it is expected the DOI provides the necessary parameters to the ho
 One potential mechanism to provide the parameters would be to provide the user with a JSON object which they can copy paste into the CPE - such as described in {{info-model}}.
 But, what matters to infrastructure is that the HNA is able to authenticate itself to the DOI.
 
-* If the DOI is not the DNS Registrar, then the proof of ownership needs to be established using a protocols.  ACME {{?RFC8555}} for example that will end in the generation of a certificate.
-ACME is used here to the purpose of automating the generation of the certificate, the CA may be a specific CA or the DOI.
-With that being done, the DOI has a roof of ownership and can proceed as above.
+* If the DOI is not the DNS Registrar, then the proof of ownership needs to be established using some other protocol.
+ACME {{?RFC8555}} is one protocol that would allow an owner of an existing domain name to prove their ownership (but requires they have DNS already setup!)
+There are other ways such as putting a DOI generated TXT record, or web site contents, as championed by entities like Google's Sitemaster and Postmaster protocols.
 
 
 # Architecture Description  {#sec-arch-desc}
