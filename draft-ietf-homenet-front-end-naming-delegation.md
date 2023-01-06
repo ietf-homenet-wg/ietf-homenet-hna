@@ -608,8 +608,6 @@ Limited exchanges:
 This results in a limited number of possible exchanges (AXFR/IXFR) with a small number of IP addresses and an implementation MUST enable filtering policies: it should only respond to queries that are required to do zone transfers.
 That list includes SOA queries and AXFR/IXFR queries.
 
-The HNA SHOULD drop any packets arriving on the WAN interface that are not issued from the DM.
-
 # Public Homenet Reverse Zone {#sec-reverse}
 
 Public Homenet Reverse Zone works similarly to the Public Homenet Zone.
