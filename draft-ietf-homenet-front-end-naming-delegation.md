@@ -313,7 +313,7 @@ The DOI is also responsible for ensuring the DS record has been updated in the p
 Resolution is performed by DNS(SEC) resolvers.
 When the resolution is performed outside the home network, the DNS(SEC) Resolver resolves the DS record on the Global DNS and the name associated with the Public Homenet Zone (myhome.example) on the Public Authoritative Servers.
 
-On the other hand, to provide resilience to the Public Homenet Zone in case of WAN connectivity disruption, the Homenet DNS(SEC) Resolver SHOULD be able to perform the resolution on the Homenet Authoritative Servers.
+In order to provide resilience to the Public Homenet Zone in case of WAN connectivity disruption, the Homenet DNS(SEC) Resolver MUST be able to perform the resolution on the Homenet Authoritative Servers.
 Note that the use of the Homenet resolver enhances privacy since the user on the home network would no longer be leaking interactions with internal services to an external DNS provider and to an on-path observer.
 These servers are not expected to be mentioned in the Public Homenet Zone, nor to be accessible from the Internet.
 As such their information as well as the corresponding signed DS record MAY be provided by the HNA to the Homenet DNS(SEC) Resolvers, e.g., using HNCP {{?RFC7788}} or a by configuring a trust anchor {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
@@ -333,7 +333,7 @@ The information exchanged between the HNA and the DM uses DNS messages protected
 This is configured identically to that described in {{!RFC9103}}, Section 9.3.3.
 
 It is worth noting that both DM and HNA need to agree on a common configuration to set up the synchronization channel as well as to build and server a coherent Public Homenet Zone.
-Typically,  the visible NS records of the Public Homenet Zone (built by the HNA) SHOULD remain pointing at the DOI's Public Authoritative Servers' IP address.
+As previously noted, the visible NS records of the Public Homenet Zone (built by the HNA) remain pointing at the DOI's Public Authoritative Servers' IP address.
 Revealing the address of the HNA in the DNS is not desirable.
 In addition, and depending on the configuration of the DOI, the DM also needs to update the parent zone's NS, DS and associated A or AAAA glue records.
 Refer to {{sec-chain-of-trust}} for more details.
@@ -378,7 +378,7 @@ The DOI does not publish this NS record, but uses it to perform zone transfers.
 
 ## Information to build the DNSSEC chain of trust {#sec-chain-of-trust}
 
-The HNA SHOULD provide the hash of the KSK via the DS RRset, so that the DOI can provide this value to the parent zone.
+The HNA MUST provide the hash of the KSK via the DS RRset, so that the DOI can provide this value to the parent zone.
 A common deployment use case is that the DOI is the registrar of the Registered Homenet Domain and as such, its relationship with the registry of the parent zone enables it to update the parent zone.
 When such relation exists, the HNA should be able to request the DOI to update the DS RRset in the parent zone.
 A direct update is especially necessary to initialize the chain of trust.
@@ -427,7 +427,7 @@ The Control Channel MAY be re-opened at any time later.
 
 The use of a TLS session tickets {{?RFC8446, Section 4.6.1}} is RECOMMENDED.
 
-The authentication of the channel SHOULD be based on certificates for both the DM and each HNA.
+The authentication of the channel MUST be based on certificates for both the DM and each HNA.
 The DM may also create the initial configuration for the delegation zone in the parent zone during the provisioning process.
 
 ### Retrieving information for the Public Homenet Zone {#zonetemplate}
@@ -450,16 +450,17 @@ The zone template will include Time To Live (TTL) values for each RR, and the HN
 The NS RRsets carry the Public Authoritative Servers of the DOI.
 Their associated NAME MUST be the Registered Homenet Domain.
 
-The TTL and RDATA are those expected to be published on the Public Homenet Zone.
-Note that the TTL SHOULD be set following the resolver's guide line {{?I-D.ietf-dnsop-ns-revalidation}} {{?I-D.ietf-dnsop-dnssec-validator-requirements}} with a TTL not exceeding those of the NS.
+In addition to the considerations above about default TTL, the HNA SHOULD
+take care to not pick a TTL larger than the parent NS, based upon resolver's guide lines: {{?I-D.ietf-dnsop-ns-revalidation}} and {{?I-D.ietf-dnsop-dnssec-validator-requirements}}.
 The RRsets of Type A and AAAA MUST have their NAME matching the NSDNAME of one of the NS RRsets.
 
 Upon receiving the response, the HNA MUST validate format and properties of the SOA, NS and A or AAAA RRsets.
 If an error occurs, the HNA MUST stop proceeding and MUST log an error.
 Otherwise, the HNA builds the Public Homenet Zone by setting the MNAME value of the SOA as indicated by the  SOA provided by the AXFR response.
-The HNA SHOULD set the value of NAME, REFRESH, RETRY, EXPIRE and MINIMUM of the SOA to those provided by the AXFR response.
+The HNA MUST not exceed the values of NAME, REFRESH, RETRY, EXPIRE and MINIMUM of the SOA to those provided by the AXFR response.
 The HNA MUST insert the NS and corresponding A or AAAA RRset in its Public Homenet Zone.
 The HNA MUST ignore other RRsets.
+
 If an error message is returned by the DM, the HNA MUST proceed as a regular DNS resolution.
 Error messages SHOULD be logged for further analysis.
 If the resolution does not succeed, the outsourcing operation is aborted and the HNA MUST close the Control Channel.
@@ -478,12 +479,12 @@ Though the pre-requisite section MAY be ignored by the DM, this value is fixed t
 
 Upon receiving the DNS update request, the DM reads the DS RRset in the Update section.
 The DM checks ZNAME corresponds to the parent zone.
-The DM SHOULD ignore the Pre-requisite and Additional Data sections, if present.
+The DM MUST ignore the Pre-requisite and Additional Data sections, if present.
 The DM MAY update the TTL value before updating the DS RRset in the parent zone.
 Upon a successful update, the DM should return a NOERROR response as a commitment to update the parent zone with the provided DS.
 An error indicates the MD does not update the DS, and the HNA needs to act accordingly or other method should be used by the HNA.
 
-The regular DNS error message SHOULD be returned to the HNA when an error occurs.
+The regular DNS error message MUST be returned to the HNA when an error occurs.
 In particular a FORMERR is returned when a format error is found, this includes when unexpected RRSets are added or when RRsets are missing.
 A SERVFAIL error is returned when a internal error is encountered.
 A NOTZONE error is returned when update and Zone sections are not coherent, a NOTAUTH error is returned when the DM is not authoritative for the Zone section.
@@ -503,7 +504,7 @@ The Additional Data section contains the RRsets of type A or AAAA that designate
 The reason to provide these IP addresses is to keep them unpublished and prevent them to be resolved.
 
 Upon receiving the DNS update request, the DM reads the IP addresses and checks the ZNAME corresponds to the parent zone.
-The DM SHOULD ignore a non-empty Pre-requisite section.
+The DM MUST ignore a non-empty Pre-requisite section.
 The DM configures the secondary with the IP addresses and returns a NOERROR response to indicate it is committed to serve as a secondary.
 
 Similarly to {{sec-ds}}, DNS errors are used and an error indicates the DM is not configured as a secondary.
@@ -585,7 +586,7 @@ The HNA MAY use this certificate as the authorization for the zone transfer, or 
 This is a local configuration option, as it is premature to determine which will be operationally simpler.
 
 When the HNA expects to do zone transfer authorization by certificate only, the HNA MAY still apply an ACL on inbound connection requests to avoid load.
-In this case, the HNA SHOULD regularly check (via a DNS resolution) that the address(es) of the DM in the filter is still valid.
+In this case, the HNA MUST regularly check (via a DNS resolution) that the address(es) of the DM in the filter is still valid.
 
 # DM Distribution Channel {#sec-dist}
 
@@ -604,7 +605,7 @@ Interface Binding:
 
 Limited exchanges:
 : the purpose of the Hidden Primary Server is to synchronize with the DM, not to serve any zones to end users, or the public Internet.
-This results in a limited number of possible exchanges (AXFR/IXFR) with a small number of IP addresses and an implementation SHOULD enable filtering policies: it should only respond to queries that are required to do zone transfers.
+This results in a limited number of possible exchanges (AXFR/IXFR) with a small number of IP addresses and an implementation MUST enable filtering policies: it should only respond to queries that are required to do zone transfers.
 That list includes SOA queries and AXFR/IXFR queries.
 
 The HNA SHOULD drop any packets arriving on the WAN interface that are not issued from the DM.
@@ -685,8 +686,7 @@ If the HNA anticipates that period of overlap is long (perhaps due to knowledge 
 In break-before-make renumbering scenarios, including flash renumbering scenarios {{?RFC8978}}, the old prefix becomes unuseable before the new prefix is known or advertised.
 As explained in {{?RFC8978}}, some flash renumberings occur due to power cycling of the HNA, where ISPs do not properly remember what prefixes have been assigned to which user.
 
-An HNA that boots up SHOULD immediately use the Control Channel to update the location for the
-Synchronization Channel.
+An HNA that boots up MUST immediately use the Control Channel to update the location for the Synchronization Channel.
 This is a reasonable thing to do on every boot, as the HNA has no idea how long it has been offline, or if the (DNSSEC) zone has perhaps expired during the time the HNA was powered off.
 
 The HNA will have a list of names that should be published, but it might not yet have IP addresses for those devices.
@@ -696,11 +696,11 @@ If the HNA is sure that the prefix has not changed, then it should use the previ
 Although the new and old IP addresses may be stored in the Public Homenet Zone, it is RECOMMENDED that only the newly reachable IP addresses be published.
 
 Regarding the Public Homenet Reverse Zone, the new Public Homenet Reverse Zone has to be populated as soon as possible, and the old Public Homenet Reverse Zone will be deleted by the owner of the zone (and the owner of the old prefix which is usually the ISP) once the prefix is no longer assigned to the HNA.
-The ISP SHOULD ensure that the DNS cache has expired before re-assigning the prefix to a new home network.
+The ISP MUST ensure that the DNS cache has expired before re-assigning the prefix to a new home network.
 This may be enforced by controlling the TTL values.
 
-To avoid reachability disruption, IP connectivity information provided by the DNS SHOULD be coherent with the IP in use.
-In our case, this means the old IP address SHOULD NOT be provided via the DNS when it is not reachable anymore.
+To avoid reachability disruption, IP connectivity information provided by the DNS MUST be coherent with the IP in use.
+In our case, this means the old IP address MUST NOT be provided via the DNS when it is not reachable anymore.
 
 In the make-before-break scenario, it is possible to make the transition seamless.
 Let T be the TTL associated with a RRset of the Public Homenet Zone.
