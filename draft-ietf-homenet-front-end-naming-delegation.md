@@ -83,26 +83,23 @@ informative:
 
 --- abstract
 
-Home network owners may have devices or services hosted on this home network
-that they wish to access from the Internet (i.e., from a network outside of the home network).
-Home networks are increasingly numbered using IPv6 addresses, which makes this access much simpler.
-To enable this access, the names and IP addresses of these devices and services needs to be made  available in the public DNS.
+Home network owners may have devices or services hosted on their home network that they wish to access from the Internet (i.e., from a network outside of the home network).
+Home networks are increasingly numbered using IPv6 addresses, which makes this access much simpler, but their access from the Internet requires the names and IP addresses of these devices and services to be made  available in the public DNS.
 
-The names and IP address of the home network are present in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs an
-outsourced infrastructure to publish the zone on the behalf of the home owner.
-This document describes how an this Home Naming Authority instructs the outsourced infrastructure.
+This document describes how an Home Naming Authority (NHA) instructs the outsourced infrastructure to publish these pieces of information in the public DNS. 
+The names and IP addresses of the home network are set in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs an outsourced infrastructure to publish the zone on behalf of the home network owner.
 
 --- middle
 
 # Introduction
 
-Home network owners may have devices or services hosted on this home network
+Home network owners may have devices or services hosted on their home network
 that they wish to access from the Internet (i.e., from a network outside of the
 home network).
-The use of IPv6 addresess in the home makes the actual network access much simpler, while on the other hand, the addresses are much harder to remember, and subject to regular renumbering.
+The use of IPv6 addresesses in the home makes the actual network access much simpler, while on the other hand, the addresses are much harder to remember, and subject to regular renumbering.
 To make this situation simpler for typical home owners to manage, there needs to be an easy way for names and IP addresses of these devices and services to be published in the public DNS.
 
-The names and IP address of the home network are present in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs the DNS Outsourcing Infrastructure (DOI) to publish the zone on the behalf of the HNA.
+The names and IP address of the home network are made availble in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs the DNS Outsourcing Infrastructure (DOI) to publish the zone on behalf of the HNA.
 This document describes how an HNA can instruct a DOI to publish a Public Homenet Zone on its behalf.
 
 The document introduces the Synchronization Channel and the Control Channel between the HNA and the  Distribution Manager (DM), which is the main interface to the DNS Outsourcing Infrastructure (DOI).
@@ -373,7 +370,7 @@ For instance, an HNA might want to change these values if it thinks that a renum
 
 As the information is necessary for the HNA to proceed and the information is associated with the DM, this information exchange is mandatory.
 
-The HNA then perhaps and DNS Update operation to the DOI, updating the DOI with an NS, DS, A and AAAA records. These indicates where its Synchronization Channel is.
+The HNA then performs a DNS Update operation to the DOI, updating the DOI with an NS, DS, A and AAAA records. These indicates where its Synchronization Channel is.
 The DOI does not publish this NS record, but uses it to perform zone transfers.
 
 ## Information to build the DNSSEC chain of trust {#sec-chain-of-trust}
