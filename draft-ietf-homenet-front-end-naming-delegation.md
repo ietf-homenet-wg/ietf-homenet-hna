@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-25
+docname: draft-ietf-homenet-front-end-naming-delegation-26
 
 stand_alone: true
 
@@ -251,14 +251,19 @@ But, what matters to infrastructure is that the HNA is able to authenticate itse
 * If the DOI is not the DNS Registrar, then the proof of ownership needs to be established using some other protocol.
 ACME {{?RFC8555}} is one protocol that would allow an owner of an existing domain name to prove their ownership (but requires they have DNS already setup!)
 There are other ways such as putting a DOI generated TXT record, or web site contents, as championed by entities like Google's Sitemaster and Postmaster protocols.
+{{?I-D.ietf-dnsop-domain-verification-techniques}} describes a few ways ownership or control of a domain can be achieved. 
 
 
 # Architecture Description  {#sec-arch-desc}
 
 This section provides an overview of the architecture for outsourcing the authoritative naming service from the HNA to the DOI.
 As a consequence, this prevents HNA to handle the DNS traffic from the Internet associated with the resolution of the Homenet Zone.
+
+The device assigned zone or user configurable zone to use as the domain to publicly serve hostnames in the home network is called the Public Homenet Zone. 
+In this document, "myhome.example" is used as the example for an enduser owned domain configured as Public Homenet Zone.
+
 More specifically, DNS resolution for the Public Homenet Zone (here myhome.example) from Internet DNSSEC resolvers is handled by the DOI as opposed to the HNA.
-The DOI benefits from a cloud infrastructure while the HNA is dimensioned for home network and as such likely enable to support any load.
+The DOI benefits from a cloud infrastructure while the HNA is dimensioned for home network and as such likely unable to support any load.
 In the case the HNA is a CPE, outsourcing to the DOI protects the home network against DDoS for example.
 Of course the DOI needs to be informed dynamically about the content of myhome.example. The description of such a synchronization mechanism is the purpose of this document.
 
@@ -295,7 +300,7 @@ The DM has three communication channels:
 * DM Control Channel ({{sec-ctrl}}) to configure the HNA and the DOI. This includes necessary parameters to configure the primary/secondary relation as well as some information provided by the DOI that needs to be included by the HNA in the Public Homenet Zone.
 
 * DM Synchronization Channel ({{sec-synch}}) to synchronize the Public Homenet Zone on the HNA and on the DM with the appropriately configured primary/secondary.
-This is a zone transfer over TLS.
+This is a zone transfer over mutually authenticated TLS.
 
 * one or more Distribution Channels ({{sec-dist}}) that distribute the Public Homenet Zone from the DM to the Public Authoritative Servers serving the Public Homenet Zone on the Internet.
 
@@ -339,7 +344,7 @@ This specification assumes:
 
 * the DM serves both the Control Channel and Synchronization Channel on a single IP address, single port and using a single transport protocol.
 * By default, the HNA uses a single IP address for both the Control and Synchronization channel.
-However,  the HNA MAY use distinct IP addresses for the Control Channel and the Synchronization Channel - see {{sec-synch}} and {{sec-sync-info}} for more details.
+However, the HNA MAY use distinct IP addresses for the Control Channel and the Synchronization Channel - see {{sec-synch}} and {{sec-sync-info}} for more details.
 
 The Distribution Channel is internal to the DOI and as such is not normatively defined by this specification.
 
@@ -390,7 +395,7 @@ On the other hand if the DM does not have the capacity to advertise the DS to th
 ## Information to set up the Synchronization Channel {#sec-sync-info}
 
 The HNA works as a hidden primary authoritative DNS server, while the DM works like a secondary.
-As a result, the HNA must provide the IP address the DM should use to reach the HNA.
+As a result, the HNA needs to provide the IP address the DM should use to reach the HNA.
 
 If the HNA detects that it has been renumbered, then it MUST use the Control Channel to update the DOI with the new IPv6 address it has been assigned.
 
@@ -413,7 +418,7 @@ The decision to delete an inactive HNA by the DM is part of the commercial agree
 
 Multiple ways were considered on how the control information could be exchanged between  the HNA and the DM.
 
-This specification defines a mechanism that re-use the DNS zone transfer format.
+This specification defines a mechanism that re-uses the DNS zone transfer format.
 Note that while information is provided using DNS exchanges, the exchanged information is not expected to be set in any zone file, instead this information is used as commands between the HNA and the DM.
 This was found to be simpler on the home router side, as the HNA already has to have code to deal with all the DNS encodings/decodings.
 Inventing a new way to encode the DNS information in, for instance, JSON, seemed to add complexity for no return on investment.
@@ -436,7 +441,7 @@ To retrieve the necessary information to build the Public Homenet Zone, the HNA 
 
 The zone that is returned by the DM is used by the HNA as a template to build its own zone.
 
-The zone template MUST contain a RRset of type SOA, one or multiple RRset of type NS and zero or more RRset of type A or AAAA (if the NS are in-bailiwick {{!RFC8499}}).
+The zone template MUST contain a RRset of type SOA, one or multiple RRset of type NS and zero or more RRset of type A or AAAA (if the NS are in-domain {{!RFC8499}}).
 The zone template will include Time To Live (TTL) values for each RR, and the HNA SHOULD take these as suggested maximum values, but MAY use lower values for operational reasons, such impending renumbering events.
 
 * The SOA RR indicates to the HNA the value of the MNAME of the Public Homenet Zone.
@@ -479,7 +484,7 @@ The DM checks ZNAME corresponds to the parent zone.
 The DM MUST ignore the Pre-requisite and Additional Data sections, if present.
 The DM MAY update the TTL value before updating the DS RRset in the parent zone.
 Upon a successful update, the DM should return a NOERROR response as a commitment to update the parent zone with the provided DS.
-An error indicates the MD does not update the DS, and the HNA needs to act accordingly or other method should be used by the HNA.
+An error indicates the DM does not update the DS, and the HNA needs to act accordingly or other method should be used by the HNA.
 
 The regular DNS error message MUST be returned to the HNA when an error occurs.
 In particular a FORMERR is returned when a format error is found, this includes when unexpected RRSets are added or when RRsets are missing.
@@ -543,11 +548,11 @@ In the future, other specifications may consider protecting DNS messages with ot
 The DM Synchronization Channel is used for communication between the HNA and the DM for synchronizing the Public Homenet Zone.
 Note that the Control Channel and the Synchronization Channel are by construction different channels even though there they may use the same IP address.
 Suppose the HNA and the DM are using a single IP address and let designate by XX.
-YYYY and ZZZZ the various ports involved in the communications.
+YYYYY and ZZZZZ the various ports involved in the communications.
 
-The Control Channel is between the HNA working as a client using port number YYYY (a high range port) toward a service provided by the DM at port 853, when using DoT.
+The Control Channel is between the HNA working as a client using port number YYYYY (an ephemeral also commonly designated as high range port) toward a service provided by the DM at port 853, when using DoT.
 
-On the other hand, the Synchronization Channel is set between the DM working as a client using port ZZZZ (another high range port) toward a service provided  by the HNA at port 853.
+On the other hand, the Synchronization Channel is set between the DM working as a client using port ZZZZZ (another ephemeral port) toward a service provided  by the HNA at port 853.
 
 As a result, even though the same pair of IP addresses may be involved the Control Channel and the Synchronization Channel are always distinct channels.
 
@@ -555,13 +560,13 @@ Uploading and dynamically updating the zone file on the DM can be seen as zone p
 This is handled using the normal zone transfer mechanism involving AXFR/IXFR.
 
 Part of this zone update process involves the owner of the zone (the hidden primary, the HNA) sending a DNS Notify to the secondaries.
-In this situation the only destination that is known by the HNA is the DM's Control Channel, and so DNS notifies are sent over the Control Channel, secured by TLS.
+In this situation the only destination that is known by the HNA is the DM's Control Channel, and so DNS notifies are sent over the Control Channel, secured by a mutually authenticated TLS.
 
 Please note that, DNS Notifies are not critical to normal operation, as the DM will be checking the zone regularly based upon SOA record comments.  DNS Notifies do speed things up as they cause the DM to use the Synchronization channel to immediately do an SOA Query to detect any updates.  If there are any changes then the DM immediately transfers the zone updates.
 
 This specification standardizes the use of a primary / secondary mechanism {{!RFC1996}} rather than an extended series of DNS update messages.
 The primary / secondary mechanism was selected as it scales better and avoids DoS attacks.
-As this AXFR runs over a TCP channel secured by TLS, then DNS Update is just more complicated.
+As this AXFR runs over a TCP channel secured by a mutually authenticated TLS, then DNS Update is just more complicated.
 
 Note that this document provides no standard way to distribute a DNS primary between multiple devices.
 As a result, if multiple devices are candidate for hosting the Hidden Primary, some specific mechanisms should be designed so the home network only selects a single HNA for the Hidden Primary.
@@ -574,8 +579,9 @@ The Synchronization Channel uses mutually authenticated TLS, as described by {{R
 There is a TLS client certificate used by the DM to authenticate itself.
 The DM uses the same certificate which was configured into the HNA for authenticating the Control Channel, but as a client certificate rather than a server certificate.
 
-{{RFC9103}} makes no requirements or recommendations on any extended key usage flags for zone transfers, and this document adopts the view that none should be required, but that if there are any set, they should be tolerated and ignored.
-A revision to this specification could change this, and if there is a revision to {{RFC9103}} to clarify this, then this document should be marked as updated as well.
+
+{{!RFC9103}} makes no requirements or recommendations on any extended key usage flags for zone transfers, and this document adopts the view that none should be required. 
+ and leave it up to {{!RFC9103}} to get updated for this document's normative reference to be considered updated as well.
 
 For the TLS server certificate, the HNA uses the same certificate which it uses to authenticate itself to the DM for the Control Channel.
 
@@ -749,12 +755,16 @@ Although, caching may obfuscate this information inside the home network, it is 
 
 # Security Considerations {#sec-security}
 
-This document exposes a mechanism that prevents the HNA from being exposed to queries from the Internet.
 The HNA never answers DNS requests from the Internet.
 These requests are instead served by the DOI.
 
 While this limits the level of exposure of the HNA, the HNA still has some exposure to attacks from the Internet.
 This section analyses the attack surface associated with these communications, the data published by the DOI, as well as operational considerations.
+
+## Registered Homenet Domain
+
+The DOI MUST NOT serve any Public Homenet Zone that it has not strong confidence the HNA owns the Registered Homenet Domain. 
+Proof of ownership is outside the document and is assumed such phase has preceded the outsourcing of the zone.
 
 ## HNA DM channels
 
@@ -802,7 +812,7 @@ The HNA is expected to sign the DNSSEC zone and as such hold the private KSK/ZSK
 There is no strong justification in this case to use a separate KSK and ZSK.
 If an attacker can get access to one of them, it likely that they will access both of them.
 If the HNA is run in a home router with a secure element (SE) or TPM, storing the private keys in the secure element would be a useful precaution.
-The DNSSEC keys are needed on an hourly to weekly basis, but not more often.
+The DNSSEC keys are generally needed on an hourly to weekly basis, but not more often.
 
 While there is some risk that the DNSSEC keys might be disclosed by malicious parties, the bigger risk is that they will simply be lost if the home router is factory reset, or just thrown out/replaced with a newer model.
 
