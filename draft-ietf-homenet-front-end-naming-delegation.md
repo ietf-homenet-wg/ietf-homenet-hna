@@ -9,7 +9,7 @@ ipr: trust200902
 area: Internet
 wg: Homenet
 kw: Internet-Draft
-cat: std
+cat: exp
 
 pi:
   rfcedstyle: yes
