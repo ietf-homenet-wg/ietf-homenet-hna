@@ -336,7 +336,7 @@ This is configured identically to that described in {{!RFC9103}}, Section 9.3.3.
 
 It is worth noting that both DM and HNA need to agree on a common configuration to set up the synchronization channel as well as to build and server a coherent Public Homenet Zone.
 As previously noted, the visible NS records of the Public Homenet Zone (built by the HNA) remain pointing at the DOI's Public Authoritative Servers' IP address.
-Revealing the address of the HNA in the DNS is not desirable.
+Unless the HNA is able to support the traffic load, the HNA SHOULD NOT appear as a visible NS records of the Public Homenet Zone. 
 In addition, and depending on the configuration of the DOI, the DM also needs to update the parent zone's NS, DS and associated A or AAAA glue records.
 Refer to {{sec-chain-of-trust}} for more details.
 
@@ -504,6 +504,7 @@ The Update section is a RRset of type NS.
 The Additional Data section contains the RRsets of type A or AAAA that designates the IP addresses associated with the primary (or the HNA).
 
 The reason to provide these IP addresses is to keep them unpublished and prevent them to be resolved.
+It is RECOMMENDED the IP address of the HNA is randomly chosen to prevent it from being easily discovered as well. 
 
 Upon receiving the DNS update request, the DM reads the IP addresses and checks the ZNAME corresponds to the parent zone.
 The DM MUST ignore a non-empty Pre-requisite section.
