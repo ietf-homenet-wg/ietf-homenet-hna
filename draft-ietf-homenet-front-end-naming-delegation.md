@@ -84,7 +84,7 @@ informative:
 --- abstract
 
 Home network owners may have devices or services hosted on their home network that they wish to access from the Internet (i.e., from a network outside of the home network).
-Home networks are increasingly numbered using IPv6 addresses, which makes this access much simpler, but their access from the Internet requires the names and IP addresses of these devices and services to be made  available in the public DNS.
+Home networks are increasingly numbered using IPv6 addresses, which in principle makes this access simpler, but their access from the Internet requires the names and IP addresses of these devices and services to be made  available in the public DNS.
 
 This document describes how an Home Naming Authority (NHA) instructs the outsourced infrastructure to publish these pieces of information in the public DNS. 
 The names and IP addresses of the home network are set in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs an outsourced infrastructure to publish the zone on behalf of the home network owner.
@@ -96,15 +96,20 @@ The names and IP addresses of the home network are set in the Public Homenet Zon
 Home network owners may have devices or services hosted on their home network
 that they wish to access from the Internet (i.e., from a network outside of the
 home network).
-The use of IPv6 addresesses in the home makes the actual network access much simpler, while on the other hand, the addresses are much harder to remember, and subject to regular renumbering.
+The use of IPv6 addresesses in the home makes inprinciple the actual network access simpler, while on the other hand, the addresses are much harder to remember, and subject to regular renumbering.
 To make this situation simpler for typical home owners to manage, there needs to be an easy way for names and IP addresses of these devices and services to be published in the public DNS.
 
-The names and IP address of the home network are made availble in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs the DNS Outsourcing Infrastructure (DOI) to publish the zone on behalf of the HNA.
+As depicted in {fig-outsourcing-overview}, he names and IP address of the home network are made availble in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs the DNS Outsourcing Infrastructure (DOI) to publish the zone on behalf of the HNA.
 This document describes how an HNA can instruct a DOI to publish a Public Homenet Zone on its behalf.
 
 The document introduces the Synchronization Channel and the Control Channel between the HNA and the  Distribution Manager (DM), which is the main interface to the DNS Outsourcing Infrastructure (DOI).
 
 The Synchronization Channel (see {{sec-synch}}) is used to synchronize the Public Homenet Zone.
+
+~~~~
+{::include architecture-intro.txt}
+~~~~
+{: #fig-outsourcing-overview artwork-align="center" title="High level architecture overview of outsourcing the Public Homenet Zone"}
 
 The Synchronization Channel is a zone transfer, with the HNA configured as a primary, and the Distribution Manager configured as a secondary.
 Some operators refer to this kind of configuration as a "hidden primary", but that term is not used in this document as it is not precisely defined anywhere, but has many slightly different meanings to many.
@@ -197,7 +202,7 @@ The administrator would mark which devices and services (by name), are to be pub
 The HNA would then collect the IP address(es) associated with that device or service, and put the name into the Public Homenet Zone.
 The address of the device or service can be collected from a number of places: mDNS {{?RFC6762}}, DHCP {{?RFC8415}}, UPnP, PCP {{?RFC6887}}, or manual configuration.
 
-A device or service may have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), Unique Local IPv6 Addresses (ULA) {{?RFC4193}}, IPv6-Link-Local addresses{{?RFC4291}}{{?RFC7404}}, IPv4-Link-Local Addresses {{?RFC3927}} (LLA), and finally, private IPv4 addresses {{!RFC1918}}.
+A device or service SHOULD have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}} or IPv4), but MAY also have Unique Local IPv6 Addresses (ULA) {{?RFC4193}}, IPv6-Link-Local addresses{{?RFC4291}}{{?RFC7404}}, IPv4-Link-Local Addresses {{?RFC3927}} (LLA), and finally, private IPv4 addresses {{!RFC1918}}.
 
 Of these the link-local are almost never useful for the Public Zone, and should be omitted.
 
@@ -207,7 +212,7 @@ RFC1918 addresses in public zones are generally filtered out by many DNS servers
 
 In general, one expects the GUA to be the default address to be published.
 A direct advantage of enabling local communication is to enable communications even in case of Internet disruption.
-Since communications are established with names which remain a global identifier, the communication can be protected by TLS the same way it is protected on the global Internet - using certificates.  
+Since communications are established with names which remain a global identifier, the communication can be protected (at the very least with integrity protection) by TLS the same way it is protected on the global Internet - using certificates.  
 
 
 
@@ -217,7 +222,22 @@ A number of deployment scenarios have been envisioned, this section aims at
 providing a brief description.
 The use cases are not limitations and this section is not normative.
 
-### CPE Vendor
+The main difference between the various deployments concerns the provisioning of the HNA - that is how it is configured to outsource the Public Homenet Zone to the DOI - as well as how the Public Homenet Zone is being provisioned before being outsourced.  
+In both cases, these configuration aspects are out of the scope of the document.              
+
+Provisioning the configuration related to the DOI is expected to be automated as much as possible and require as little as possible interaction with the end user.    
+Zero configuration can only be achieved under some circumstances and {{?I-D.ietf-homenet-naming-architecture-dhc-options}} provides one such example under the assumption the ISP provides the DOI. {{sec-cpe-vendor}} describes another variant where the CPE is provided preconfigured with the DOI.
+{{sec-agnostic-cpe}} describes how an agnostic CPE may be configured by the home network administrator.
+Of course even in this case, the configuration can leverage mechanisms to prevent the end user manually entering all information.
+
+On the other hand, provisioning the Public Homenet Zone needs to combine the ability to closely reflect what the end user wishes to publish on the Internet while easing such interaction.
+The HNA may implement such interactions using Web GUI or specific mobile applications.  
+
+With the CPE configured with the DOI, the HNA contacts the DOI to build a template for the
+Public Homenet Zone, and then provision the Public Homenet Zone.
+Once the Public Homenet Zone is built, the HNA strats synchronizing it with the DOI on the Synchronization channel.
+
+## CPE Vendor {#sec-cpe-vendor}
 
 A specific vendor with specific relations with a registrar or a registry
 may sell a CPE that is provisioned with a domain name.
@@ -231,7 +251,7 @@ Normally the keys should be necessary and sufficient to proceed to the authentic
 
 When the home network owner plugs in the CPE at home, the relation between HNA and DM is expected to work out-of-the-box.
 
-### Agnostic CPE
+## Agnostic CPE {#sec-agnostic-cpe}
 
 A CPE that is not preconfigured may also use the protocol
 defined in this document but some configuration steps will be needed.
@@ -268,7 +288,7 @@ Note that {{info-model}} shows necessary parameters to configure the HNA.
 
 ## Architecture Overview {#sec-arch-overview}
 
-~~~~ aasvg
+~~~~ 
 {::include architecture-overview.txt}
 ~~~~
 {: #fig-naming-arch artwork-align="center" title="Homenet Naming Architecture"}
@@ -283,7 +303,7 @@ This diagram also shows a reverse IPv6 map being hosted.
 The ".local" as well as ".home.arpa" are explicitly not considered as Public Homenet zones and represented as a Homenet Zone in {{fig-naming-arch}}.
 They are resolved locally, but not published as they are local content.
 
-The HNA signs the Public Homenet Zone with DNSSEC.
+It is RECOMMENDED the HNA implements DNSSEC, in which case the HNA MUST signs the Public Homenet Zone with DNSSEC.
 
 The HNA handles all operations and keying material required for DNSSEC, so there is no provision made in this architecture for transferring private DNSSEC related keying material between the HNA and the DM.
 
