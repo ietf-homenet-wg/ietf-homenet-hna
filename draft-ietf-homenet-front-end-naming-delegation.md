@@ -273,7 +273,7 @@ Note that {{info-model}} shows necessary parameters to configure the HNA.
 
 ## Architecture Overview {#sec-arch-overview}
 
-~~~~ aasvg
+~~~~  
 {::include architecture-overview.txt}
 ~~~~
 {: #fig-naming-arch artwork-align="center" title="Homenet Naming Architecture"}

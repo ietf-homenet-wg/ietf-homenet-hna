@@ -4,32 +4,34 @@
 
 Homenet                                                       D. Migault
 Internet-Draft                                                  Ericsson
-Intended status: Standards Track                                R. Weber
-Expires: 7 June 2023                                             Nominum
+Intended status: Experimental                                   R. Weber
+Expires: 17 July 2023                                            Nominum
                                                            M. Richardson
                                                 Sandelman Software Works
                                                                R. Hunter
                                                     Globis Consulting BV
-                                                         4 December 2022
+                                                         13 January 2023
 
 
       Simple Provisioning of Public Names for Residential Networks
-           draft-ietf-homenet-front-end-naming-delegation-23
+           draft-ietf-homenet-front-end-naming-delegation-26
 
 Abstract
 
-   Home network owners may have devices or services hosted on this home
+   Home network owners may have devices or services hosted on their home
    network that they wish to access from the Internet (i.e., from a
    network outside of the home network).  Home networks are increasingly
-   numbered using IPv6 addresses, which makes this access much simpler.
-   To enable this access, the names and IP addresses of these devices
-   and services needs to be made available in the public DNS.
+   numbered using IPv6 addresses, which makes this access much simpler,
+   but their access from the Internet requires the names and IP
+   addresses of these devices and services to be made available in the
+   public DNS.
 
-   The names and IP address of the home network are present in the
-   Public Homenet Zone by the Homenet Naming Authority (HNA), which in
-   turn instructs an outsourced infrastructure to publish the zone on
-   the behalf of the home owner.  This document describes how an this
-   Home Naming Authority instructs the outsourced infrastructure.
+   This document describes how an Home Naming Authority (NHA) instructs
+   the outsourced infrastructure to publish these pieces of information
+   in the public DNS.  The names and IP addresses of the home network
+   are set in the Public Homenet Zone by the Homenet Naming Authority
+   (HNA), which in turn instructs an outsourced infrastructure to
+   publish the zone on behalf of the home network owner.
 
 Status of This Memo
 
@@ -46,21 +48,19 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 June 2023.
+   This Internet-Draft will expire on 17 July 2023.
 
 
 
 
-
-
-Migault, et al.            Expires 7 June 2023                  [Page 1]
+Migault, et al.           Expires 17 July 2023                  [Page 1]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
 Copyright Notice
 
-   Copyright (c) 2022 IETF Trust and the persons identified as the
+   Copyright (c) 2023 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -68,9 +68,9 @@ Copyright Notice
    license-info) in effect on the date of publication of this document.
    Please review these documents carefully, as they describe your rights
    and restrictions with respect to this document.  Code Components
-   extracted from this document must include Simplified BSD License text
-   as described in Section 4.e of the Trust Legal Provisions and are
-   provided without warranty as described in the Simplified BSD License.
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
 
 Table of Contents
 
@@ -81,12 +81,12 @@ Table of Contents
      4.1.  CPE Vendor  . . . . . . . . . . . . . . . . . . . . . . .   7
        4.1.1.  Agnostic CPE  . . . . . . . . . . . . . . . . . . . .   7
    5.  Architecture Description  . . . . . . . . . . . . . . . . . .   8
-     5.1.  Architecture Overview . . . . . . . . . . . . . . . . . .   8
+     5.1.  Architecture Overview . . . . . . . . . . . . . . . . . .   9
      5.2.  Distribution Manager (DM) Communication Channels  . . . .  11
    6.  Control Channel . . . . . . . . . . . . . . . . . . . . . . .  12
      6.1.  Information to Build the Public Homenet Zone  . . . . . .  12
      6.2.  Information to build the DNSSEC chain of trust  . . . . .  13
-     6.3.  Information to set the Synchronization Channel  . . . . .  14
+     6.3.  Information to set up the Synchronization Channel . . . .  14
      6.4.  Deleting the delegation . . . . . . . . . . . . . . . . .  14
      6.5.  Messages Exchange Description . . . . . . . . . . . . . .  14
        6.5.1.  Retrieving information for the Public Homenet Zone  .  15
@@ -94,35 +94,36 @@ Table of Contents
                trust . . . . . . . . . . . . . . . . . . . . . . . .  16
        6.5.3.  Providing information for the Synchronization
                Channel . . . . . . . . . . . . . . . . . . . . . . .  17
-       6.5.4.  HNA instructing deleting the delegation . . . . . . .  17
+       6.5.4.  HNA instructing deleting the delegation . . . . . . .  18
      6.6.  Securing the Control Channel  . . . . . . . . . . . . . .  18
-   7.  Synchronization Channel . . . . . . . . . . . . . . . . . . .  18
-     7.1.  Securing the Synchronization Channel  . . . . . . . . . .  19
+   7.  Synchronization Channel . . . . . . . . . . . . . . . . . . .  19
+     7.1.  Securing the Synchronization Channel  . . . . . . . . . .  20
    8.  DM Distribution Channel . . . . . . . . . . . . . . . . . . .  20
-   9.  HNA Security Policies . . . . . . . . . . . . . . . . . . . .  20
+   9.  HNA Security Policies . . . . . . . . . . . . . . . . . . . .  21
    10. Public Homenet Reverse Zone . . . . . . . . . . . . . . . . .  21
    11. DNSSEC compliant Homenet Architecture . . . . . . . . . . . .  22
    12. Renumbering . . . . . . . . . . . . . . . . . . . . . . . . .  23
-   13. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  24
+   13. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  25
    14. Security Considerations . . . . . . . . . . . . . . . . . . .  26
-     14.1.  HNA DM channels  . . . . . . . . . . . . . . . . . . . .  26
+     14.1.  Registered Homenet Domain  . . . . . . . . . . . . . . .  27
 
 
 
-Migault, et al.            Expires 7 June 2023                  [Page 2]
+Migault, et al.           Expires 17 July 2023                  [Page 2]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
-     14.2.  Names are less secure than IP addresses  . . . . . . . .  27
-     14.3.  Names are less volatile than IP addresses  . . . . . . .  27
-     14.4.  Deployment Considerations  . . . . . . . . . . . . . . .  28
-     14.5.  Operational Considerations . . . . . . . . . . . . . . .  28
+     14.2.  HNA DM channels  . . . . . . . . . . . . . . . . . . . .  27
+     14.3.  Names are less secure than IP addresses  . . . . . . . .  27
+     14.4.  Names are less volatile than IP addresses  . . . . . . .  28
+     14.5.  Deployment Considerations  . . . . . . . . . . . . . . .  28
+     14.6.  Operational Considerations . . . . . . . . . . . . . . .  29
    15. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  29
    16. Acknowledgment  . . . . . . . . . . . . . . . . . . . . . . .  29
-   17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  29
-   18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
-     18.1.  Normative References . . . . . . . . . . . . . . . . . .  29
+   17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  30
+   18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  30
+     18.1.  Normative References . . . . . . . . . . . . . . . . . .  30
      18.2.  Informative References . . . . . . . . . . . . . . . . .  31
    Appendix A.  HNA Channel Configurations . . . . . . . . . . . . .  35
      A.1.  Homenet Public Zone . . . . . . . . . . . . . . . . . . .  35
@@ -133,9 +134,9 @@ Internet-Draft                public-names                 December 2022
 
 1.  Introduction
 
-   Home network owners may have devices or services hosted on this home
+   Home network owners may have devices or services hosted on their home
    network that they wish to access from the Internet (i.e., from a
-   network outside of the home network).  The use of IPv6 addresess in
+   network outside of the home network).  The use of IPv6 addresesses in
    the home makes the actual network access much simpler, while on the
    other hand, the addresses are much harder to remember, and subject to
    regular renumbering.  To make this situation simpler for typical home
@@ -143,12 +144,11 @@ Internet-Draft                public-names                 December 2022
    addresses of these devices and services to be published in the public
    DNS.
 
-   The names and IP address of the home network are present in the
+   The names and IP address of the home network are made availble in the
    Public Homenet Zone by the Homenet Naming Authority (HNA), which in
    turn instructs the DNS Outsourcing Infrastructure (DOI) to publish
-   the zone on the behalf of the HNA.  This document describes how an
-   HNA can instruct a DOI to publish a Public Homenet Zone on its
-   behalf.
+   the zone on behalf of the HNA.  This document describes how an HNA
+   can instruct a DOI to publish a Public Homenet Zone on its behalf.
 
    The document introduces the Synchronization Channel and the Control
    Channel between the HNA and the Distribution Manager (DM), which is
@@ -165,9 +165,9 @@ Internet-Draft                public-names                 December 2022
 
 
 
-Migault, et al.            Expires 7 June 2023                  [Page 3]
+Migault, et al.           Expires 17 July 2023                  [Page 3]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
    The Synchronization Channel is a zone transfer, with the HNA
@@ -221,9 +221,9 @@ Internet-Draft                public-names                 December 2022
 
 
 
-Migault, et al.            Expires 7 June 2023                  [Page 4]
+Migault, et al.           Expires 17 July 2023                  [Page 4]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
 2.  Terminology
@@ -277,9 +277,9 @@ Internet-Draft                public-names                 December 2022
 
 
 
-Migault, et al.            Expires 7 June 2023                  [Page 5]
+Migault, et al.           Expires 17 July 2023                  [Page 5]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
       HNA synchronizes the Public Homenet Zone, and which then
@@ -333,9 +333,9 @@ Internet-Draft                public-names                 December 2022
 
 
 
-Migault, et al.            Expires 7 June 2023                  [Page 6]
+Migault, et al.           Expires 17 July 2023                  [Page 6]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
    The IPv6 ULA and the private IPv4 addresses may be useful to publish,
@@ -389,9 +389,9 @@ Internet-Draft                public-names                 December 2022
 
 
 
-Migault, et al.            Expires 7 June 2023                  [Page 7]
+Migault, et al.           Expires 17 July 2023                  [Page 7]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
    2.  the registrar may also be providing the outsourcing
@@ -408,24 +408,33 @@ Internet-Draft                public-names                 December 2022
       HNA is able to authenticate itself to the DOI.
 
    *  If the DOI is not the DNS Registrar, then the proof of ownership
-      needs to be established using a protocols.  ACME [RFC8555] for
-      example that will end in the generation of a certificate.  ACME is
-      used here to the purpose of automating the generation of the
-      certificate, the CA may be a specific CA or the DOI.  With that
-      being done, the DOI has a roof of ownership and can proceed as
-      above.
+      needs to be established using some other protocol.  ACME [RFC8555]
+      is one protocol that would allow an owner of an existing domain
+      name to prove their ownership (but requires they have DNS already
+      setup!)  There are other ways such as putting a DOI generated TXT
+      record, or web site contents, as championed by entities like
+      Google's Sitemaster and Postmaster protocols.
+      [I-D.ietf-dnsop-domain-verification-techniques] describes a few
+      ways ownership or control of a domain can be achieved.
 
 5.  Architecture Description
 
    This section provides an overview of the architecture for outsourcing
    the authoritative naming service from the HNA to the DOI.  As a
    consequence, this prevents HNA to handle the DNS traffic from the
-   Internet associated with the resolution of the Homenet Zone.  More
-   specifically, DNS resolution for the Public Homenet Zone (here
+   Internet associated with the resolution of the Homenet Zone.
+
+   The device assigned zone or user configurable zone to use as the
+   domain to publicly serve hostnames in the home network is called the
+   Public Homenet Zone.  In this document, "myhome.example" is used as
+   the example for an enduser owned domain configured as Public Homenet
+   Zone.
+
+   More specifically, DNS resolution for the Public Homenet Zone (here
    myhome.example) from Internet DNSSEC resolvers is handled by the DOI
    as opposed to the HNA.  The DOI benefits from a cloud infrastructure
    while the HNA is dimensioned for home network and as such likely
-   enable to support any load.  In the case the HNA is a CPE,
+   unable to support any load.  In the case the HNA is a CPE,
    outsourcing to the DOI protects the home network against DDoS for
    example.  Of course the DOI needs to be informed dynamically about
    the content of myhome.example.  The description of such a
@@ -433,47 +442,40 @@ Internet-Draft                public-names                 December 2022
 
    Note that Appendix B shows necessary parameters to configure the HNA.
 
-5.1.  Architecture Overview
 
 
 
-
-
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                  [Page 8]
+Migault, et al.           Expires 17 July 2023                  [Page 8]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
+
+5.1.  Architecture Overview
 
   .----------------------------.         .-----------------------------.
   |        Home Network        |         |          Internet           |
-  | .-----------------------.  | Control |  .------------------------. |
-  | |          HNA          |  | Channel |  |          DOI           | |
-  | |   (hidden primary)    |<------------->|   (hidden secondary)   | |
-  | |                       |  | DNSUPD  |  |  Distribution Manager  | |
-  | | .-------------------. |  |         |  |                        | |
-  | | |  Public Homenet   | |  |         |  |  .-------------------. | |
-  | | |       Zone        |<------------------>| Public Homenet Zo | | |
-  | | | myhome.example    | |  |Synchron-|  |  | myhome.example    | | |
-  | | '-------------------' |  | ization |  |  '-------------------' | |
-  | '-----------------------'  |Channel  |  '------------|-----------' |
-  |             ^              |  AXFR   |               |             |
-  |             |              |         |               v             |
-  | .-----------------------.  |         |   .---------------------.   |
-  | | Homenet Authoritative |  |         |   | Public Authoriative |   |
-  | |        Server         |  |         |   | (secondary) Servers |   |
-  | | + myhome.example      |  |         |   | + myhome.example    |   |
-  | | + home.arpa           |  |         |   | + x.y.z.ip6.arpa    |   |
-  | |                       |  |         |   |                     |   |
-  | '-----------------------'  |         |   |                     |   |
-  |        |       ^           |         |   '---------------------'   |
-  |        |       |           |         |     ^            |          |
-  |        |       |           |         |     |            |          |
+  | .-----------------------.  | Control |  .-----------------------.  |
+  | |          HNA          |  | Channel |  |          DOI          |  |
+  | |   (hidden primary)    |<------------->|   (hidden secondary)  |  |
+  | |                       |  | DNSUPD  |  |  Distribution Manager |  |
+  | | .-------------------. |  |         |  |                       |  |
+  | | |  Public Homenet   | |  |         |  |  .-------------------.|  |
+  | | |       Zone        |<------------------>| Public Homenet Zo ||  |
+  | | | myhome.example    | |  |Synchron-|  |  | myhome.example    ||  |
+  | | '-------------------' |  | ization |  |  '-------------------'|  |
+  | '-----------------------'  |Channel  |  |             |         |  |
+  |             ^              |  AXFR   |  |             |         |  |
+  |             |              |         |  |             v         |  |
+  | .-----------------------.  |         |  |.---------------------.|  |
+  | | Homenet Authoritative |  |         |  || Public Authoriative ||  |
+  | |        Server         |  |         |  || (secondary) Servers ||  |
+  | | + myhome.example      |  |         |  || + myhome.example    ||  |
+  | | + home.arpa           |  |         |  || + x.y.z.ip6.arpa    ||  |
+  | | + x.y.z.ip6.arpa      |  |         |  ||                     ||  |
+  | '-----------------------'  |         |  ||                     ||  |
+  |        |       ^           |         |  |'---------------------'|  |
+  |        |       |           |         |  |  ^            |       |  |
+  |        |       |           |         |  '--|------------|-------'  |
   |        v       |           |         |     |            v          |
   |  .----------------------.  |         | .------------------------.  |
   |  |   Homenet Resolver   |  |         | |   Internet Resolvers   |  |
@@ -492,18 +494,16 @@ Internet-Draft                public-names                 December 2022
    Resolver as detailed in further details below.
 
    In this example, The Public Homenet Zone is identified by the
-   Registered Homenet Domain name - myhome.example.  This diagram also
+   Registered Homenet Domain name -- myhome.example.  This diagram also
    shows a reverse IPv6 map being hosted.
 
 
 
 
 
-
-
-Migault, et al.            Expires 7 June 2023                  [Page 9]
+Migault, et al.           Expires 17 July 2023                  [Page 9]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
    The ".local" as well as ".home.arpa" are explicitly not considered as
@@ -511,15 +511,12 @@ Internet-Draft                public-names                 December 2022
    They are resolved locally, but not published as they are local
    content.
 
-   The HNA SHOULD build the Public Homenet Zone in a single zone
-   populated with all resource records that are expected to be published
-   on the Internet.  The use of zone cuts/delegations is NOT
-   RECOMMENDED.
+   The HNA signs the Public Homenet Zone with DNSSEC.
 
-   The HNA also signs the Public Homenet Zone with DNSSEC.  The HNA
-   handles all operations and keying material required for DNSSEC, so
-   there is no provision made in this architecture for transferring
-   private DNSSEC related keying material between the HNA and the DM.
+   The HNA handles all operations and keying material required for
+   DNSSEC, so there is no provision made in this architecture for
+   transferring private DNSSEC related keying material between the HNA
+   and the DM.
 
    Once the Public Homenet Zone has been built, the HNA communicates and
    synchronizes it with the DOI using a primary/secondary setting as
@@ -536,7 +533,8 @@ Internet-Draft                public-names                 December 2022
 
    *  DM Synchronization Channel (Section 7) to synchronize the Public
       Homenet Zone on the HNA and on the DM with the appropriately
-      configured primary/secondary.  This is a zone transfer over TLS.
+      configured primary/secondary.  This is a zone transfer over
+      mutually authenticated TLS.
 
    *  one or more Distribution Channels (Section 8) that distribute the
       Public Homenet Zone from the DM to the Public Authoritative
@@ -557,9 +555,11 @@ Internet-Draft                public-names                 December 2022
 
 
 
-Migault, et al.            Expires 7 June 2023                 [Page 10]
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 10]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
    The DOI is also responsible for ensuring the DS record has been
@@ -571,22 +571,22 @@ Internet-Draft                public-names                 December 2022
    Public Homenet Zone (myhome.example) on the Public Authoritative
    Servers.
 
-   On the other hand, to provide resilience to the Public Homenet Zone
-   in case of WAN connectivity disruption, the Homenet DNS(SEC) Resolver
-   SHOULD be able to perform the resolution on the Homenet Authoritative
-   Servers.  Note that the use of the Homenet resolver enhances privacy
-   since the user on the home network would no longer be leaking
-   interactions with internal services to an external DNS provider and
-   to an on-path observer.  These servers are not expected to be
-   mentioned in the Public Homenet Zone, nor to be accessible from the
-   Internet.  As such their information as well as the corresponding
-   signed DS record MAY be provided by the HNA to the Homenet DNS(SEC)
-   Resolvers, e.g., using HNCP [RFC7788] or a by configuring a trust
-   anchor [I-D.ietf-dnsop-dnssec-validator-requirements].  Such
-   configuration is outside the scope of this document.  Since the scope
-   of the Homenet Authoritative Servers is limited to the home network,
-   these servers are expected to serve the Homenet Zone as represented
-   in Figure 1.
+   In order to provide resilience to the Public Homenet Zone in case of
+   WAN connectivity disruption, the Homenet DNS(SEC) Resolver MUST be
+   able to perform the resolution on the Homenet Authoritative Servers.
+   Note that the use of the Homenet resolver enhances privacy since the
+   user on the home network would no longer be leaking interactions with
+   internal services to an external DNS provider and to an on-path
+   observer.  These servers are not expected to be mentioned in the
+   Public Homenet Zone, nor to be accessible from the Internet.  As such
+   their information as well as the corresponding signed DS record MAY
+   be provided by the HNA to the Homenet DNS(SEC) Resolvers, e.g., using
+   HNCP [RFC7788] or a by configuring a trust anchor
+   [I-D.ietf-dnsop-dnssec-validator-requirements].  Such configuration
+   is outside the scope of this document.  Since the scope of the
+   Homenet Authoritative Servers is limited to the home network, these
+   servers are expected to serve the Homenet Zone as represented in
+   Figure 1.
 
 5.2.  Distribution Manager (DM) Communication Channels
 
@@ -606,22 +606,22 @@ Internet-Draft                public-names                 December 2022
 
    It is worth noting that both DM and HNA need to agree on a common
    configuration to set up the synchronization channel as well as to
-   build and server a coherent Public Homenet Zone.  Typically, the
-   visible NS records of the Public Homenet Zone (built by the HNA)
-   SHOULD remain pointing at the DOI's Public Authoritative Servers' IP
-   address.  Revealing the address of the HNA in the DNS is not
+   build and server a coherent Public Homenet Zone.  As previously
+   noted, the visible NS records of the Public Homenet Zone (built by
+   the HNA) remain pointing at the DOI's Public Authoritative Servers'
+   IP address.  Unless the HNA is able to support the traffic load, the
 
 
 
-Migault, et al.            Expires 7 June 2023                 [Page 11]
+Migault, et al.           Expires 17 July 2023                 [Page 11]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
-   desirable.  In addition, and depending on the configuration of the
-   DOI, the DM also needs to update the parent zone's NS, DS and
-   associated A or AAAA glue records.  Refer to Section 6.2 for more
-   details.
+   HNA SHOULD NOT appear as a visible NS records of the Public Homenet
+   Zone.  In addition, and depending on the configuration of the DOI,
+   the DM also needs to update the parent zone's NS, DS and associated A
+   or AAAA glue records.  Refer to Section 6.2 for more details.
 
    This specification assumes:
 
@@ -660,25 +660,25 @@ Internet-Draft                public-names                 December 2022
 
 6.1.  Information to Build the Public Homenet Zone
 
-   The HNA builds the Public Homenet Zone based on information retrieved
-   from the DM (see Section 6.5).
+   The HNA builds the Public Homenet Zone based on a template that is
+   returned by the DM to the HNA.  Section 6.5 explains how this
+   leverages the AXFR mechanism.
 
 
 
 
 
 
-
-Migault, et al.            Expires 7 June 2023                 [Page 12]
+Migault, et al.           Expires 17 July 2023                 [Page 12]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
-   The information that the HNA needs to build its zone is retrieve by
-   using a DNS AXFR on the Control Channel (see Section 6.5.1) The HNA
-   needs the names and IP addresses of the Public Authoritative Name
-   Servers in order to form the NS records for the zone.  (All contents
-   of the zone must be created by the HNA, because it is DNSSEC signed)
+   In order to build its zone completely, the HNA needs the names (and
+   possibly IP addresses) of the Public Authoritative Name Servers.
+   These are used to populate the NS records for the zone.  All the
+   content of the zone MUST be created by the HNA, because the zone is
+   DNSSEC signed.
 
    In addition, the HNA needs to know what to put into the MNAME of the
    SOA, and only the DOI knows what to put there.  The DM MUST also
@@ -686,20 +686,20 @@ Internet-Draft                public-names                 December 2022
    (SERIAL, RNAME, REFRESH, RETRY, EXPIRE and MINIMUM), however, the HNA
    is free to override these values based upon local configuration.  For
    instance, an HNA might want to change these values if it thinks that
-   a renumbering event if approaching.
+   a renumbering event is approaching.
 
    As the information is necessary for the HNA to proceed and the
    information is associated with the DM, this information exchange is
    mandatory.
 
-   The HNA then perhaps and DNS Update operation to the DOI, updating
-   the DOI with an NS, DS, A and AAAA records.  These indicates where
-   its Synchronization Channel is.  The DOI does not publish this NS
-   record, but uses it to perform zone transfers.
+   The HNA then performs a DNS Update operation to the DOI, updating the
+   DOI with an NS, DS, A and AAAA records.  These indicates where its
+   Synchronization Channel is.  The DOI does not publish this NS record,
+   but uses it to perform zone transfers.
 
 6.2.  Information to build the DNSSEC chain of trust
 
-   The HNA SHOULD provide the hash of the KSK via the DS RRset, so that
+   The HNA MUST provide the hash of the KSK via the DS RRset, so that
    the DOI can provide this value to the parent zone.  A common
    deployment use case is that the DOI is the registrar of the
    Registered Homenet Domain and as such, its relationship with the
@@ -725,25 +725,27 @@ Internet-Draft                public-names                 December 2022
 
 
 
-Migault, et al.            Expires 7 June 2023                 [Page 13]
+Migault, et al.           Expires 17 July 2023                 [Page 13]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
 
-6.3.  Information to set the Synchronization Channel
+6.3.  Information to set up the Synchronization Channel
 
    The HNA works as a hidden primary authoritative DNS server, while the
-   DM works like a secondary.  As a result, the HNA must provide the IP
-   address the DM should use to reach the HNA.  If the HNA detects that
-   it has been renumbered, then it MUST use the Control Channel to
-   update the DOI with its new IPv4 and IPv6 addresses.
+   DM works like a secondary.  As a result, the HNA needs to provide the
+   IP address the DM should use to reach the HNA.
 
-   The Synchronization Channel will be set between that IP address and
-   the IP address of the DM.  By default, the IP address used by the HNA
-   in the Control Channel is considered by the DM and the explicit
-   specification of the IP by the HNA is only OPTIONAL.  The transport
-   channel (including port number) is the same as the one used between
-   the HNA and the DM for the Control Channel.
+   If the HNA detects that it has been renumbered, then it MUST use the
+   Control Channel to update the DOI with the new IPv6 address it has
+   been assigned.
+
+   The Synchronization Channel will be set between the new IPv6 (and
+   IPv4) address and the IP address of the DM.  By default, the IP
+   address used by the HNA in the Control Channel is considered by the
+   DM and the explicit specification of the IP by the HNA is only
+   OPTIONAL.  The transport channel (including port number) is the same
+   as the one used between the HNA and the DM for the Control Channel.
 
 6.4.  Deleting the delegation
 
@@ -765,30 +767,37 @@ Internet-Draft                public-names                 December 2022
    Multiple ways were considered on how the control information could be
    exchanged between the HNA and the DM.
 
-   This specification defines a mechanism that re-use the DNS exchanges
-   format, while the exchange in itself is not a DNS exchange involved
-   in any DNS operations such as DNS resolution.  Note that while
-   information is provided using DNS exchanges, the exchanged
-   information is not expected to be set in any zone file, instead this
-   information is used as commands between the HNA and the DM.
+   This specification defines a mechanism that re-uses the DNS zone
+   transfer format.  Note that while information is provided using DNS
+   exchanges, the exchanged information is not expected to be set in any
+   zone file, instead this information is used as commands between the
+   HNA and the DM.  This was found to be simpler on the home router
+   side, as the HNA already has to have code to deal with all the DNS
+   encodings/decodings.  Inventing a new way to encode the DNS
+   information in, for instance, JSON, seemed to add complexity for no
+   return on investment.
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 14]
+
+Internet-Draft                public-names                  January 2023
+
 
    The Control Channel is not expected to be a long-term session.  After
    a predefined timer - similar to those used for TCP - the Control
    Channel is expected to be terminated - by closing the transport
    channel.  The Control Channel MAY be re-opened at any time later.
 
-   The use of a TLS session tickets [RFC5077] is encouraged.
+   The use of a TLS session tickets [RFC8446], Section 4.6.1 is
+   RECOMMENDED.
 
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 14]
-
-Internet-Draft                public-names                 December 2022
-
-
-   This authentication MAY be based on certificates for both the DM and
-   each HNA.  The DM may also create the initial configuration for the
-   delegation zone in the parent zone during the provisioning process.
+   The authentication of the channel MUST be based on certificates for
+   both the DM and each HNA.  The DM may also create the initial
+   configuration for the delegation zone in the parent zone during the
+   provisioning process.
 
 6.5.1.  Retrieving information for the Public Homenet Zone
 
@@ -798,9 +807,17 @@ Internet-Draft                public-names                 December 2022
 
    To retrieve the necessary information to build the Public Homenet
    Zone, the HNA MUST send a DNS request of type AXFR associated with
-   the Registered Homenet Domain.  The DM MUST respond with a zone
-   template.  The zone template MUST contain a RRset of type SOA, one or
-   multiple RRset of type NS and zero or more RRset of type A or AAAA.
+   the Registered Homenet Domain.
+
+   The zone that is returned by the DM is used by the HNA as a template
+   to build its own zone.
+
+   The zone template MUST contain a RRset of type SOA, one or multiple
+   RRset of type NS and zero or more RRset of type A or AAAA (if the NS
+   are in-domain [RFC8499]).  The zone template will include Time To
+   Live (TTL) values for each RR, and the HNA SHOULD take these as
+   suggested maximum values, but MAY use lower values for operational
+   reasons, such impending renumbering events.
 
    *  The SOA RR indicates to the HNA the value of the MNAME of the
       Public Homenet Zone.
@@ -816,45 +833,36 @@ Internet-Draft                public-names                 December 2022
    The NS RRsets carry the Public Authoritative Servers of the DOI.
    Their associated NAME MUST be the Registered Homenet Domain.
 
-   The TTL and RDATA are those expected to be published on the Public
-   Homenet Zone.  Note that the TTL SHOULD be set following the
-   resolver's guide line [I-D.ietf-dnsop-ns-revalidation]
-   [I-D.ietf-dnsop-dnssec-validator-requirements] with a TTL not
-   exceeding those of the NS.  The RRsets of Type A and AAAA MUST have
-   their NAME matching the NSDNAME of one of the NS RRsets.
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 15]
+Migault, et al.           Expires 17 July 2023                 [Page 15]
 
-Internet-Draft                public-names                 December 2022
+Internet-Draft                public-names                  January 2023
 
+
+   In addition to the considerations above about default TTL, the HNA
+   SHOULD take care to not pick a TTL larger than the parent NS, based
+   upon resolver's guide lines: [I-D.ietf-dnsop-ns-revalidation] and
+   [I-D.ietf-dnsop-dnssec-validator-requirements].  The RRsets of Type A
+   and AAAA MUST have their NAME matching the NSDNAME of one of the NS
+   RRsets.
 
    Upon receiving the response, the HNA MUST validate format and
    properties of the SOA, NS and A or AAAA RRsets.  If an error occurs,
    the HNA MUST stop proceeding and MUST log an error.  Otherwise, the
    HNA builds the Public Homenet Zone by setting the MNAME value of the
    SOA as indicated by the SOA provided by the AXFR response.  The HNA
-   SHOULD set the value of NAME, REFRESH, RETRY, EXPIRE and MINIMUM of
-   the SOA to those provided by the AXFR response.  The HNA MUST insert
-   the NS and corresponding A or AAAA RRset in its Public Homenet Zone.
-   The HNA MUST ignore other RRsets.  If an error message is returned by
-   the DM, the HNA MUST proceed as a regular DNS resolution.  Error
-   messages SHOULD be logged for further analysis.  If the resolution
-   does not succeed, the outsourcing operation is aborted and the HNA
-   MUST close the Control Channel.
+   MUST not exceed the values of NAME, REFRESH, RETRY, EXPIRE and
+   MINIMUM of the SOA to those provided by the AXFR response.  The HNA
+   MUST insert the NS and corresponding A or AAAA RRset in its Public
+   Homenet Zone.  The HNA MUST ignore other RRsets.
+
+   If an error message is returned by the DM, the HNA MUST proceed as a
+   regular DNS resolution.  Error messages SHOULD be logged for further
+   analysis.  If the resolution does not succeed, the outsourcing
+   operation is aborted and the HNA MUST close the Control Channel.
 
 6.5.2.  Providing information for the DNSSEC chain of trust
 
@@ -874,30 +882,38 @@ Internet-Draft                public-names                 December 2022
    Though the pre-requisite section MAY be ignored by the DM, this value
    is fixed to remain coherent with a standard DNS update.
 
+
+
+
+
+
+
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 16]
+
+Internet-Draft                public-names                  January 2023
+
+
    Upon receiving the DNS update request, the DM reads the DS RRset in
    the Update section.  The DM checks ZNAME corresponds to the parent
-   zone.  The DM SHOULD ignore the Pre-requisite and Additional Data
+   zone.  The DM MUST ignore the Pre-requisite and Additional Data
    sections, if present.  The DM MAY update the TTL value before
    updating the DS RRset in the parent zone.  Upon a successful update,
    the DM should return a NOERROR response as a commitment to update the
-   parent zone with the provided DS.  An error indicates the MD does not
+   parent zone with the provided DS.  An error indicates the DM does not
    update the DS, and the HNA needs to act accordingly or other method
    should be used by the HNA.
 
-   The regular DNS error message SHOULD be returned to the HNA when an
+   The regular DNS error message MUST be returned to the HNA when an
    error occurs.  In particular a FORMERR is returned when a format
    error is found, this includes when unexpected RRSets are added or
    when RRsets are missing.  A SERVFAIL error is returned when a
    internal error is encountered.  A NOTZONE error is returned when
    update and Zone sections are not coherent, a NOTAUTH error is
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 16]
-
-Internet-Draft                public-names                 December 2022
-
-
    returned when the DM is not authoritative for the Zone section.  A
    REFUSED error is returned when the DM refuses to proceed to the
    configuration and the requested action.
@@ -917,16 +933,26 @@ Internet-Draft                public-names                 December 2022
    addresses associated with the primary (or the HNA).
 
    The reason to provide these IP addresses is to keep them unpublished
-   and prevent them to be resolved.
+   and prevent them to be resolved.  It is RECOMMENDED the IP address of
+   the HNA is randomly chosen to prevent it from being easily discovered
+   as well.
 
    Upon receiving the DNS update request, the DM reads the IP addresses
-   and checks the ZNAME corresponds to the parent zone.  The DM SHOULD
+   and checks the ZNAME corresponds to the parent zone.  The DM MUST
    ignore a non-empty Pre-requisite section.  The DM configures the
    secondary with the IP addresses and returns a NOERROR response to
    indicate it is committed to serve as a secondary.
 
    Similarly to Section 6.5.2, DNS errors are used and an error
    indicates the DM is not configured as a secondary.
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 17]
+
+Internet-Draft                public-names                  January 2023
+
 
 6.5.4.  HNA instructing deleting the delegation
 
@@ -946,13 +972,6 @@ Internet-Draft                public-names                 December 2022
    indicate the delegation has been deleted.  Similarly to
    Section 6.5.2, DNS errors are used and an error indicates the
    delegation has not been deleted.
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 17]
-
-Internet-Draft                public-names                 December 2022
-
 
 6.6.  Securing the Control Channel
 
@@ -975,12 +994,21 @@ Internet-Draft                public-names                 December 2022
    described in Appendix A.1.
 
    The HNA will validate the DM's control channel certificate by doing
-   [RFC6125]/[I-D.ietf-uta-rfc6125bis] DNS-ID check on the name.
+   an [I-D.ietf-uta-rfc6125bis] DNS-ID check on the name.
 
    In the future, other specifications may consider protecting DNS
    messages with other transport layers, among others, DNS over DTLS
    [RFC8094], or DNS over HTTPs (DoH) [RFC8484] or DNS over QUIC
    [RFC9250].
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 18]
+
+Internet-Draft                public-names                  January 2023
+
 
 7.  Synchronization Channel
 
@@ -989,26 +1017,17 @@ Internet-Draft                public-names                 December 2022
    the Control Channel and the Synchronization Channel are by
    construction different channels even though there they may use the
    same IP address.  Suppose the HNA and the DM are using a single IP
-   address and let designate by XX.  YYYY and ZZZZ the various ports
+   address and let designate by XX.  YYYYY and ZZZZZ the various ports
    involved in the communications.
 
    The Control Channel is between the HNA working as a client using port
-   number YYYY (a high range port) toward a service provided by the DM
-   at port 853, when using DoT.
+   number YYYYY (an ephemeral also commonly designated as high range
+   port) toward a service provided by the DM at port 853, when using
+   DoT.
 
    On the other hand, the Synchronization Channel is set between the DM
-   working as a client using port ZZZZ (another high range port) toward
+   working as a client using port ZZZZZ (another ephemeral port) toward
    a service provided by the HNA at port 853.
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 18]
-
-Internet-Draft                public-names                 December 2022
-
 
    As a result, even though the same pair of IP addresses may be
    involved the Control Channel and the Synchronization Channel are
@@ -1022,16 +1041,30 @@ Internet-Draft                public-names                 December 2022
    Part of this zone update process involves the owner of the zone (the
    hidden primary, the HNA) sending a DNS Notify to the secondaries.  In
    this situation the only destination that is known by the HNA is the
-   DM's Control Channel, and so DNS updates are to sent over the Control
-   Channel, secured by TLS.  DNS Notifies are not critical: they always
-   cause the DM to use the Synchronization channel to do an SOA Query to
-   detect any updates, and if there are some, then to transfer the zone.
+   DM's Control Channel, and so DNS notifies are sent over the Control
+   Channel, secured by a mutually authenticated TLS.
+
+   Please note that, DNS Notifies are not critical to normal operation,
+   as the DM will be checking the zone regularly based upon SOA record
+   comments.  DNS Notifies do speed things up as they cause the DM to
+   use the Synchronization channel to immediately do an SOA Query to
+   detect any updates.  If there are any changes then the DM immediately
+   transfers the zone updates.
 
    This specification standardizes the use of a primary / secondary
    mechanism [RFC1996] rather than an extended series of DNS update
    messages.  The primary / secondary mechanism was selected as it
    scales better and avoids DoS attacks.  As this AXFR runs over a TCP
-   channel secured by TLS, then DNS Update is just more complicated.
+   channel secured by a mutually authenticated TLS, then DNS Update is
+   just more complicated.
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 19]
+
+Internet-Draft                public-names                  January 2023
+
 
    Note that this document provides no standard way to distribute a DNS
    primary between multiple devices.  As a result, if multiple devices
@@ -1052,19 +1085,9 @@ Internet-Draft                public-names                 December 2022
 
    [RFC9103] makes no requirements or recommendations on any extended
    key usage flags for zone transfers, and this document adopts the view
-   that none should be required, but that if there are any set, they
-   should be tolerated and ignored.  A revision to this specification
-   could change this, and if there is a revision to [RFC9103] to clarify
-   this, then this document should be marked as updated as well.
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 19]
-
-Internet-Draft                public-names                 December 2022
-
+   that none should be required.  and leave it up to [RFC9103] to get
+   updated for this document's normative reference to be considered
+   updated as well.
 
    For the TLS server certificate, the HNA uses the same certificate
    which it uses to authenticate itself to the DM for the Control
@@ -1078,8 +1101,8 @@ Internet-Draft                public-names                 December 2022
 
    When the HNA expects to do zone transfer authorization by certificate
    only, the HNA MAY still apply an ACL on inbound connection requests
-   to avoid load.  In this case, the HNA SHOULD regularly check (via a
-   DNS resolution) that the address(es) of the DM in the filter is still
+   to avoid load.  In this case, the HNA MUST regularly check (via a DNS
+   resolution) that the address(es) of the DM in the filter is still
    valid.
 
 8.  DM Distribution Channel
@@ -1090,12 +1113,21 @@ Internet-Draft                public-names                 December 2022
    scope of this document, and there are many existing solutions
    available, e.g., rsync, DNS AXFR, REST, DB copy.
 
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 20]
+
+Internet-Draft                public-names                  January 2023
+
+
 9.  HNA Security Policies
 
    The HNA as hidden primary processes only a limited message exchanges
-   on it's WAN interface(s).  This should be enforced using security
-   policies - to allow only a subset of DNS requests to be received by
-   HNA.
+   on it's Internet facing interface.  This should be enforced using
+   security policies - to allow only a subset of DNS requests to be
+   received by HNA.
 
    The Hidden Primary Server on the HNA differs the regular
    authoritative server for the home network due to:
@@ -1109,31 +1141,19 @@ Internet-Draft                public-names                 December 2022
       synchronize with the DM, not to serve any zones to end users, or
       the public Internet.  This results in a limited number of possible
       exchanges (AXFR/IXFR) with a small number of IP addresses and an
-      implementation SHOULD enable filtering policies: it should only
+      implementation MUST enable filtering policies: it should only
       respond to queries that are required to do zone transfers.  That
       list includes SOA queries and AXFR/IXFR queries.
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 20]
-
-Internet-Draft                public-names                 December 2022
-
-
-   The HNA SHOULD drop any packets arriving on the WAN interface that
-   are not issued from the DM.
 
 10.  Public Homenet Reverse Zone
 
    Public Homenet Reverse Zone works similarly to the Public Homenet
-   Zone.  The main difference is that ISP that provides the IP
-   connectivity is likely also the owner of the corresponding reverse
-   zone and administrating the Reverse Public Authoritative Servers.
-   The configuration and the setting of the Synchronization Channel and
-   Control Channel can largely be automated using DHCPv6 messages that
-   are part of the IPv6 Prefix Delegation process.
+   Zone.  The main difference is that ISP that provides the IPv6
+   connectivity is likely also the owner of the corresponding IPv6
+   reverse zone and administrating the Reverse Public Authoritative
+   Servers.  The configuration and the setting of the Synchronization
+   Channel and Control Channel can largely be automated using DHCPv6
+   messages that are part of the IPv6 Prefix Delegation process.
 
    The Public Homenet Zone is associated with a Registered Homenet
    Domain and the ownership of that domain requires a specific
@@ -1150,6 +1170,14 @@ Internet-Draft                public-names                 December 2022
    quite common for the Reverse Homenet Zone as the ISP owns the IP
    address or IP prefix.
 
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 21]
+
+Internet-Draft                public-names                  January 2023
+
+
    More specifically, a common case is that the upstream ISP provides
    the IPv6 prefix to the Homenet with a IA_PD [RFC8415] option and
    manages the DOI of the associated reverse zone.
@@ -1163,20 +1191,13 @@ Internet-Draft                public-names                 December 2022
    zone, the ISP knows exactly what addresses have been delegated.  The
    HNA SHOULD therefore always originate Synchronization Channel updates
    from an IP address within the zone that is being updated.
+   Exceptionally, the synchronization channel might be from a different
+   zone delegated to the HNA (if there were multiple zones, or
+   renumbering events were in progress).
 
    For example, if the ISP has assigned 2001:db8:f00d::/64 to the WAN
    interface (by DHCPv6, or PPP/RA), then the HNA should originate
    Synchronization Channel updates from, for example, 2001:db8:f00d::2.
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 21]
-
-Internet-Draft                public-names                 December 2022
-
 
    An ISP that has delegated 2001:db8:aeae::/56 to the HNA via
    DHCPv6-PD, then HNA should originate Synchronization Channel updates
@@ -1206,12 +1227,20 @@ Internet-Draft                public-names                 December 2022
    [RFC7368] in Section 3.7.3 recommends DNSSEC to be deployed on both
    the authoritative server and the resolver.
 
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 22]
+
+Internet-Draft                public-names                  January 2023
+
+
    The resolver side is out of scope of this document, and only the
    authoritative part of the server is considered.  Other documents such
    as [RFC5011] deal with continuous update of trust anchors required
    for operation of a DNSSEC resolver.
 
-   It is RECOMMENDED the HNA sign the Public Homenet Zone.
+   The HNA MUST DNSSEC sign the Public Homenet Zone and the Public
+   Reverse Zone.
 
    Secure delegation is achieved only if the DS RRset is properly set in
    the parent zone.  Secure delegation can be performed by the HNA or
@@ -1226,13 +1255,9 @@ Internet-Draft                public-names                 December 2022
    initialization will be required, and that will be specific to the
    infrastructure involved.  It is beyond the scope of this document.
 
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 22]
-
-Internet-Draft                public-names                 December 2022
-
+   There may be some situations where the HNA is unable to arrange for
+   secure delegation of the zones, but the HNA MUST still sign the
+   zones.
 
 12.  Renumbering
 
@@ -1257,6 +1282,14 @@ Internet-Draft                public-names                 December 2022
    prepare the transition to the new prefix.  During a period of time,
    the two prefixes old and new coexist, before the old prefix is
    completely removed.  New resources records containing the new prefix
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 23]
+
+Internet-Draft                public-names                  January 2023
+
+
    SHOULD be published, while the old resource records with the old
    prefixes SHOULD be withdrawn.  If the HNA anticipates that period of
    overlap is long (perhaps due to knowledge of router and DHCPv6
@@ -1270,7 +1303,7 @@ Internet-Draft                public-names                 December 2022
    HNA, where ISPs do not properly remember what prefixes have been
    assigned to which user.
 
-   An HNA that boots up SHOULD immediately use the Control Channel to
+   An HNA that boots up MUST immediately use the Control Channel to
    update the location for the Synchronization Channel.  This is a
    reasonable thing to do on every boot, as the HNA has no idea how long
    it has been offline, or if the (DNSSEC) zone has perhaps expired
@@ -1282,14 +1315,6 @@ Internet-Draft                public-names                 December 2022
    online.  If the HNA is sure that the prefix has not changed, then it
    should use the previously known addresses, with a very low TTL.
 
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 23]
-
-Internet-Draft                public-names                 December 2022
-
-
    Although the new and old IP addresses may be stored in the Public
    Homenet Zone, it is RECOMMENDED that only the newly reachable IP
    addresses be published.
@@ -1298,14 +1323,14 @@ Internet-Draft                public-names                 December 2022
    Reverse Zone has to be populated as soon as possible, and the old
    Public Homenet Reverse Zone will be deleted by the owner of the zone
    (and the owner of the old prefix which is usually the ISP) once the
-   prefix is no longer assigned to the HNA.  The ISP SHOULD ensure that
+   prefix is no longer assigned to the HNA.  The ISP MUST ensure that
    the DNS cache has expired before re-assigning the prefix to a new
    home network.  This may be enforced by controlling the TTL values.
 
    To avoid reachability disruption, IP connectivity information
-   provided by the DNS SHOULD be coherent with the IP in use.  In our
-   case, this means the old IP address SHOULD NOT be provided via the
-   DNS when it is not reachable anymore.
+   provided by the DNS MUST be coherent with the IP in use.  In our
+   case, this means the old IP address MUST NOT be provided via the DNS
+   when it is not reachable anymore.
 
    In the make-before-break scenario, it is possible to make the
    transition seamless.  Let T be the TTL associated with a RRset of the
@@ -1313,6 +1338,13 @@ Internet-Draft                public-names                 December 2022
    replaces the old IP address in the Homenet Zone, and
    Time_OLD_UNREACHABLE the time the old IP will not be reachable
    anymore.
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 24]
+
+Internet-Draft                public-names                  January 2023
+
 
    In the case of the make-before-break, seamless reachability is
    provided as long as Time_OLD_UNREACHABLE - T_NEW > (2 * T).  If this
@@ -1328,23 +1360,6 @@ Internet-Draft                public-names                 December 2022
 
    Outsourcing the DNS Authoritative service from the HNA to a third
    party raises a few privacy related concerns.
-
-
-
-
-
-
-
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 24]
-
-Internet-Draft                public-names                 December 2022
-
 
    The Public Homenet Zone lists the names of services hosted in the
    home network.  Combined with blocking of AXFR queries, the use of
@@ -1379,6 +1394,14 @@ Internet-Draft                public-names                 December 2022
    The access control may consist of an IP source address range, or
    access may be restricted via some VPN functionality.  The main
    advantages of publishing the name are that service may be access by
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 25]
+
+Internet-Draft                public-names                  January 2023
+
+
    the same name both within the home and outside the home and that the
    DNS resolution can be handled similarly within the home and outside
    the home.  This considerably eases the ability to use VPNs where the
@@ -1394,19 +1417,11 @@ Internet-Draft                public-names                 December 2022
    carefully.  In split-horizon-DNS, names are designated with internal
    names that can only be resolved within the corporate network.  When
    such strategy is applied to homenet, VPNs needs to be both configured
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 25]
-
-Internet-Draft                public-names                 December 2022
-
-
    with a naming resolution policies and routing policies.  Such
    approach might be reasonable with a single VPN, but maintaining a
    coherent DNS space and IP space among various VPNs comes with serious
    complexities.  Firstly, if multiple homenets are using the same
-   domain name - like home.arpa - it becomes difficult to determine on
+   domain name -- like home.arpa -- it becomes difficult to determine on
    which network the resolution should be performed.  As a result,
    homenets should at least be differentiated by a domain name.
    Secondly, the use of split-horizon-DNS requires each VPN being
@@ -1425,17 +1440,32 @@ Internet-Draft                public-names                 December 2022
 
 14.  Security Considerations
 
-   This document exposes a mechanism that prevents the HNA from being
-   exposed to queries from the Internet.  The HNA never answers DNS
-   requests from the Internet.  These requests are instead served by the
-   DOI.
+   The HNA never answers DNS requests from the Internet.  These requests
+   are instead served by the DOI.
 
    While this limits the level of exposure of the HNA, the HNA still has
    some exposure to attacks from the Internet.  This section analyses
    the attack surface associated with these communications, the data
    published by the DOI, as well as operational considerations.
 
-14.1.  HNA DM channels
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 26]
+
+Internet-Draft                public-names                  January 2023
+
+
+14.1.  Registered Homenet Domain
+
+   The DOI MUST NOT serve any Public Homenet Zone that it has not strong
+   confidence the HNA owns the Registered Homenet Domain.  Proof of
+   ownership is outside the document and is assumed such phase has
+   preceded the outsourcing of the zone.
+
+14.2.  HNA DM channels
 
    The channels between HNA and DM are mutually authenticated and
    encrypted with TLS [RFC8446] and its associated security
@@ -1449,14 +1479,6 @@ Internet-Draft                public-names                 December 2022
    DM during the setup of the Synchronization Channel.  (Alternatively,
    the HNA is configured with an ACL from which Synchronization Channel
    connections will originate)
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 26]
-
-Internet-Draft                public-names                 December 2022
-
 
    The Control Channel and the Synchronization Channel respectively
    follow [RFC7858] and [RFC9103] guidelines.
@@ -1475,7 +1497,7 @@ Internet-Draft                public-names                 December 2022
    in which case DM and RDM might be less exposed to attacks - as
    communications within a network.
 
-14.2.  Names are less secure than IP addresses
+14.3.  Names are less secure than IP addresses
 
    This document describes how an end user can make their services and
    devices from their home network reachable on the Internet by using
@@ -1484,13 +1506,21 @@ Internet-Draft                public-names                 December 2022
    addresses.  IPv4 Addresses are 4 bytes long leading to 2**32
    possibilities.  With IPv6 addresses, the Interface Identifier is 64
    bits long leading to up to 2^64 possibilities for a given subnetwork.
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 27]
+
+Internet-Draft                public-names                  January 2023
+
+
    This is not to mention that the subnet prefix is also of 64 bits
    long, thus providing up to 2^64 possibilities.  On the other hand,
    names used either for the home network domain or for the devices
    present less entropy (livebox, router, printer, nicolas, jennifer,
    ...) and thus potentially exposes the devices to dictionary attacks.
 
-14.3.  Names are less volatile than IP addresses
+14.4.  Names are less volatile than IP addresses
 
    IP addresses may be used to locate a device, a host or a service.
    However, home networks are not expected to be assigned a time
@@ -1507,14 +1537,7 @@ Internet-Draft                public-names                 December 2022
    that reason PTR DNS queries and MAY instead be configured to return
    with NXDOMAIN.
 
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 27]
-
-Internet-Draft                public-names                 December 2022
-
-
-14.4.  Deployment Considerations
+14.5.  Deployment Considerations
 
    The HNA is expected to sign the DNSSEC zone and as such hold the
    private KSK/ZSK.
@@ -1524,7 +1547,7 @@ Internet-Draft                public-names                 December 2022
    that they will access both of them.  If the HNA is run in a home
    router with a secure element (SE) or TPM, storing the private keys in
    the secure element would be a useful precaution.  The DNSSEC keys are
-   needed on an hourly to weekly basis, but not more often.
+   generally needed on an hourly to weekly basis, but not more often.
 
    While there is some risk that the DNSSEC keys might be disclosed by
    malicious parties, the bigger risk is that they will simply be lost
@@ -1537,7 +1560,17 @@ Internet-Draft                public-names                 December 2022
    protection, and should ideally be backed up to offline storage.
    (Such as a USB key)
 
-14.5.  Operational Considerations
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 28]
+
+Internet-Draft                public-names                  January 2023
+
+
+14.6.  Operational Considerations
 
    HomeNet technologies makes it easier to expose devices and services
    to the Internet.  This imposes broader operational considerations for
@@ -1558,17 +1591,6 @@ Internet-Draft                public-names                 December 2022
       need to deploy additional mitigations to ensure that attacks do
       not originate from their networks.  The use of RFC8520 (MUD)
       filters is one such method.
-
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 28]
-
-Internet-Draft                public-names                 December 2022
-
 
 15.  IANA Considerations
 
@@ -1594,6 +1616,16 @@ Internet-Draft                public-names                 December 2022
    At last the authors would like to thank Kiran Makhijani for her in-
    depth review that contributed in shaping the final version.
 
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 29]
+
+Internet-Draft                public-names                  January 2023
+
+
 17.  Contributors
 
    The co-authors would like to thank Chris Griffiths and Wouter
@@ -1614,17 +1646,6 @@ Internet-Draft                public-names                 December 2022
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
               <https://www.rfc-editor.org/info/rfc1034>.
-
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 29]
-
-Internet-Draft                public-names                 December 2022
-
 
    [RFC1918]  Rekhter, Y., Moskowitz, B., Karrenberg, D., de Groot, G.
               J., and E. Lear, "Address Allocation for Private
@@ -1654,12 +1675,12 @@ Internet-Draft                public-names                 December 2022
               Existence", RFC 5155, DOI 10.17487/RFC5155, March 2008,
               <https://www.rfc-editor.org/info/rfc5155>.
 
-   [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
-              Verification of Domain-Based Application Service Identity
-              within Internet Public Key Infrastructure Using X.509
-              (PKIX) Certificates in the Context of Transport Layer
-              Security (TLS)", RFC 6125, DOI 10.17487/RFC6125, March
-              2011, <https://www.rfc-editor.org/info/rfc6125>.
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 30]
+
+Internet-Draft                public-names                  January 2023
+
 
    [RFC7344]  Kumari, W., Gudmundsson, O., and G. Barwood, "Automating
               DNSSEC Delegation Trust Maintenance", RFC 7344,
@@ -1675,13 +1696,6 @@ Internet-Draft                public-names                 December 2022
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 30]
-
-Internet-Draft                public-names                 December 2022
-
-
    [RFC8375]  Pfister, P. and T. Lemon, "Special-Use Domain
               'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
               <https://www.rfc-editor.org/info/rfc8375>.
@@ -1689,6 +1703,10 @@ Internet-Draft                public-names                 December 2022
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
+
+   [RFC8499]  Hoffman, P., Sullivan, A., and K. Fujiwara, "DNS
+              Terminology", BCP 219, RFC 8499, DOI 10.17487/RFC8499,
+              January 2019, <https://www.rfc-editor.org/info/rfc8499>.
 
    [RFC9103]  Toorop, W., Dickinson, S., Sahib, S., Aras, P., and A.
               Mankin, "DNS Zone Transfer over TLS", RFC 9103,
@@ -1707,6 +1725,22 @@ Internet-Draft                public-names                 December 2022
               draft-ietf-dnsop-dnssec-validator-requirements-01, 13 May
               2022, <https://www.ietf.org/archive/id/draft-ietf-dnsop-
               dnssec-validator-requirements-01.txt>.
+
+   [I-D.ietf-dnsop-domain-verification-techniques]
+              Sahib, S. K., Huque, S., and P. Wouters, "Survey of Domain
+              Verification Techniques using DNS", Work in Progress,
+              Internet-Draft, draft-ietf-dnsop-domain-verification-
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 31]
+
+Internet-Draft                public-names                  January 2023
+
+
+              techniques-00, 28 July 2022,
+              <https://www.ietf.org/archive/id/draft-ietf-dnsop-domain-
+              verification-techniques-00.txt>.
 
    [I-D.ietf-dnsop-ns-revalidation]
               Huque, S., Vixie, P. A., and R. Dolmans, "Delegation
@@ -1729,14 +1763,6 @@ Internet-Draft                public-names                 December 2022
               draft-richardson-homerouter-provisioning-02, 14 November
               2021, <https://www.ietf.org/archive/id/draft-richardson-
               homerouter-provisioning-02.txt>.
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 31]
-
-Internet-Draft                public-names                 December 2022
-
 
    [REBIND]   "DNS rebinding", n.d.,
               <https://en.wikipedia.org/wiki/DNS_rebinding>.
@@ -1761,6 +1787,13 @@ Internet-Draft                public-names                 December 2022
               DOI 10.17487/RFC4192, September 2005,
               <https://www.rfc-editor.org/info/rfc4192>.
 
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 32]
+
+Internet-Draft                public-names                  January 2023
+
+
    [RFC4193]  Hinden, R. and B. Haberman, "Unique Local IPv6 Unicast
               Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
               <https://www.rfc-editor.org/info/rfc4193>.
@@ -1773,26 +1806,11 @@ Internet-Draft                public-names                 December 2022
               Trust Anchors", STD 74, RFC 5011, DOI 10.17487/RFC5011,
               September 2007, <https://www.rfc-editor.org/info/rfc5011>.
 
-   [RFC5077]  Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig,
-              "Transport Layer Security (TLS) Session Resumption without
-              Server-Side State", RFC 5077, DOI 10.17487/RFC5077,
-              January 2008, <https://www.rfc-editor.org/info/rfc5077>.
-
    [RFC6092]  Woodyatt, J., Ed., "Recommended Simple Security
               Capabilities in Customer Premises Equipment (CPE) for
               Providing Residential IPv6 Internet Service", RFC 6092,
               DOI 10.17487/RFC6092, January 2011,
               <https://www.rfc-editor.org/info/rfc6092>.
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 32]
-
-Internet-Draft                public-names                 December 2022
-
 
    [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
               RFC 6749, DOI 10.17487/RFC6749, October 2012,
@@ -1822,6 +1840,16 @@ Internet-Draft                public-names                 December 2022
               RFC 7368, DOI 10.17487/RFC7368, October 2014,
               <https://www.rfc-editor.org/info/rfc7368>.
 
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 33]
+
+Internet-Draft                public-names                  January 2023
+
+
    [RFC7404]  Behringer, M. and E. Vyncke, "Using Only Link-Local
               Addressing inside an IPv6 Network", RFC 7404,
               DOI 10.17487/RFC7404, November 2014,
@@ -1840,16 +1868,6 @@ Internet-Draft                public-names                 December 2022
               DOI 10.17487/RFC8094, February 2017,
               <https://www.rfc-editor.org/info/rfc8094>.
 
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 33]
-
-Internet-Draft                public-names                 December 2022
-
-
    [RFC8415]  Mrugalski, T., Siodelski, M., Volz, B., Yourtchenko, A.,
               Richardson, M., Jiang, S., Lemon, T., and T. Winters,
               "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)",
@@ -1859,10 +1877,6 @@ Internet-Draft                public-names                 December 2022
    [RFC8484]  Hoffman, P. and P. McManus, "DNS Queries over HTTPS
               (DoH)", RFC 8484, DOI 10.17487/RFC8484, October 2018,
               <https://www.rfc-editor.org/info/rfc8484>.
-
-   [RFC8499]  Hoffman, P., Sullivan, A., and K. Fujiwara, "DNS
-              Terminology", BCP 219, RFC 8499, DOI 10.17487/RFC8499,
-              January 2019, <https://www.rfc-editor.org/info/rfc8499>.
 
    [RFC8501]  Howard, L., "Reverse DNS in IPv6 for Internet Service
               Providers", RFC 8501, DOI 10.17487/RFC8501, November 2018,
@@ -1883,6 +1897,15 @@ Internet-Draft                public-names                 December 2022
               with Tickets", RFC 8672, DOI 10.17487/RFC8672, October
               2019, <https://www.rfc-editor.org/info/rfc8672>.
 
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 34]
+
+Internet-Draft                public-names                  January 2023
+
+
    [RFC8978]  Gont, F., Žorž, J., and R. Patterson, "Reaction of IPv6
               Stateless Address Autoconfiguration (SLAAC) to Flash-
               Renumbering Events", RFC 8978, DOI 10.17487/RFC8978, March
@@ -1898,13 +1921,6 @@ Internet-Draft                public-names                 December 2022
               Dedicated QUIC Connections", RFC 9250,
               DOI 10.17487/RFC9250, May 2022,
               <https://www.rfc-editor.org/info/rfc9250>.
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 34]
-
-Internet-Draft                public-names                 December 2022
-
 
    [RFC9276]  Hardaker, W. and V. Dukhovni, "Guidance for NSEC3
               Parameter Settings", BCP 236, RFC 9276,
@@ -1938,6 +1954,14 @@ A.1.  Homenet Public Zone
 
    *  the HNA credentials used by the DM for its authentication.
 
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 35]
+
+Internet-Draft                public-names                  January 2023
+
+
    The HNA will need to select an IP address for communication for the
    Synchronization Channel.  This is typically the WAN address of the
    CPE, but could be an IPv6 LAN address in the case of a home with
@@ -1954,13 +1978,6 @@ A.1.  Homenet Public Zone
 
    Similarly, if the HNA is provided by a registrar, the HNA may be
    handed pre-configured to end user.
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 35]
-
-Internet-Draft                public-names                 December 2022
-
 
    In the absence of specific pre-established relation, these pieces of
    information may be entered manually by the end user.  In order to
@@ -1991,6 +2008,16 @@ Appendix B.  Information Model for Outsourced information
    owner will need to configure these settings via an administrative
    interface.
 
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 36]
+
+Internet-Draft                public-names                  January 2023
+
+
    By defining a standard format (in JSON) for this configuration
    information, the user/owner may be able to just copy and paste a
    configuration blob from the service provider into the administrative
@@ -2004,19 +2031,6 @@ Appendix B.  Information Model for Outsourced information
    necessary to establish a secure channel between the HNA and the DM as
    well as to specify the DNS zone that is in the scope of the
    communication.
-
-
-
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 36]
-
-Internet-Draft                public-names                 December 2022
-
 
    hna-configuration = {
      "registered_domain" : tstr,
@@ -2050,6 +2064,16 @@ Internet-Draft                public-names                 December 2022
       parameter is mandatory.
 
    Distribution Manager notification address (dm)  The associated FQDNs
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 37]
+
+Internet-Draft                public-names                  January 2023
+
+
       or IP addresses of the DM to which DNS notifies should be sent.
       This parameter is mandatory.  IP addresses are optional and the
       FQDN is sufficient and preferred.  If there are concerns about the
@@ -2064,16 +2088,6 @@ Internet-Draft                public-names                 December 2022
    the DM during the TLS session establishment.
 
    Supported Transport (dm_transport):  The transport that carries the
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 37]
-
-Internet-Draft                public-names                 December 2022
-
-
       DNS exchanges between the HNA and the DM.  Typical value is "DoT"
       but it may be extended in the future with "DoH", "DoQ" for
       example.  This parameter is optional and by default the HNA uses
@@ -2103,6 +2117,19 @@ Internet-Draft                public-names                 December 2022
       and when not specified, a self-signed certificate is used.
 
    Distribution Manager AXFR permission netmask (dm_acl):  The subnet
+
+
+
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 38]
+
+Internet-Draft                public-names                  January 2023
+
+
       from which the CPE should accept SOA queries and AXFR requests.  A
       subnet is used in the case where the DOI consists of a number of
       different systems.  An array of addresses is permitted.  This
@@ -2122,13 +2149,6 @@ Internet-Draft                public-names                 December 2022
        would be derived from a public attribute of the device, such as a
        serial number (see Appendix C or
        [I-D.richardson-homerouter-provisioning] for more details ).
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 38]
-
-Internet-Draft                public-names                 December 2022
-
 
    2.  The forward zone outsourcing may be provided by the Internet
        Service Provider.  In this case, the use of
@@ -2154,6 +2174,18 @@ Appendix C.  Example: A manufacturer provisioned HNA product flow
    This scenario is one where a homenet router device manufacturer
    decides to offer DNS hosting as a value add.
 
+
+
+
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 39]
+
+Internet-Draft                public-names                  January 2023
+
+
    [I-D.richardson-homerouter-provisioning] describes a process for a
    home router credential provisioning system.  The outline of it is
    that near the end of the manufacturing process, as part of the
@@ -2171,20 +2203,6 @@ Appendix C.  Example: A manufacturer provisioned HNA product flow
    for it.
 
    The configuration would look like:
-
-
-
-
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 39]
-
-Internet-Draft                public-names                 December 2022
-
 
    {
      "dm" : "2001:db8:1234:111:222::2",
@@ -2206,7 +2224,6 @@ Authors' Addresses
    8275 Trans Canada Route
    Saint Laurent, QC  4S 0B6
    Canada
-
    Email: daniel.migault@ericsson.com
 
 
@@ -2215,8 +2232,14 @@ Authors' Addresses
    2000 Seaport Blvd
    Redwood City,  94063
    United States of America
-
    Email: ralf.weber@nominum.com
+
+
+
+
+Migault, et al.           Expires 17 July 2023                 [Page 40]
+
+Internet-Draft                public-names                  January 2023
 
 
    Michael Richardson
@@ -2224,7 +2247,6 @@ Authors' Addresses
    470 Dawson Avenue
    Ottawa, ON  K1Z 5V7
    Canada
-
    Email: mcr+ietf@sandelman.ca
 
 
@@ -2233,15 +2255,6 @@ Authors' Addresses
    Weegschaalstraat 3
    5632CW Eindhoven
    Netherlands
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 40]
-
-Internet-Draft                public-names                 December 2022
-
-
    Email: v6ops@globis.net
 
 
@@ -2280,17 +2293,4 @@ Internet-Draft                public-names                 December 2022
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Migault, et al.            Expires 7 June 2023                 [Page 41]
+Migault, et al.           Expires 17 July 2023                 [Page 41]
