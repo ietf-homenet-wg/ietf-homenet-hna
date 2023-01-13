@@ -136,7 +136,7 @@ Internet-Draft                public-names                  January 2023
    Home network owners may have devices or services hosted on their home
    network that they wish to access from the Internet (i.e., from a
    network outside of the home network).  The use of IPv6 addresesses in
-   the home makes inprinciple the actual network access simpler, while
+   the home makes in principle the actual network access simpler, while
    on the other hand, the addresses are much harder to remember, and
    subject to regular renumbering.  To make this situation simpler for
    typical home owners to manage, there needs to be an easy way for

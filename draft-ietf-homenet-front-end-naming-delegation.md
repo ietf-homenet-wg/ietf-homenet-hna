@@ -96,7 +96,7 @@ The names and IP addresses of the home network are set in the Public Homenet Zon
 Home network owners may have devices or services hosted on their home network
 that they wish to access from the Internet (i.e., from a network outside of the
 home network).
-The use of IPv6 addresesses in the home makes inprinciple the actual network access simpler, while on the other hand, the addresses are much harder to remember, and subject to regular renumbering.
+The use of IPv6 addresesses in the home makes in principle the actual network access simpler, while on the other hand, the addresses are much harder to remember, and subject to regular renumbering.
 To make this situation simpler for typical home owners to manage, there needs to be an easy way for names and IP addresses of these devices and services to be published in the public DNS.
 
 As depicted in {fig-outsourcing-overview}, he names and IP address of the home network are made availble in the Public Homenet Zone by the Homenet Naming Authority (HNA), which in turn instructs the DNS Outsourcing Infrastructure (DOI) to publish the zone on behalf of the HNA.
