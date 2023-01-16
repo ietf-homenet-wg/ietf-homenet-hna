@@ -838,8 +838,6 @@ exposed to the Internet
 is an increased risk to the Internet through the possible
 introduction of additional internet-exposed system that are poorly managed and
 likely to be compromised.
-Carriers may need to deploy additional mitigations to ensure that attacks do not originate from their networks.
-The use of RFC8520 (MUD) filters is one such method.
 
 #IANA Considerations
 
