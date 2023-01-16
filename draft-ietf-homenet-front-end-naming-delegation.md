@@ -207,7 +207,6 @@ A device or service SHOULD have Global Unicast Addresses (GUA) (IPv6 {{?RFC3787}
 Of these the link-local are almost never useful for the Public Zone, and should be omitted.
 
 The IPv6 ULA and the private IPv4 addresses may be useful to publish, if the home network environment features a VPN that would allow the home owner to reach the network.
-The IPv6 ULA addresses are safer to publish with a significantly lower probability of collision than RFC1918 addresses.
 RFC1918 addresses in public zones are generally filtered out by many DNS servers as they are considered rebind attacks {{REBIND}}.
 
 In general, one expects the GUA to be the default address to be published.
