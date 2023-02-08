@@ -1,7 +1,7 @@
 ---
 title: Simple Provisioning of Public Names for Residential Networks
 abbrev: public-names
-docname: draft-ietf-homenet-front-end-naming-delegation-26
+docname: draft-ietf-homenet-front-end-naming-delegation-27
 
 stand_alone: true
 
@@ -283,7 +283,7 @@ In this document, "myhome.example" is used as the example for an enduser owned d
 
 More specifically, DNS resolution for the Public Homenet Zone (here myhome.example) from Internet DNSSEC resolvers is handled by the DOI as opposed to the HNA.
 The DOI benefits from a cloud infrastructure while the HNA is dimensioned for home network and as such likely unable to support any load.
-In the case the HNA is a CPE, outsourcing to the DOI protects the home network against DDoS for example.
+In the case the HNA is a CPE, outsourcing to the DOI reduces the attack surface of the home network to  DDoS for example.
 Of course the DOI needs to be informed dynamically about the content of myhome.example. The description of such a synchronization mechanism is the purpose of this document.
 
 Note that {{info-model}} shows necessary parameters to configure the HNA.
@@ -874,12 +874,14 @@ solutions; Paul Mockapetris, Christian Jacquenet, Francis Dupont and
 Ludovic Eschard for their remarks on HNA and low power devices; Olafur
 Gudmundsson for clarifying DNSSEC capabilities of small devices; Simon
 Kelley for its feedback as dnsmasq implementer; Andrew Sullivan, Mark
-Andrew, Ted Lemon, Mikael Abrahamson, and Ray Bellis
+Andrew, Ted Lemon, Mikael Abrahamson, Stephen Farrell, and Ray Bellis
 for their feedback on handling different views as well as clarifying the
 impact of outsourcing the zone signing operation outside the HNA; Mark
 Andrew and Peter Koch for clarifying the renumbering.
 
-At last the authors would like to thank Kiran Makhijani for her in-depth review that contributed in shaping the final version.
+The authors would like to thank Kiran Makhijani for her in-depth review that contributed in shaping the final version.
+
+The authors would like to thank our Area Directorate Éric Vyncke for his constant support and pushing the document through the IESG as well as the many reviewers from various directorates including Anthony Somerset, Geoff Huston, Tim Chown, Tim Wicinski, Matt Brown, Darrel Miller, Chirster Holmberg. 
 
 # Contributors
 

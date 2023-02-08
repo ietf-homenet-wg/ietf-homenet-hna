@@ -5,16 +5,16 @@
 Homenet                                                       D. Migault
 Internet-Draft                                                  Ericsson
 Intended status: Experimental                                   R. Weber
-Expires: 20 July 2023                                            Nominum
+Expires: 12 August 2023                                          Nominum
                                                            M. Richardson
                                                 Sandelman Software Works
                                                                R. Hunter
                                                     Globis Consulting BV
-                                                         16 January 2023
+                                                         8 February 2023
 
 
       Simple Provisioning of Public Names for Residential Networks
-           draft-ietf-homenet-front-end-naming-delegation-26
+           draft-ietf-homenet-front-end-naming-delegation-27
 
 Abstract
 
@@ -48,14 +48,14 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 July 2023.
+   This Internet-Draft will expire on 12 August 2023.
 
 
 
 
-Migault, et al.           Expires 20 July 2023                  [Page 1]
+Migault, et al.          Expires 12 August 2023                 [Page 1]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
 Copyright Notice
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Migault, et al.           Expires 20 July 2023                  [Page 2]
+Migault, et al.          Expires 12 August 2023                 [Page 2]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
      14.2.  HNA DM channels  . . . . . . . . . . . . . . . . . . . .  28
@@ -122,8 +122,8 @@ Internet-Draft                public-names                  January 2023
    15. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  31
    16. Acknowledgment  . . . . . . . . . . . . . . . . . . . . . . .  31
    17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  31
-   18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  31
-     18.1.  Normative References . . . . . . . . . . . . . . . . . .  31
+   18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  32
+     18.1.  Normative References . . . . . . . . . . . . . . . . . .  32
      18.2.  Informative References . . . . . . . . . . . . . . . . .  33
    Appendix A.  HNA Channel Configurations . . . . . . . . . . . . .  37
      A.1.  Homenet Public Zone . . . . . . . . . . . . . . . . . . .  37
@@ -165,9 +165,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                  [Page 3]
+Migault, et al.          Expires 12 August 2023                 [Page 3]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
                                         Internet
@@ -221,9 +221,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                  [Page 4]
+Migault, et al.          Expires 12 August 2023                 [Page 4]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    Section 5 provides an architectural view of the HNA, DM and DOI as
@@ -277,9 +277,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                  [Page 5]
+Migault, et al.          Expires 12 August 2023                 [Page 5]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
       managing the Public Homenet Zone.  This includes populating the
@@ -333,9 +333,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                  [Page 6]
+Migault, et al.          Expires 12 August 2023                 [Page 6]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
 3.  Selecting Names and Addresses to Publish
@@ -389,9 +389,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                  [Page 7]
+Migault, et al.          Expires 12 August 2023                 [Page 7]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    The main difference between the various deployments concerns the
@@ -445,9 +445,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                  [Page 8]
+Migault, et al.          Expires 12 August 2023                 [Page 8]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
 4.2.  Agnostic CPE
@@ -501,16 +501,16 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                  [Page 9]
+Migault, et al.          Expires 12 August 2023                 [Page 9]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    unable to support any load.  In the case the HNA is a CPE,
-   outsourcing to the DOI protects the home network against DDoS for
-   example.  Of course the DOI needs to be informed dynamically about
-   the content of myhome.example.  The description of such a
-   synchronization mechanism is the purpose of this document.
+   outsourcing to the DOI reduces the attack surface of the home network
+   to DDoS for example.  Of course the DOI needs to be informed
+   dynamically about the content of myhome.example.  The description of
+   such a synchronization mechanism is the purpose of this document.
 
    Note that Appendix B shows necessary parameters to configure the HNA.
 
@@ -557,9 +557,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 10]
+Migault, et al.          Expires 12 August 2023                [Page 10]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    Figure 2 illustrates the architecture where the HNA outsources the
@@ -613,9 +613,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 11]
+Migault, et al.          Expires 12 August 2023                [Page 11]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    There might be multiple DM's, and multiple servers per DM.  This
@@ -669,9 +669,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 12]
+Migault, et al.          Expires 12 August 2023                [Page 12]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    The Control Channel and the Synchronization Channel are the
@@ -725,9 +725,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 13]
+Migault, et al.          Expires 12 August 2023                [Page 13]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    Some information is carried from the DOI to the HNA, described in the
@@ -781,9 +781,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 14]
+Migault, et al.          Expires 12 August 2023                [Page 14]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
 6.2.  Information to build the DNSSEC chain of trust
@@ -837,9 +837,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 15]
+Migault, et al.          Expires 12 August 2023                [Page 15]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    Section 6.5.4 explains how a DNS Update operation on the Control
@@ -893,9 +893,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 16]
+Migault, et al.          Expires 12 August 2023                [Page 16]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    The zone that is returned by the DM is used by the HNA as a template
@@ -949,9 +949,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 17]
+Migault, et al.          Expires 12 August 2023                [Page 17]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
 6.5.2.  Providing information for the DNSSEC chain of trust
@@ -1005,9 +1005,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 18]
+Migault, et al.          Expires 12 August 2023                [Page 18]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    Update section is a RRset of type NS.  The Additional Data section
@@ -1061,9 +1061,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 19]
+Migault, et al.          Expires 12 August 2023                [Page 19]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    The HNA may be provisioned by the manufacturer, or during some user-
@@ -1117,9 +1117,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 20]
+Migault, et al.          Expires 12 August 2023                [Page 20]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    Uploading and dynamically updating the zone file on the DM can be
@@ -1173,9 +1173,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 21]
+Migault, et al.          Expires 12 August 2023                [Page 21]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    For the TLS server certificate, the HNA uses the same certificate
@@ -1229,9 +1229,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 22]
+Migault, et al.          Expires 12 August 2023                [Page 22]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
 10.  Public Homenet Reverse Zone
@@ -1285,9 +1285,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 23]
+Migault, et al.          Expires 12 August 2023                [Page 23]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    An ISP that has delegated 2001:db8:aeae::/56 to the HNA via
@@ -1341,9 +1341,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 24]
+Migault, et al.          Expires 12 August 2023                [Page 24]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    There may be some situations where the HNA is unable to arrange for
@@ -1397,9 +1397,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 25]
+Migault, et al.          Expires 12 August 2023                [Page 25]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    The HNA will have a list of names that should be published, but it
@@ -1453,9 +1453,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 26]
+Migault, et al.          Expires 12 August 2023                [Page 26]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    able to walk the zone, to discover all the names.  However, recent
@@ -1509,9 +1509,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 27]
+Migault, et al.          Expires 12 August 2023                [Page 27]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    complexities.  Firstly, if multiple homenets are using the same
@@ -1565,9 +1565,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 28]
+Migault, et al.          Expires 12 August 2023                [Page 28]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    To ensure the multiple TLS session are continuously authenticating
@@ -1621,9 +1621,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 29]
+Migault, et al.          Expires 12 August 2023                [Page 29]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
 14.4.  Names are less volatile than IP addresses
@@ -1677,9 +1677,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 30]
+Migault, et al.          Expires 12 August 2023                [Page 30]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    *  The home network operator must carefully assess whether a device
@@ -1711,13 +1711,19 @@ Internet-Draft                public-names                  January 2023
    HNA and low power devices; Olafur Gudmundsson for clarifying DNSSEC
    capabilities of small devices; Simon Kelley for its feedback as
    dnsmasq implementer; Andrew Sullivan, Mark Andrew, Ted Lemon, Mikael
-   Abrahamson, and Ray Bellis for their feedback on handling different
-   views as well as clarifying the impact of outsourcing the zone
-   signing operation outside the HNA; Mark Andrew and Peter Koch for
-   clarifying the renumbering.
+   Abrahamson, Stephen Farrell, and Ray Bellis for their feedback on
+   handling different views as well as clarifying the impact of
+   outsourcing the zone signing operation outside the HNA; Mark Andrew
+   and Peter Koch for clarifying the renumbering.
 
-   At last the authors would like to thank Kiran Makhijani for her in-
-   depth review that contributed in shaping the final version.
+   The authors would like to thank Kiran Makhijani for her in-depth
+   review that contributed in shaping the final version.
+
+   The authors would like to thank our Area Directorate Éric Vyncke for
+   his constant support and pushing the document through the IESG as
+   well as the many reviewers from various directorates including
+   Anthony Somerset, Geoff Huston, Tim Chown, Tim Wicinski, Matt Brown,
+   Darrel Miller, Chirster Holmberg.
 
 17.  Contributors
 
@@ -1725,95 +1731,94 @@ Internet-Draft                public-names                  January 2023
    Cloetens that provided a significant contribution in the early
    versions of the document.
 
+
+
+Migault, et al.          Expires 12 August 2023                [Page 31]
+
+Internet-Draft                public-names                 February 2023
+
+
 18.  References
 
 18.1.  Normative References
 
-
-
-
-
-Migault, et al.           Expires 20 July 2023                 [Page 31]
-
-Internet-Draft                public-names                  January 2023
-
-
    [I-D.ietf-uta-rfc6125bis]
               Saint-Andre, P. and R. Salz, "Service Identity in TLS",
               Work in Progress, Internet-Draft, draft-ietf-uta-
-              rfc6125bis-08, 12 October 2022,
-              <https://www.ietf.org/archive/id/draft-ietf-uta-
-              rfc6125bis-08.txt>.
+              rfc6125bis-10, 25 January 2023,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-uta-
+              rfc6125bis-10>.
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
-              <https://www.rfc-editor.org/info/rfc1034>.
+              <https://www.rfc-editor.org/rfc/rfc1034>.
 
    [RFC1918]  Rekhter, Y., Moskowitz, B., Karrenberg, D., de Groot, G.
               J., and E. Lear, "Address Allocation for Private
               Internets", BCP 5, RFC 1918, DOI 10.17487/RFC1918,
-              February 1996, <https://www.rfc-editor.org/info/rfc1918>.
+              February 1996, <https://www.rfc-editor.org/rfc/rfc1918>.
 
    [RFC1996]  Vixie, P., "A Mechanism for Prompt Notification of Zone
               Changes (DNS NOTIFY)", RFC 1996, DOI 10.17487/RFC1996,
-              August 1996, <https://www.rfc-editor.org/info/rfc1996>.
+              August 1996, <https://www.rfc-editor.org/rfc/rfc1996>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
+              <https://www.rfc-editor.org/rfc/rfc2119>.
 
    [RFC3007]  Wellington, B., "Secure Domain Name System (DNS) Dynamic
               Update", RFC 3007, DOI 10.17487/RFC3007, November 2000,
-              <https://www.rfc-editor.org/info/rfc3007>.
+              <https://www.rfc-editor.org/rfc/rfc3007>.
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
               RFC 4034, DOI 10.17487/RFC4034, March 2005,
-              <https://www.rfc-editor.org/info/rfc4034>.
+              <https://www.rfc-editor.org/rfc/rfc4034>.
 
    [RFC5155]  Laurie, B., Sisson, G., Arends, R., and D. Blacka, "DNS
               Security (DNSSEC) Hashed Authenticated Denial of
               Existence", RFC 5155, DOI 10.17487/RFC5155, March 2008,
-              <https://www.rfc-editor.org/info/rfc5155>.
+              <https://www.rfc-editor.org/rfc/rfc5155>.
 
    [RFC7344]  Kumari, W., Gudmundsson, O., and G. Barwood, "Automating
               DNSSEC Delegation Trust Maintenance", RFC 7344,
               DOI 10.17487/RFC7344, September 2014,
-              <https://www.rfc-editor.org/info/rfc7344>.
+              <https://www.rfc-editor.org/rfc/rfc7344>.
+
+
+
+
+Migault, et al.          Expires 12 August 2023                [Page 32]
+
+Internet-Draft                public-names                 February 2023
+
 
    [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
               and P. Hoffman, "Specification for DNS over Transport
               Layer Security (TLS)", RFC 7858, DOI 10.17487/RFC7858, May
-              2016, <https://www.rfc-editor.org/info/rfc7858>.
-
-
-
-Migault, et al.           Expires 20 July 2023                 [Page 32]
-
-Internet-Draft                public-names                  January 2023
-
+              2016, <https://www.rfc-editor.org/rfc/rfc7858>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
    [RFC8375]  Pfister, P. and T. Lemon, "Special-Use Domain
               'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
-              <https://www.rfc-editor.org/info/rfc8375>.
+              <https://www.rfc-editor.org/rfc/rfc8375>.
 
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
-              <https://www.rfc-editor.org/info/rfc8446>.
+              <https://www.rfc-editor.org/rfc/rfc8446>.
 
    [RFC8499]  Hoffman, P., Sullivan, A., and K. Fujiwara, "DNS
               Terminology", BCP 219, RFC 8499, DOI 10.17487/RFC8499,
-              January 2019, <https://www.rfc-editor.org/info/rfc8499>.
+              January 2019, <https://www.rfc-editor.org/rfc/rfc8499>.
 
    [RFC9103]  Toorop, W., Dickinson, S., Sahib, S., Aras, P., and A.
               Mankin, "DNS Zone Transfer over TLS", RFC 9103,
               DOI 10.17487/RFC9103, August 2021,
-              <https://www.rfc-editor.org/info/rfc9103>.
+              <https://www.rfc-editor.org/rfc/rfc9103>.
 
 18.2.  Informative References
 
@@ -1822,48 +1827,50 @@ Internet-Draft                public-names                  January 2023
               <https://doi.org/10.1109/NCA.2014.27>.
 
    [I-D.ietf-dnsop-dnssec-validator-requirements]
-              Migault, D. and D. York, "Recommendations for DNSSEC
-              Resolvers Operators", Work in Progress, Internet-Draft,
-              draft-ietf-dnsop-dnssec-validator-requirements-01, 13 May
-              2022, <https://www.ietf.org/archive/id/draft-ietf-dnsop-
-              dnssec-validator-requirements-01.txt>.
+              Migault, D., Lewis, E., and D. York, "Recommendations for
+              DNSSEC Resolvers Operators", Work in Progress, Internet-
+              Draft, draft-ietf-dnsop-dnssec-validator-requirements-04,
+              25 January 2023, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-dnsop-dnssec-validator-requirements-04>.
 
    [I-D.ietf-dnsop-domain-verification-techniques]
               Sahib, S. K., Huque, S., and P. Wouters, "Survey of Domain
               Verification Techniques using DNS", Work in Progress,
               Internet-Draft, draft-ietf-dnsop-domain-verification-
               techniques-00, 28 July 2022,
-              <https://www.ietf.org/archive/id/draft-ietf-dnsop-domain-
-              verification-techniques-00.txt>.
+              <https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-
+              domain-verification-techniques-00>.
+
+
+
+
+
+Migault, et al.          Expires 12 August 2023                [Page 33]
+
+Internet-Draft                public-names                 February 2023
+
 
    [I-D.ietf-dnsop-ns-revalidation]
               Huque, S., Vixie, P. A., and R. Dolmans, "Delegation
               Revalidation by DNS Resolvers", Work in Progress,
               Internet-Draft, draft-ietf-dnsop-ns-revalidation-03, 6
-              September 2022, <https://www.ietf.org/archive/id/draft-
-              ietf-dnsop-ns-revalidation-03.txt>.
-
-
-
-Migault, et al.           Expires 20 July 2023                 [Page 33]
-
-Internet-Draft                public-names                  January 2023
-
+              September 2022, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-dnsop-ns-revalidation-03>.
 
    [I-D.ietf-homenet-naming-architecture-dhc-options]
               Migault, D., Weber, R., and T. Mrugalski, "DHCPv6 Options
               for Home Network Naming Authority", Work in Progress,
               Internet-Draft, draft-ietf-homenet-naming-architecture-
               dhc-options-24, 31 October 2022,
-              <https://www.ietf.org/archive/id/draft-ietf-homenet-
-              naming-architecture-dhc-options-24.txt>.
+              <https://datatracker.ietf.org/doc/html/draft-ietf-homenet-
+              naming-architecture-dhc-options-24>.
 
    [I-D.richardson-homerouter-provisioning]
               Richardson, M., "Provisioning Initial Device Identifiers
               into Home Routers", Work in Progress, Internet-Draft,
               draft-richardson-homerouter-provisioning-02, 14 November
-              2021, <https://www.ietf.org/archive/id/draft-richardson-
-              homerouter-provisioning-02.txt>.
+              2021, <https://datatracker.ietf.org/doc/html/draft-
+              richardson-homerouter-provisioning-02>.
 
    [REBIND]   "DNS rebinding", n.d.,
               <https://en.wikipedia.org/wiki/DNS_rebinding>.
@@ -1871,162 +1878,161 @@ Internet-Draft                public-names                  January 2023
    [RFC2136]  Vixie, P., Ed., Thomson, S., Rekhter, Y., and J. Bound,
               "Dynamic Updates in the Domain Name System (DNS UPDATE)",
               RFC 2136, DOI 10.17487/RFC2136, April 1997,
-              <https://www.rfc-editor.org/info/rfc2136>.
+              <https://www.rfc-editor.org/rfc/rfc2136>.
 
    [RFC3787]  Parker, J., Ed., "Recommendations for Interoperable IP
               Networks using Intermediate System to Intermediate System
               (IS-IS)", RFC 3787, DOI 10.17487/RFC3787, May 2004,
-              <https://www.rfc-editor.org/info/rfc3787>.
+              <https://www.rfc-editor.org/rfc/rfc3787>.
 
    [RFC3927]  Cheshire, S., Aboba, B., and E. Guttman, "Dynamic
               Configuration of IPv4 Link-Local Addresses", RFC 3927,
               DOI 10.17487/RFC3927, May 2005,
-              <https://www.rfc-editor.org/info/rfc3927>.
+              <https://www.rfc-editor.org/rfc/rfc3927>.
 
    [RFC4192]  Baker, F., Lear, E., and R. Droms, "Procedures for
               Renumbering an IPv6 Network without a Flag Day", RFC 4192,
               DOI 10.17487/RFC4192, September 2005,
-              <https://www.rfc-editor.org/info/rfc4192>.
+              <https://www.rfc-editor.org/rfc/rfc4192>.
 
    [RFC4193]  Hinden, R. and B. Haberman, "Unique Local IPv6 Unicast
               Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
-              <https://www.rfc-editor.org/info/rfc4193>.
+              <https://www.rfc-editor.org/rfc/rfc4193>.
+
+
+
+Migault, et al.          Expires 12 August 2023                [Page 34]
+
+Internet-Draft                public-names                 February 2023
+
 
    [RFC4291]  Hinden, R. and S. Deering, "IP Version 6 Addressing
               Architecture", RFC 4291, DOI 10.17487/RFC4291, February
-              2006, <https://www.rfc-editor.org/info/rfc4291>.
-
-
-
-
-
-
-Migault, et al.           Expires 20 July 2023                 [Page 34]
-
-Internet-Draft                public-names                  January 2023
-
+              2006, <https://www.rfc-editor.org/rfc/rfc4291>.
 
    [RFC5011]  StJohns, M., "Automated Updates of DNS Security (DNSSEC)
               Trust Anchors", STD 74, RFC 5011, DOI 10.17487/RFC5011,
-              September 2007, <https://www.rfc-editor.org/info/rfc5011>.
+              September 2007, <https://www.rfc-editor.org/rfc/rfc5011>.
 
    [RFC6092]  Woodyatt, J., Ed., "Recommended Simple Security
               Capabilities in Customer Premises Equipment (CPE) for
               Providing Residential IPv6 Internet Service", RFC 6092,
               DOI 10.17487/RFC6092, January 2011,
-              <https://www.rfc-editor.org/info/rfc6092>.
+              <https://www.rfc-editor.org/rfc/rfc6092>.
 
    [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
               RFC 6749, DOI 10.17487/RFC6749, October 2012,
-              <https://www.rfc-editor.org/info/rfc6749>.
+              <https://www.rfc-editor.org/rfc/rfc6749>.
 
    [RFC6762]  Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
               DOI 10.17487/RFC6762, February 2013,
-              <https://www.rfc-editor.org/info/rfc6762>.
+              <https://www.rfc-editor.org/rfc/rfc6762>.
 
    [RFC6887]  Wing, D., Ed., Cheshire, S., Boucadair, M., Penno, R., and
               P. Selkirk, "Port Control Protocol (PCP)", RFC 6887,
               DOI 10.17487/RFC6887, April 2013,
-              <https://www.rfc-editor.org/info/rfc6887>.
+              <https://www.rfc-editor.org/rfc/rfc6887>.
 
    [RFC7010]  Liu, B., Jiang, S., Carpenter, B., Venaas, S., and W.
               George, "IPv6 Site Renumbering Gap Analysis", RFC 7010,
               DOI 10.17487/RFC7010, September 2013,
-              <https://www.rfc-editor.org/info/rfc7010>.
+              <https://www.rfc-editor.org/rfc/rfc7010>.
 
    [RFC7084]  Singh, H., Beebee, W., Donley, C., and B. Stark, "Basic
               Requirements for IPv6 Customer Edge Routers", RFC 7084,
               DOI 10.17487/RFC7084, November 2013,
-              <https://www.rfc-editor.org/info/rfc7084>.
+              <https://www.rfc-editor.org/rfc/rfc7084>.
 
    [RFC7368]  Chown, T., Ed., Arkko, J., Brandt, A., Troan, O., and J.
               Weil, "IPv6 Home Networking Architecture Principles",
               RFC 7368, DOI 10.17487/RFC7368, October 2014,
-              <https://www.rfc-editor.org/info/rfc7368>.
+              <https://www.rfc-editor.org/rfc/rfc7368>.
 
    [RFC7404]  Behringer, M. and E. Vyncke, "Using Only Link-Local
               Addressing inside an IPv6 Network", RFC 7404,
               DOI 10.17487/RFC7404, November 2014,
-              <https://www.rfc-editor.org/info/rfc7404>.
+              <https://www.rfc-editor.org/rfc/rfc7404>.
+
+
+
+
+
+Migault, et al.          Expires 12 August 2023                [Page 35]
+
+Internet-Draft                public-names                 February 2023
+
 
    [RFC7707]  Gont, F. and T. Chown, "Network Reconnaissance in IPv6
               Networks", RFC 7707, DOI 10.17487/RFC7707, March 2016,
-              <https://www.rfc-editor.org/info/rfc7707>.
-
-
-
-
-
-Migault, et al.           Expires 20 July 2023                 [Page 35]
-
-Internet-Draft                public-names                  January 2023
-
+              <https://www.rfc-editor.org/rfc/rfc7707>.
 
    [RFC7788]  Stenberg, M., Barth, S., and P. Pfister, "Home Networking
               Control Protocol", RFC 7788, DOI 10.17487/RFC7788, April
-              2016, <https://www.rfc-editor.org/info/rfc7788>.
+              2016, <https://www.rfc-editor.org/rfc/rfc7788>.
 
    [RFC8094]  Reddy, T., Wing, D., and P. Patil, "DNS over Datagram
               Transport Layer Security (DTLS)", RFC 8094,
               DOI 10.17487/RFC8094, February 2017,
-              <https://www.rfc-editor.org/info/rfc8094>.
+              <https://www.rfc-editor.org/rfc/rfc8094>.
 
    [RFC8415]  Mrugalski, T., Siodelski, M., Volz, B., Yourtchenko, A.,
               Richardson, M., Jiang, S., Lemon, T., and T. Winters,
               "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)",
               RFC 8415, DOI 10.17487/RFC8415, November 2018,
-              <https://www.rfc-editor.org/info/rfc8415>.
+              <https://www.rfc-editor.org/rfc/rfc8415>.
 
    [RFC8484]  Hoffman, P. and P. McManus, "DNS Queries over HTTPS
               (DoH)", RFC 8484, DOI 10.17487/RFC8484, October 2018,
-              <https://www.rfc-editor.org/info/rfc8484>.
+              <https://www.rfc-editor.org/rfc/rfc8484>.
 
    [RFC8501]  Howard, L., "Reverse DNS in IPv6 for Internet Service
               Providers", RFC 8501, DOI 10.17487/RFC8501, November 2018,
-              <https://www.rfc-editor.org/info/rfc8501>.
+              <https://www.rfc-editor.org/rfc/rfc8501>.
 
    [RFC8555]  Barnes, R., Hoffman-Andrews, J., McCarney, D., and J.
               Kasten, "Automatic Certificate Management Environment
               (ACME)", RFC 8555, DOI 10.17487/RFC8555, March 2019,
-              <https://www.rfc-editor.org/info/rfc8555>.
+              <https://www.rfc-editor.org/rfc/rfc8555>.
 
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
               Express Concise Binary Object Representation (CBOR) and
               JSON Data Structures", RFC 8610, DOI 10.17487/RFC8610,
-              June 2019, <https://www.rfc-editor.org/info/rfc8610>.
+              June 2019, <https://www.rfc-editor.org/rfc/rfc8610>.
 
    [RFC8672]  Sheffer, Y. and D. Migault, "TLS Server Identity Pinning
               with Tickets", RFC 8672, DOI 10.17487/RFC8672, October
-              2019, <https://www.rfc-editor.org/info/rfc8672>.
+              2019, <https://www.rfc-editor.org/rfc/rfc8672>.
 
    [RFC8978]  Gont, F., Žorž, J., and R. Patterson, "Reaction of IPv6
               Stateless Address Autoconfiguration (SLAAC) to Flash-
               Renumbering Events", RFC 8978, DOI 10.17487/RFC8978, March
-              2021, <https://www.rfc-editor.org/info/rfc8978>.
+              2021, <https://www.rfc-editor.org/rfc/rfc8978>.
+
+
+
+
+
+Migault, et al.          Expires 12 August 2023                [Page 36]
+
+Internet-Draft                public-names                 February 2023
+
 
    [RFC8981]  Gont, F., Krishnan, S., Narten, T., and R. Draves,
               "Temporary Address Extensions for Stateless Address
               Autoconfiguration in IPv6", RFC 8981,
               DOI 10.17487/RFC8981, February 2021,
-              <https://www.rfc-editor.org/info/rfc8981>.
-
-
-
-Migault, et al.           Expires 20 July 2023                 [Page 36]
-
-Internet-Draft                public-names                  January 2023
-
+              <https://www.rfc-editor.org/rfc/rfc8981>.
 
    [RFC9250]  Huitema, C., Dickinson, S., and A. Mankin, "DNS over
               Dedicated QUIC Connections", RFC 9250,
               DOI 10.17487/RFC9250, May 2022,
-              <https://www.rfc-editor.org/info/rfc9250>.
+              <https://www.rfc-editor.org/rfc/rfc9250>.
 
    [RFC9276]  Hardaker, W. and V. Dukhovni, "Guidance for NSEC3
               Parameter Settings", BCP 236, RFC 9276,
               DOI 10.17487/RFC9276, August 2022,
-              <https://www.rfc-editor.org/info/rfc9276>.
+              <https://www.rfc-editor.org/rfc/rfc9276>.
 
    [ZONEENUM] Wang, Z., Xiao, L., and R. Wang, "An efficient DNSSEC zone
               enumeration algorithm", n.d..
@@ -2063,15 +2069,9 @@ A.1.  Homenet Public Zone
 
 
 
-
-
-
-
-
-
-Migault, et al.           Expires 20 July 2023                 [Page 37]
+Migault, et al.          Expires 12 August 2023                [Page 37]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    The above parameters MUST be be provisioned for ISP-specific reverse
@@ -2125,9 +2125,9 @@ Appendix B.  Information Model for Outsourced information
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 38]
+Migault, et al.          Expires 12 August 2023                [Page 38]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    The HNA needs to be configured with the following parameters as
@@ -2181,9 +2181,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 39]
+Migault, et al.          Expires 12 August 2023                [Page 39]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    As certificates are more commonly emitted for FQDN than for IP
@@ -2237,9 +2237,9 @@ Internet-Draft                public-names                  January 2023
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 40]
+Migault, et al.          Expires 12 August 2023                [Page 40]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
        The device would need to be provisioned with a device-unique
@@ -2293,9 +2293,9 @@ Appendix C.  Example: A manufacturer provisioned HNA product flow
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 41]
+Migault, et al.          Expires 12 August 2023                [Page 41]
 
-Internet-Draft                public-names                  January 2023
+Internet-Draft                public-names                 February 2023
 
 
    {
@@ -2349,4 +2349,4 @@ Authors' Addresses
 
 
 
-Migault, et al.           Expires 20 July 2023                 [Page 42]
+Migault, et al.          Expires 12 August 2023                [Page 42]
